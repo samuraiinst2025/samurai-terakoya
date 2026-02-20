@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP実践ユースケースガイド - 初学者のための実践的活用事例集</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+      body {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        color: #333;
+        background-color: #f9fafb;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #111827;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 3px solid #2563eb;
+        padding-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        border-left: 5px solid #2563eb;
+        padding-left: 15px;
+      }
+
+      h3 {
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        color: #1f2937;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+      }
+
+      .meta-info {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+      }
+
+      .intro-box {
+        background-color: #eff6ff;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #bfdbfe;
+        margin-bottom: 30px;
+      }
+
+      /* Comparison Table Styles */
+      .comparison-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .comparison-card {
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        background: white;
+      }
+
+      .comparison-card.traditional {
+        border-top: 4px solid #f97316;
+      }
+
+      .comparison-card.mcp {
+        border-top: 4px solid #2563eb;
+        background-color: #f0f9ff;
+      }
+
+      .comparison-title {
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .traditional .comparison-title {
+        color: #c2410c;
+      }
+      .mcp .comparison-title {
+        color: #1d4ed8;
+      }
+
+      /* Use Case Card Styles */
+      .use-case-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 30px;
+        margin-bottom: 40px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .use-case-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .use-case-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #111827;
+        margin: 0;
+      }
+
+      .difficulty-badge {
+        background-color: #f3f4f6;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      .before-after-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .before-after-table th,
+      .before-after-table td {
+        padding: 12px 20px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .before-after-table th {
+        background-color: #f3f4f6;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .before-col {
+        color: #c2410c;
+      }
+      .after-col {
+        color: #15803d;
+        font-weight: bold;
+      }
+
+      .benefits-box {
+        background-color: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .benefits-title {
+        color: #047857;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .server-list {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 10px 0;
+      }
+
+      .server-tag {
+        background-color: #dbeafe;
+        color: #1e40af;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .mermaid {
+        background-color: #f9fafb;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      /* Decision Matrix */
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .decision-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        text-align: center;
+      }
+
+      .decision-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      /* FAQ */
+      details {
+        margin-bottom: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: white;
+        padding: 10px 20px;
+      }
+
+      summary {
+        font-weight: bold;
+        cursor: pointer;
+        color: #1f2937;
+      }
+
+      /* Footer/Next Steps */
+      .next-steps {
+        background-color: #1f2937;
+        color: #f3f4f6;
+        padding: 40px;
+        border-radius: 12px;
+        margin-top: 60px;
+      }
+
+      .next-steps h2 {
+        color: #ffffff;
+        border-left-color: #60a5fa;
+      }
+
+      .next-steps h3 {
+        color: #e5e7eb;
+      }
+
+      .next-steps p,
+      .next-steps ol,
+      .next-steps ul,
+      .next-steps li {
+        color: #d1d5db;
+      }
+
+      .next-steps strong {
+        color: #f3f4f6;
+      }
+
+      .next-steps a {
+        color: #93c5fd;
+        text-decoration: underline;
+      }
+
+      .next-steps a:hover {
+        color: #60a5fa;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 20px;
+        }
+        .comparison-container {
+          grid-template-columns: 1fr;
+        }
+        .use-case-card {
+          padding: 20px;
+        }
+      }
+    
+      /* --- Mermaid: 文字切れ対策（SVG viewBox外も見える + 横スクロール許可） --- */
+      .mermaid { overflow-x: auto; overflow-y: visible; }
+      .mermaid svg { overflow: visible !important; }
+      /* foreignObjectのクリップ対策として、SVGの余白をviewBoxで拡張（下の自動置換とセット） */
+
+    
+      /* --- Mermaid: iOS/フォント差分での文字欠け対策（少し小さくする） --- */
+      .mermaid svg { font-size: 14px !important; }
+      .mermaid svg foreignObject, .mermaid svg foreignObject * { font-size: 14px !important; }
+
+    </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Open%20Sans:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google%20Sans:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Noto%20Sans%20JP:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&amp;display=swap" rel="stylesheet"></head>
+  <body style="">
+    <!-- 1. Header Section -->
+    <header>
+      <h1>MCP実践ユースケースガイド</h1>
+      <div class="subtitle">初学者のための実践的活用事例集</div>
+      <div class="meta-info">最終更新日: 2026年2月16日</div>
+
+      <div class="intro-box">
+        <p>
+          <strong>はじめに</strong><br>
+          このガイドでは、AIエージェントと外部ツールをつなぐ新しい標準プロトコル「MCP (Model Context
+          Protocol)」の実践的な活用方法を紹介します。
+          「具体的に何ができるの？」「どれくらい便利になるの？」という疑問に対し、6つの具体的なユースケース（事例）を通して、
+          導入前の課題と導入後の効果を分かりやすく解説します。初学者の方でも理解できるよう、専門用語を極力噛み砕いて説明しています。
+        </p>
+      </div>
+    </header>
+
+    <!-- 2. What is MCP? Section -->
+    <section>
+      <h2>MCP (Model Context Protocol) とは？</h2>
+      <p>
+        MCPは、AIモデル（Claudeなど）が外部のデータやツールと「会話」するための共通規格です。
+        これまで、AIに社内データを読み込ませたり、外部ツールを操作させたりするには、ツールごとに専用のプログラム（API連携コード）を書く必要がありました。
+        MCPを使えば、USBケーブルを差し込むように、標準化された方法で簡単にAIとツールを接続できます。
+      </p>
+
+      <div class="comparison-container">
+        <div class="comparison-card traditional">
+          <div class="comparison-title">🟧 従来のAPI連携</div>
+          <ul>
+            <li>ツールごとに個別の接続コード開発が必要</li>
+            <li>開発に時間がかかり、メンテナンスが大変</li>
+            <li>新しいツールを追加するたびに工事が必要</li>
+            <li><strong>イメージ：</strong> 機器ごとに形が違う充電端子</li>
+          </ul>
+        </div>
+        <div class="comparison-card mcp">
+          <div class="comparison-title">🟦 MCPによる連携</div>
+          <ul>
+            <li>共通の規格で「プラグ＆プレイ」接続</li>
+            <li>一度設定すれば、AIがツールの使い方を自律的に理解</li>
+            <li>ツールの追加・変更が非常に簡単</li>
+            <li><strong>イメージ：</strong> 何でもつながるUSB-C端子</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>なぜ今、MCPが注目されているのか？</h3>
+      <ul>
+        <li>
+          <strong>開発コストの激減：</strong> 個別の「グルーコード（接着剤のようなコード）」を書く必要がなくなります。
+        </li>
+        <li>
+          <strong>エコシステムの拡大：</strong> Google, Microsoft,
+          Anthropicなど主要企業が参画し、対応ツールが急増しています。
+        </li>
+        <li>
+          <strong>AIの自律性向上：</strong> AIが「今どのツールを使うべきか」を自分で判断しやすくなる設計になっています。
+        </li>
+      </ul>
+
+      <div class="mermaid" data-processed="true"><svg id="mermaid-1771230026976" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-55.058906 -17.9 721.883438 483.3" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771230026976{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771230026976 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771230026976 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771230026976 .error-icon{fill:#552222;}#mermaid-1771230026976 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771230026976 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771230026976 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771230026976 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771230026976 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771230026976 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771230026976 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771230026976 .marker{fill:#666;stroke:#666;}#mermaid-1771230026976 .marker.cross{stroke:#666;}#mermaid-1771230026976 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771230026976 p{margin:0;}#mermaid-1771230026976 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771230026976 .cluster-label text{fill:#333;}#mermaid-1771230026976 .cluster-label span{color:#333;}#mermaid-1771230026976 .cluster-label span p{background-color:transparent;}#mermaid-1771230026976 .label text,#mermaid-1771230026976 span{fill:#000000;color:#000000;}#mermaid-1771230026976 .node rect,#mermaid-1771230026976 .node circle,#mermaid-1771230026976 .node ellipse,#mermaid-1771230026976 .node polygon,#mermaid-1771230026976 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771230026976 .rough-node .label text,#mermaid-1771230026976 .node .label text,#mermaid-1771230026976 .image-shape .label,#mermaid-1771230026976 .icon-shape .label{text-anchor:middle;}#mermaid-1771230026976 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771230026976 .rough-node .label,#mermaid-1771230026976 .node .label,#mermaid-1771230026976 .image-shape .label,#mermaid-1771230026976 .icon-shape .label{text-align:center;}#mermaid-1771230026976 .node.clickable{cursor:pointer;}#mermaid-1771230026976 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771230026976 .arrowheadPath{fill:#333333;}#mermaid-1771230026976 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771230026976 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771230026976 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771230026976 .edgeLabel p{background-color:white;}#mermaid-1771230026976 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230026976 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771230026976 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771230026976 .cluster text{fill:#333;}#mermaid-1771230026976 .cluster span{color:#333;}#mermaid-1771230026976 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771230026976 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771230026976 rect.text{fill:none;stroke-width:0;}#mermaid-1771230026976 .icon-shape,#mermaid-1771230026976 .image-shape{background-color:white;text-align:center;}#mermaid-1771230026976 .icon-shape p,#mermaid-1771230026976 .image-shape p{background-color:white;padding:2px;}#mermaid-1771230026976 .icon-shape rect,#mermaid-1771230026976 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230026976 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771230026976 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771230026976 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771230026976_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230026976_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230026976_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230026976_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230026976_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230026976_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M155.945,61.5L164.733,57.333C173.52,53.167,191.096,44.833,203.396,40.667C215.695,36.5,222.719,36.5,226.23,36.5L229.742,36.5" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTU1Ljk0NDgwMTQwMTg2OTE0LCJ5Ijo2MS41fSx7IngiOjIwOC42NzE4NzUsInkiOjM2LjV9LHsieCI6MjMzLjc0MjE4NzUsInkiOjM2LjV9XQ==" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M155.945,118.5L164.733,122.667C173.52,126.833,191.096,135.167,203.432,139.333C215.768,143.5,222.865,143.5,226.413,143.5L229.961,143.5" id="L_A_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_C_0" data-points="W3sieCI6MTU1Ljk0NDgwMTQwMTg2OTE0LCJ5IjoxMTguNX0seyJ4IjoyMDguNjcxODc1LCJ5IjoxNDMuNX0seyJ4IjoyMzMuOTYwOTM3NSwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M115.872,118.5L131.339,140.5C146.805,162.5,177.739,206.5,196.705,228.5C215.672,250.5,222.672,250.5,226.172,250.5L229.672,250.5" id="L_A_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_D_0" data-points="W3sieCI6MTE1Ljg3MjIyNTQ2NzI4OTcyLCJ5IjoxMTguNX0seyJ4IjoyMDguNjcxODc1LCJ5IjoyNTAuNX0seyJ4IjoyMzMuNjcxODc1LCJ5IjoyNTAuNX1d" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M142.625,357.5L153.633,357.5C164.641,357.5,186.656,357.5,202.001,357.5C217.346,357.5,226.021,357.5,230.358,357.5L234.695,357.5" id="L_E_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_E_F_0" data-points="W3sieCI6MTQyLjYyNSwieSI6MzU3LjV9LHsieCI6MjA4LjY3MTg3NSwieSI6MzU3LjV9LHsieCI6MjM4LjY5NTMxMjUsInkiOjM1Ny41fV0=" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M353.541,329L370.404,307C387.267,285,420.993,241,441.367,219C461.742,197,468.766,197,472.277,197L475.789,197" id="L_F_G_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_F_G_0" data-points="W3sieCI6MzUzLjU0MDU5NTc5NDM5MjUsInkiOjMyOX0seyJ4Ijo0NTQuNzE4NzUsInkiOjE5N30seyJ4Ijo0NzkuNzg5MDYyNSwieSI6MTk3fV0=" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M397.231,329L406.812,324.833C416.394,320.667,435.556,312.333,448.686,308.167C461.815,304,468.911,304,472.46,304L476.008,304" id="L_F_H_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_F_H_0" data-points="W3sieCI6Mzk3LjIzMTE2MjM4MzE3NzU1LCJ5IjozMjl9LHsieCI6NDU0LjcxODc1LCJ5IjozMDR9LHsieCI6NDgwLjAwNzgxMjUsInkiOjMwNH1d" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path><path d="M397.231,386L406.812,390.167C416.394,394.333,435.556,402.667,448.637,406.833C461.719,411,468.719,411,472.219,411L475.719,411" id="L_F_I_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_F_I_0" data-points="W3sieCI6Mzk3LjIzMTE2MjM4MzE3NzU1LCJ5IjozODZ9LHsieCI6NDU0LjcxODc1LCJ5Ijo0MTF9LHsieCI6NDc5LjcxODc1LCJ5Ijo0MTF9XQ==" marker-end="url(#mermaid-1771230026976_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_A_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_A_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_E_F_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_F_G_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_F_H_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_F_I_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(95.8359375, 90)"><rect class="basic label-container" style="" x="-87.8359375" y="-28.5" width="175.671875" height="57"></rect><g class="label" style="" transform="translate(-57.8359375, -13.5)"><rect></rect><foreignObject width="115.671875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>従来のAPI連携</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(331.6953125, 36.5)"><rect class="basic label-container" style="" x="-97.953125" y="-28.5" width="195.90625" height="57"></rect><g class="label" style="" transform="translate(-67.953125, -13.5)"><rect></rect><foreignObject width="135.90625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールA用コード</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(331.6953125, 143.5)"><rect class="basic label-container" style="" x="-97.734375" y="-28.5" width="195.46875" height="57"></rect><g class="label" style="" transform="translate(-67.734375, -13.5)"><rect></rect><foreignObject width="135.46875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールB用コード</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(331.6953125, 250.5)"><rect class="basic label-container" style="" x="-98.0234375" y="-28.5" width="196.046875" height="57"></rect><g class="label" style="" transform="translate(-68.0234375, -13.5)"><rect></rect><foreignObject width="136.046875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールC用コード</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-E-6" transform="translate(95.8359375, 357.5)"><rect class="basic label-container" style="" x="-46.7890625" y="-28.5" width="93.578125" height="57"></rect><g class="label" style="" transform="translate(-16.7890625, -13.5)"><rect></rect><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-F-7" transform="translate(331.6953125, 357.5)"><rect class="basic label-container" style="" x="-93" y="-28.5" width="186" height="57"></rect><g class="label" style="" transform="translate(-63, -13.5)"><rect></rect><foreignObject width="126" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>統一プロトコル</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-G-9" transform="translate(541.7421875, 197)"><rect class="basic label-container" style="" x="-61.953125" y="-28.5" width="123.90625" height="57"></rect><g class="label" style="" transform="translate(-31.953125, -13.5)"><rect></rect><foreignObject width="63.90625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールA</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-H-11" transform="translate(541.7421875, 304)"><rect class="basic label-container" style="" x="-61.734375" y="-28.5" width="123.46875" height="57"></rect><g class="label" style="" transform="translate(-31.734375, -13.5)"><rect></rect><foreignObject width="63.46875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールB</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-I-13" transform="translate(541.7421875, 411)"><rect class="basic label-container" style="" x="-62.0234375" y="-28.5" width="124.046875" height="57"></rect><g class="label" style="" transform="translate(-32.0234375, -13.5)"><rect></rect><foreignObject width="64.046875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ツールC</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+    </section>
+
+    <!-- 3. Six Use Cases -->
+    <section>
+      <h2>実践ユースケース 6選</h2>
+
+      <!-- Use Case 1 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">1. Slackと連携した議事録自動保存</h3>
+          <span class="difficulty-badge">難易度: ★☆☆☆☆ (初級)</span>
+        </div>
+        <p>
+          会議の録音データやメモをAIに渡すだけで、整形された議事録を作成し、Slackの指定チャンネルへの投稿からファイル保存までを一括で自動化します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">Slack MCP</span>
+          <span class="server-tag">Filesystem MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>作業フロー</td>
+              <td class="before-col">要約作成 → ファイル保存 → Slack開く → コピペ投稿</td>
+              <td class="after-col">「議事録よろしく」の一言で完結</td>
+            </tr>
+            <tr>
+              <td>所要時間</td>
+              <td class="before-col">約60分 / 回</td>
+              <td class="after-col">約5分 / 回 (92%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>議事録作成・共有の手間がほぼゼロに</li>
+            <li>投稿忘れ・保存忘れのヒューマンエラー削減（月5回 → 0回）</li>
+            <li>フォーマットが統一され、後から検索しやすくなる</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>Slackの「Bot User OAuth Token」を取得してMCP設定ファイルに記述します。</li>
+          <li>「チャンネルへの投稿権限」と「ファイルの書き込み権限」を付与します。</li>
+          <li>プロンプトで「Markdown形式で出力して」と指示すると綺麗に整います。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771230027017" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-91.261406 -15 1196.538437 210" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771230027017{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771230027017 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771230027017 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771230027017 .error-icon{fill:#552222;}#mermaid-1771230027017 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771230027017 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771230027017 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771230027017 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771230027017 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771230027017 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771230027017 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771230027017 .marker{fill:#666;stroke:#666;}#mermaid-1771230027017 .marker.cross{stroke:#666;}#mermaid-1771230027017 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771230027017 p{margin:0;}#mermaid-1771230027017 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771230027017 .cluster-label text{fill:#333;}#mermaid-1771230027017 .cluster-label span{color:#333;}#mermaid-1771230027017 .cluster-label span p{background-color:transparent;}#mermaid-1771230027017 .label text,#mermaid-1771230027017 span{fill:#000000;color:#000000;}#mermaid-1771230027017 .node rect,#mermaid-1771230027017 .node circle,#mermaid-1771230027017 .node ellipse,#mermaid-1771230027017 .node polygon,#mermaid-1771230027017 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771230027017 .rough-node .label text,#mermaid-1771230027017 .node .label text,#mermaid-1771230027017 .image-shape .label,#mermaid-1771230027017 .icon-shape .label{text-anchor:middle;}#mermaid-1771230027017 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771230027017 .rough-node .label,#mermaid-1771230027017 .node .label,#mermaid-1771230027017 .image-shape .label,#mermaid-1771230027017 .icon-shape .label{text-align:center;}#mermaid-1771230027017 .node.clickable{cursor:pointer;}#mermaid-1771230027017 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771230027017 .arrowheadPath{fill:#333333;}#mermaid-1771230027017 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771230027017 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771230027017 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771230027017 .edgeLabel p{background-color:white;}#mermaid-1771230027017 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027017 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771230027017 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771230027017 .cluster text{fill:#333;}#mermaid-1771230027017 .cluster span{color:#333;}#mermaid-1771230027017 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771230027017 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771230027017 rect.text{fill:none;stroke-width:0;}#mermaid-1771230027017 .icon-shape,#mermaid-1771230027017 .image-shape{background-color:white;text-align:center;}#mermaid-1771230027017 .icon-shape p,#mermaid-1771230027017 .image-shape p{background-color:white;padding:2px;}#mermaid-1771230027017 .icon-shape rect,#mermaid-1771230027017 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027017 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771230027017 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771230027017 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771230027017_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027017_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027017_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027017_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027017_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027017_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M234.703,90L241.668,90C248.633,90,262.563,90,275.826,90C289.089,90,301.685,90,307.983,90L314.281,90" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MjM0LjcwMzEyNSwieSI6OTB9LHsieCI6Mjc2LjQ5MjE4NzUsInkiOjkwfSx7IngiOjMxOC4yODEyNSwieSI6OTB9XQ==" marker-end="url(#mermaid-1771230027017_flowchart-v2-pointEnd)"></path><path d="M433.5,90L443.667,90C453.833,90,474.167,90,493.833,90C513.5,90,532.5,90,542,90L551.5,90" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6NDMzLjUsInkiOjkwfSx7IngiOjQ5NC41LCJ5Ijo5MH0seyJ4Ijo1NTUuNSwieSI6OTB9XQ==" marker-end="url(#mermaid-1771230027017_flowchart-v2-pointEnd)"></path><path d="M684.02,61.5L692.735,57.333C701.451,53.167,718.882,44.833,735.705,40.667C752.529,36.5,768.745,36.5,776.853,36.5L784.961,36.5" id="L_C_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_D_0" data-points="W3sieCI6Njg0LjAxOTg1OTgxMzA4NDIsInkiOjYxLjV9LHsieCI6NzM2LjMxMjUsInkiOjM2LjV9LHsieCI6Nzg4Ljk2MDkzNzUsInkiOjM2LjV9XQ==" marker-end="url(#mermaid-1771230027017_flowchart-v2-pointEnd)"></path><path d="M684.02,118.5L692.735,122.667C701.451,126.833,718.882,135.167,734.097,139.333C749.313,143.5,762.313,143.5,768.813,143.5L775.313,143.5" id="L_C_E_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_E_0" data-points="W3sieCI6Njg0LjAxOTg1OTgxMzA4NDIsInkiOjExOC41fSx7IngiOjczNi4zMTI1LCJ5IjoxNDMuNX0seyJ4Ijo3NzkuMzEyNSwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771230027017_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(276.4921875, 90)"><g class="label" data-id="L_A_B_0" transform="translate(-16.7890625, -13.5)"><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(494.5, 90)"><g class="label" data-id="L_B_C_0" transform="translate(-36, -13.5)"><foreignObject width="72" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>要約生成</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(736.3125, 36.5)"><g class="label" data-id="L_C_D_0" transform="translate(-18, -13.5)"><foreignObject width="36" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>保存</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(736.3125, 143.5)"><g class="label" data-id="L_C_E_0" transform="translate(-18, -13.5)"><foreignObject width="36" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>投稿</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(121.3515625, 90)"><rect class="basic label-container" style="" x="-113.3515625" y="-28.5" width="226.703125" height="57"></rect><g class="label" style="" transform="translate(-83.3515625, -13.5)"><rect></rect><foreignObject width="166.703125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack会議チャンネル</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(375.890625, 90)"><rect class="basic label-container" style="" x="-57.609375" y="-28.5" width="115.21875" height="57"></rect><g class="label" style="" transform="translate(-27.609375, -13.5)"><rect></rect><foreignObject width="55.21875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(624.40625, 90)"><rect class="basic label-container" style="" x="-68.90625" y="-28.5" width="137.8125" height="57"></rect><g class="label" style="" transform="translate(-38.90625, -13.5)"><rect></rect><foreignObject width="77.8125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>議事録MD</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(892.6640625, 36.5)"><rect class="basic label-container" style="" x="-103.703125" y="-28.5" width="207.40625" height="57"></rect><g class="label" style="" transform="translate(-73.703125, -13.5)"><rect></rect><foreignObject width="147.40625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Filesystem/Notion</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-E-7" transform="translate(892.6640625, 143.5)"><rect class="basic label-container" style="" x="-113.3515625" y="-28.5" width="226.703125" height="57"></rect><g class="label" style="" transform="translate(-83.3515625, -13.5)"><rect></rect><foreignObject width="166.703125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack通知チャンネル</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+
+      <!-- Use Case 2 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">2. GitHubのIssue分析とレポート作成</h3>
+          <span class="difficulty-badge">難易度: ★★☆☆☆ (初級〜中級)</span>
+        </div>
+        <p>
+          GitHub上の大量のIssue（課題）をAIが自動で読み込み、「緊急度が高いものはどれか」「最近の傾向はどうか」を分析して、要約レポートを作成します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">GitHub MCP</span>
+          <span class="server-tag">Slack MCP</span>
+          <span class="server-tag">Filesystem MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>作業内容</td>
+              <td class="before-col">Issueを一つずつ確認し、手動でリストアップ</td>
+              <td class="after-col">AIが全Issueを走査し自動分類・集計</td>
+            </tr>
+            <tr>
+              <td>レポート作成</td>
+              <td class="before-col">45分 / 回</td>
+              <td class="after-col">3分 / 回 (93%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>放置されている重要バグの早期発見（見落とし月8件 → 0件）</li>
+            <li>マネージャーへの報告業務の効率化</li>
+            <li>開発チームのリソース配分最適化</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>GitHub MCPサーバーには「Personal Access Token」が必要です。</li>
+          <li>「state:open」「label:bug」などの検索フィルターをAIに指示させます。</li>
+          <li>特定のラベルが付いたIssueのみを抽出するようフィルタリング設定を行います。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771230027033" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-89.879063 -15 1178.414375 210" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771230027033{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771230027033 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771230027033 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771230027033 .error-icon{fill:#552222;}#mermaid-1771230027033 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771230027033 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771230027033 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771230027033 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771230027033 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771230027033 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771230027033 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771230027033 .marker{fill:#666;stroke:#666;}#mermaid-1771230027033 .marker.cross{stroke:#666;}#mermaid-1771230027033 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771230027033 p{margin:0;}#mermaid-1771230027033 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771230027033 .cluster-label text{fill:#333;}#mermaid-1771230027033 .cluster-label span{color:#333;}#mermaid-1771230027033 .cluster-label span p{background-color:transparent;}#mermaid-1771230027033 .label text,#mermaid-1771230027033 span{fill:#000000;color:#000000;}#mermaid-1771230027033 .node rect,#mermaid-1771230027033 .node circle,#mermaid-1771230027033 .node ellipse,#mermaid-1771230027033 .node polygon,#mermaid-1771230027033 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771230027033 .rough-node .label text,#mermaid-1771230027033 .node .label text,#mermaid-1771230027033 .image-shape .label,#mermaid-1771230027033 .icon-shape .label{text-anchor:middle;}#mermaid-1771230027033 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771230027033 .rough-node .label,#mermaid-1771230027033 .node .label,#mermaid-1771230027033 .image-shape .label,#mermaid-1771230027033 .icon-shape .label{text-align:center;}#mermaid-1771230027033 .node.clickable{cursor:pointer;}#mermaid-1771230027033 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771230027033 .arrowheadPath{fill:#333333;}#mermaid-1771230027033 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771230027033 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771230027033 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771230027033 .edgeLabel p{background-color:white;}#mermaid-1771230027033 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027033 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771230027033 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771230027033 .cluster text{fill:#333;}#mermaid-1771230027033 .cluster span{color:#333;}#mermaid-1771230027033 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771230027033 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771230027033 rect.text{fill:none;stroke-width:0;}#mermaid-1771230027033 .icon-shape,#mermaid-1771230027033 .image-shape{background-color:white;text-align:center;}#mermaid-1771230027033 .icon-shape p,#mermaid-1771230027033 .image-shape p{background-color:white;padding:2px;}#mermaid-1771230027033 .icon-shape rect,#mermaid-1771230027033 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027033 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771230027033 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771230027033 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771230027033_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027033_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027033_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027033_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027033_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027033_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M214.094,90L221.059,90C228.023,90,241.953,90,255.216,90C268.479,90,281.076,90,287.374,90L293.672,90" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MjE0LjA5Mzc1LCJ5Ijo5MH0seyJ4IjoyNTUuODgyODEyNSwieSI6OTB9LHsieCI6Mjk3LjY3MTg3NSwieSI6OTB9XQ==" marker-end="url(#mermaid-1771230027033_flowchart-v2-pointEnd)"></path><path d="M412.891,90L427.827,90C442.763,90,472.635,90,501.841,90C531.047,90,559.586,90,573.855,90L588.125,90" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6NDEyLjg5MDYyNSwieSI6OTB9LHsieCI6NTAyLjUwNzgxMjUsInkiOjkwfSx7IngiOjU5Mi4xMjUsInkiOjkwfV0=" marker-end="url(#mermaid-1771230027033_flowchart-v2-pointEnd)"></path><path d="M743.372,61.5L753.242,57.333C763.113,53.167,782.853,44.833,799.223,40.667C815.594,36.5,828.594,36.5,835.094,36.5L841.594,36.5" id="L_C_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_D_0" data-points="W3sieCI6NzQzLjM3MjA3OTQzOTI1MjMsInkiOjYxLjV9LHsieCI6ODAyLjU5Mzc1LCJ5IjozNi41fSx7IngiOjg0NS41OTM3NSwieSI6MzYuNX1d" marker-end="url(#mermaid-1771230027033_flowchart-v2-pointEnd)"></path><path d="M743.372,118.5L753.242,122.667C763.113,126.833,782.853,135.167,802.86,139.333C822.867,143.5,843.141,143.5,853.277,143.5L863.414,143.5" id="L_C_E_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_E_0" data-points="W3sieCI6NzQzLjM3MjA3OTQzOTI1MjMsInkiOjExOC41fSx7IngiOjgwMi41OTM3NSwieSI6MTQzLjV9LHsieCI6ODY3LjQxNDA2MjUsInkiOjE0My41fV0=" marker-end="url(#mermaid-1771230027033_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(255.8828125, 90)"><g class="label" data-id="L_A_B_0" transform="translate(-16.7890625, -13.5)"><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(502.5078125, 90)"><g class="label" data-id="L_B_C_0" transform="translate(-64.6171875, -13.5)"><foreignObject width="129.234375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>Issue取得・分析</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(802.59375, 36.5)"><g class="label" data-id="L_C_D_0" transform="translate(-18, -13.5)"><foreignObject width="36" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>保存</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(802.59375, 143.5)"><g class="label" data-id="L_C_E_0" transform="translate(-18, -13.5)"><foreignObject width="36" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>投稿</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(111.046875, 90)"><rect class="basic label-container" style="" x="-103.046875" y="-28.5" width="206.09375" height="57"></rect><g class="label" style="" transform="translate(-73.046875, -13.5)"><rect></rect><foreignObject width="146.09375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>GitHubリポジトリ</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(355.28125, 90)"><rect class="basic label-container" style="" x="-57.609375" y="-28.5" width="115.21875" height="57"></rect><g class="label" style="" transform="translate(-27.609375, -13.5)"><rect></rect><foreignObject width="55.21875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(675.859375, 90)"><rect class="basic label-container" style="" x="-83.734375" y="-28.5" width="167.46875" height="57"></rect><g class="label" style="" transform="translate(-53.734375, -13.5)"><rect></rect><foreignObject width="107.46875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>レポート生成</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(918.125, 36.5)"><rect class="basic label-container" style="" x="-72.53125" y="-28.5" width="145.0625" height="57"></rect><g class="label" style="" transform="translate(-42.53125, -13.5)"><rect></rect><foreignObject width="85.0625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Filesystem</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-E-7" transform="translate(918.125, 143.5)"><rect class="basic label-container" style="" x="-50.7109375" y="-28.5" width="101.421875" height="57"></rect><g class="label" style="" transform="translate(-20.7109375, -13.5)"><rect></rect><foreignObject width="41.421875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+
+      <!-- Use Case 3 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">3. データベースの自然言語クエリ</h3>
+          <span class="difficulty-badge">難易度: ★★★☆☆ (中級)</span>
+        </div>
+        <p>
+          SQL（データベース言語）が書けない非エンジニアでも、「先月の売上トップ5の商品は？」と日本語で質問するだけで、AIがDBから正確なデータを抽出します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">PostgreSQL MCP</span>
+          <span class="server-tag">Slack MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>データ取得</td>
+              <td class="before-col">エンジニアに依頼 → SQL作成 → CSV出力</td>
+              <td class="after-col">チャットで質問 → 即座に結果回答</td>
+            </tr>
+            <tr>
+              <td>所要時間</td>
+              <td class="before-col">30分（依頼待ち含む）</td>
+              <td class="after-col">2分 (93%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>エンジニアの「データ出し作業」負担減</li>
+            <li>ビジネス側の意思決定スピード向上</li>
+            <li>クエリミスによる誤ったデータ参照の防止（月12回 → 1回）</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>データベースへの接続情報は「読み取り専用（Read Only）」ユーザーを使用し、安全性を確保します。</li>
+          <li>AIにデータベースのスキーマ（テーブル構造）情報を事前に読み込ませると精度が上がります。</li>
+          <li>複雑な集計は、一度SQLを生成させて確認してから実行するフローが安全です。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771230027050" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-61.990312 -14.102551 812.761875 217.602554" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771230027050{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771230027050 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771230027050 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771230027050 .error-icon{fill:#552222;}#mermaid-1771230027050 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771230027050 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771230027050 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771230027050 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771230027050 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771230027050 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771230027050 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771230027050 .marker{fill:#666;stroke:#666;}#mermaid-1771230027050 .marker.cross{stroke:#666;}#mermaid-1771230027050 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771230027050 p{margin:0;}#mermaid-1771230027050 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771230027050 .cluster-label text{fill:#333;}#mermaid-1771230027050 .cluster-label span{color:#333;}#mermaid-1771230027050 .cluster-label span p{background-color:transparent;}#mermaid-1771230027050 .label text,#mermaid-1771230027050 span{fill:#000000;color:#000000;}#mermaid-1771230027050 .node rect,#mermaid-1771230027050 .node circle,#mermaid-1771230027050 .node ellipse,#mermaid-1771230027050 .node polygon,#mermaid-1771230027050 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771230027050 .rough-node .label text,#mermaid-1771230027050 .node .label text,#mermaid-1771230027050 .image-shape .label,#mermaid-1771230027050 .icon-shape .label{text-anchor:middle;}#mermaid-1771230027050 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771230027050 .rough-node .label,#mermaid-1771230027050 .node .label,#mermaid-1771230027050 .image-shape .label,#mermaid-1771230027050 .icon-shape .label{text-align:center;}#mermaid-1771230027050 .node.clickable{cursor:pointer;}#mermaid-1771230027050 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771230027050 .arrowheadPath{fill:#333333;}#mermaid-1771230027050 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771230027050 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771230027050 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771230027050 .edgeLabel p{background-color:white;}#mermaid-1771230027050 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027050 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771230027050 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771230027050 .cluster text{fill:#333;}#mermaid-1771230027050 .cluster span{color:#333;}#mermaid-1771230027050 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771230027050 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771230027050 rect.text{fill:none;stroke-width:0;}#mermaid-1771230027050 .icon-shape,#mermaid-1771230027050 .image-shape{background-color:white;text-align:center;}#mermaid-1771230027050 .icon-shape p,#mermaid-1771230027050 .image-shape p{background-color:white;padding:2px;}#mermaid-1771230027050 .icon-shape rect,#mermaid-1771230027050 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027050 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771230027050 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771230027050 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771230027050_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027050_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027050_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027050_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027050_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027050_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M174.922,75L181.887,75C188.852,75,202.781,75,216.044,75C229.307,75,241.904,75,248.202,75L254.5,75" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTc0LjkyMTg3NSwieSI6NzV9LHsieCI6MjE2LjcxMDkzNzUsInkiOjc1fSx7IngiOjI1OC41LCJ5Ijo3NX1d" marker-end="url(#mermaid-1771230027050_flowchart-v2-pointEnd)"></path><path d="M373.719,52.439L386.885,47.282C400.052,42.126,426.385,31.813,452.06,28.571C477.734,25.329,502.749,29.158,515.257,31.072L527.765,32.987" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6MzczLjcxODc1LCJ5Ijo1Mi40Mzg1Nzk0MzQ5NzY1NX0seyJ4Ijo0NTIuNzE4NzUsInkiOjIxLjV9LHsieCI6NTMxLjcxODc1LCJ5IjozMy41OTIwMDA4MTQxNjY1fV0=" marker-end="url(#mermaid-1771230027050_flowchart-v2-pointEnd)"></path><path d="M531.719,59.563L518.552,62.136C505.385,64.709,479.052,69.854,453.385,72.427C427.719,75,402.719,75,390.219,75L377.719,75" id="L_C_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_B_0" data-points="W3sieCI6NTMxLjcxODc1LCJ5Ijo1OS41NjM0MDMyMTU5NTc2Nn0seyJ4Ijo0NTIuNzE4NzUsInkiOjc1fSx7IngiOjM3My43MTg3NSwieSI6NzV9XQ==" marker-end="url(#mermaid-1771230027050_flowchart-v2-pointEnd)"></path><path d="M366.673,103.5L381.014,111.583C395.355,119.667,424.037,135.833,451.061,143.917C478.086,152,503.453,152,516.137,152L528.82,152" id="L_B_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_D_0" data-points="W3sieCI6MzY2LjY3MjU4NTIyNzI3Mjc1LCJ5IjoxMDMuNX0seyJ4Ijo0NTIuNzE4NzUsInkiOjE1Mn0seyJ4Ijo1MzIuODIwMzEyNSwieSI6MTUyfV0=" marker-end="url(#mermaid-1771230027050_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(216.7109375, 75)"><g class="label" data-id="L_A_B_0" transform="translate(-16.7890625, -13.5)"><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(450.42716, 22.39745)"><g class="label" data-id="L_B_C_0" transform="translate(-32.96875, -13.5)"><foreignObject width="65.9375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>SQL生成</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(452.71875, 75)"><g class="label" data-id="L_C_B_0" transform="translate(-36, -13.5)"><foreignObject width="72" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>結果取得</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(452.71875, 152)"><g class="label" data-id="L_B_D_0" transform="translate(-54, -13.5)"><foreignObject width="108" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>回答・グラフ</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(91.4609375, 75)"><rect class="basic label-container" style="" x="-83.4609375" y="-28.5" width="166.921875" height="57"></rect><g class="label" style="" transform="translate(-53.4609375, -13.5)"><rect></rect><foreignObject width="106.921875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>ユーザー質問</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(316.109375, 75)"><rect class="basic label-container" style="" x="-57.609375" y="-28.5" width="115.21875" height="57"></rect><g class="label" style="" transform="translate(-27.609375, -13.5)"><rect></rect><foreignObject width="55.21875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(606.25, 45)"><rect class="basic label-container" style="" x="-74.53125" y="-28.5" width="149.0625" height="57"></rect><g class="label" style="" transform="translate(-44.53125, -13.5)"><rect></rect><foreignObject width="89.0625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>PostgreSQL</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-7" transform="translate(606.25, 152)"><rect class="basic label-container" style="" x="-73.4296875" y="-28.5" width="146.859375" height="57"></rect><g class="label" style="" transform="translate(-43.4296875, -13.5)"><rect></rect><foreignObject width="86.859375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack/回答</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+
+      <!-- Use Case 4 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">4. CI/CD失敗の自動デバッグ</h3>
+          <span class="difficulty-badge">難易度: ★★★☆☆ (中級)</span>
+        </div>
+        <p>
+          プログラムの自動テストやビルド（CI/CD）が失敗した際、AIが自動でエラーログを取得・解析し、「どこが悪いか」「どう直すべきか」を提案します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">GitHub MCP</span>
+          <span class="server-tag">Slack MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>調査フロー</td>
+              <td class="before-col">ログを開く → エラー箇所を探す → 検索する</td>
+              <td class="after-col">AIが原因特定と修正案を即座に提示</td>
+            </tr>
+            <tr>
+              <td>障害対応</td>
+              <td class="before-col">平均 90分</td>
+              <td class="after-col">平均 15分 (83%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>エラー原因調査のストレス大幅減</li>
+            <li>初回修正での成功率向上（60% → 95%）</li>
+            <li>新人エンジニアの学習サポート（エラー解説付き）</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>GitHub Actionsのログを取得できる権限設定が必要です。</li>
+          <li>エラーメッセージだけでなく、前後のコンテキストも含めてAIに渡します。</li>
+          <li>過去の類似エラーと解決策をナレッジベースとして参照させるとさらに強力です。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771230027058" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-65.782969 -14.074129 862.487813 217.574127" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771230027058{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771230027058 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771230027058 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771230027058 .error-icon{fill:#552222;}#mermaid-1771230027058 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771230027058 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771230027058 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771230027058 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771230027058 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771230027058 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771230027058 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771230027058 .marker{fill:#666;stroke:#666;}#mermaid-1771230027058 .marker.cross{stroke:#666;}#mermaid-1771230027058 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771230027058 p{margin:0;}#mermaid-1771230027058 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771230027058 .cluster-label text{fill:#333;}#mermaid-1771230027058 .cluster-label span{color:#333;}#mermaid-1771230027058 .cluster-label span p{background-color:transparent;}#mermaid-1771230027058 .label text,#mermaid-1771230027058 span{fill:#000000;color:#000000;}#mermaid-1771230027058 .node rect,#mermaid-1771230027058 .node circle,#mermaid-1771230027058 .node ellipse,#mermaid-1771230027058 .node polygon,#mermaid-1771230027058 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771230027058 .rough-node .label text,#mermaid-1771230027058 .node .label text,#mermaid-1771230027058 .image-shape .label,#mermaid-1771230027058 .icon-shape .label{text-anchor:middle;}#mermaid-1771230027058 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771230027058 .rough-node .label,#mermaid-1771230027058 .node .label,#mermaid-1771230027058 .image-shape .label,#mermaid-1771230027058 .icon-shape .label{text-align:center;}#mermaid-1771230027058 .node.clickable{cursor:pointer;}#mermaid-1771230027058 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771230027058 .arrowheadPath{fill:#333333;}#mermaid-1771230027058 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771230027058 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771230027058 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771230027058 .edgeLabel p{background-color:white;}#mermaid-1771230027058 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027058 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771230027058 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771230027058 .cluster text{fill:#333;}#mermaid-1771230027058 .cluster span{color:#333;}#mermaid-1771230027058 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771230027058 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771230027058 rect.text{fill:none;stroke-width:0;}#mermaid-1771230027058 .icon-shape,#mermaid-1771230027058 .image-shape{background-color:white;text-align:center;}#mermaid-1771230027058 .icon-shape p,#mermaid-1771230027058 .image-shape p{background-color:white;padding:2px;}#mermaid-1771230027058 .icon-shape rect,#mermaid-1771230027058 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771230027058 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771230027058 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771230027058 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771230027058_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027058_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027058_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027058_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771230027058_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771230027058_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M187.031,75L193.996,75C200.961,75,214.891,75,228.154,75C241.417,75,254.013,75,260.311,75L266.609,75" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTg3LjAzMTI1LCJ5Ijo3NX0seyJ4IjoyMjguODIwMzEyNSwieSI6NzV9LHsieCI6MjcwLjYwOTM3NSwieSI6NzV9XQ==" marker-end="url(#mermaid-1771230027058_flowchart-v2-pointEnd)"></path><path d="M385.828,52.439L398.995,47.282C412.161,42.126,438.495,31.813,464.168,28.4C489.841,24.987,514.854,28.475,527.36,30.219L539.866,31.962" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6Mzg1LjgyODEyNSwieSI6NTIuNDM4NTc5NDM0OTc2NTV9LHsieCI6NDY0LjgyODEyNSwieSI6MjEuNX0seyJ4Ijo1NDMuODI4MTI1LCJ5IjozMi41MTQ3Mzk5NjQ3NzI0MX1d" marker-end="url(#mermaid-1771230027058_flowchart-v2-pointEnd)"></path><path d="M543.828,60.939L530.661,63.282C517.495,65.626,491.161,70.313,465.495,72.656C439.828,75,414.828,75,402.328,75L389.828,75" id="L_C_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_B_0" data-points="W3sieCI6NTQzLjgyODEyNSwieSI6NjAuOTM4NjI5ODMyMjA1NDM2fSx7IngiOjQ2NC44MjgxMjUsInkiOjc1fSx7IngiOjM4NS44MjgxMjUsInkiOjc1fV0=" marker-end="url(#mermaid-1771230027058_flowchart-v2-pointEnd)"></path><path d="M378.782,103.5L393.123,111.583C407.464,119.667,436.146,135.833,463.46,143.917C490.773,152,516.719,152,529.691,152L542.664,152" id="L_B_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_D_0" data-points="W3sieCI6Mzc4Ljc4MTk2MDIyNzI3Mjc1LCJ5IjoxMDMuNX0seyJ4Ijo0NjQuODI4MTI1LCJ5IjoxNTJ9LHsieCI6NTQ2LjY2NDA2MjUsInkiOjE1Mn1d" marker-end="url(#mermaid-1771230027058_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(228.8203125, 75)"><g class="label" data-id="L_A_B_0" transform="translate(-16.7890625, -13.5)"><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(462.46396, 22.42587)"><g class="label" data-id="L_B_C_0" transform="translate(-36, -13.5)"><foreignObject width="72" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>ログ取得</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(464.828125, 75)"><g class="label" data-id="L_C_B_0" transform="translate(-44.734375, -13.5)"><foreignObject width="89.46875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>エラー解析</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(464.828125, 152)"><g class="label" data-id="L_B_D_0" transform="translate(-54, -13.5)"><foreignObject width="108" height="27"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"><p>原因・修正案</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(97.515625, 75)"><rect class="basic label-container" style="" x="-89.515625" y="-28.5" width="179.03125" height="57"></rect><g class="label" style="" transform="translate(-59.515625, -13.5)"><rect></rect><foreignObject width="119.03125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>CI/CD失敗通知</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(328.21875, 75)"><rect class="basic label-container" style="" x="-57.609375" y="-28.5" width="115.21875" height="57"></rect><g class="label" style="" transform="translate(-27.609375, -13.5)"><rect></rect><foreignObject width="55.21875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(633.375, 45)"><rect class="basic label-container" style="" x="-89.546875" y="-28.5" width="179.09375" height="57"></rect><g class="label" style="" transform="translate(-59.546875, -13.5)"><rect></rect><foreignObject width="119.09375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>GitHub Actions</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-7" transform="translate(633.375, 152)"><rect class="basic label-container" style="" x="-86.7109375" y="-28.5" width="173.421875" height="57"></rect><g class="label" style="" transform="translate(-56.7109375, -13.5)"><rect></rect><foreignObject width="113.421875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slackアラート</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+
+      <!-- Use Case 5 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">5. Figmaデザインからコード生成＆PR作成</h3>
+          <span class="difficulty-badge">難易度: ★★★★☆ (中級〜上級)</span>
+        </div>
+        <p>
+          デザイナーが作成したFigmaのデザインデータをAIが解析し、ReactやVueなどのフロントエンドコードを自動生成。さらにGitHubでプルリクエスト（PR）まで作成します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">Figma MCP</span>
+          <span class="server-tag">GitHub MCP</span>
+          <span class="server-tag">Filesystem MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>実装フロー</td>
+              <td class="before-col">目視でデザイン確認 → 手動コーディング</td>
+              <td class="after-col">デザインURL共有 → コード自動生成</td>
+            </tr>
+            <tr>
+              <td>実装時間</td>
+              <td class="before-col">120分 / コンポーネント</td>
+              <td class="after-col">10分 / コンポーネント (92%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>デザインと実装の差異（Pixel Perfect問題）の解消</li>
+            <li>単純なコーディング作業からの解放</li>
+            <li>デザイン変更への追従コスト低下</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>FigmaのDev Modeに近い情報を取得できるFigma MCPを使用します。</li>
+          <li>プロジェクトのコーディング規約（Tailwind使用など）をAIに事前に教えます。</li>
+          <li>生成されたコードは必ず人の目でレビューするフローにします。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771231840350" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-100.191094 -15 1313.616562 130" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771231840350{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771231840350 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771231840350 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771231840350 .error-icon{fill:#552222;}#mermaid-1771231840350 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771231840350 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771231840350 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771231840350 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771231840350 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771231840350 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771231840350 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771231840350 .marker{fill:#666;stroke:#666;}#mermaid-1771231840350 .marker.cross{stroke:#666;}#mermaid-1771231840350 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771231840350 p{margin:0;}#mermaid-1771231840350 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771231840350 .cluster-label text{fill:#333;}#mermaid-1771231840350 .cluster-label span{color:#333;}#mermaid-1771231840350 .cluster-label span p{background-color:transparent;}#mermaid-1771231840350 .label text,#mermaid-1771231840350 span{fill:#000000;color:#000000;}#mermaid-1771231840350 .node rect,#mermaid-1771231840350 .node circle,#mermaid-1771231840350 .node ellipse,#mermaid-1771231840350 .node polygon,#mermaid-1771231840350 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771231840350 .rough-node .label text,#mermaid-1771231840350 .node .label text,#mermaid-1771231840350 .image-shape .label,#mermaid-1771231840350 .icon-shape .label{text-anchor:middle;}#mermaid-1771231840350 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771231840350 .rough-node .label,#mermaid-1771231840350 .node .label,#mermaid-1771231840350 .image-shape .label,#mermaid-1771231840350 .icon-shape .label{text-align:center;}#mermaid-1771231840350 .node.clickable{cursor:pointer;}#mermaid-1771231840350 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771231840350 .arrowheadPath{fill:#333333;}#mermaid-1771231840350 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771231840350 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771231840350 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771231840350 .edgeLabel p{background-color:white;}#mermaid-1771231840350 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771231840350 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771231840350 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771231840350 .cluster text{fill:#333;}#mermaid-1771231840350 .cluster span{color:#333;}#mermaid-1771231840350 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771231840350 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771231840350 rect.text{fill:none;stroke-width:0;}#mermaid-1771231840350 .icon-shape,#mermaid-1771231840350 .image-shape{background-color:white;text-align:center;}#mermaid-1771231840350 .icon-shape p,#mermaid-1771231840350 .image-shape p{background-color:white;padding:2px;}#mermaid-1771231840350 .icon-shape rect,#mermaid-1771231840350 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771231840350 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771231840350 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771231840350 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771231840350_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840350_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840350_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771231840350_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771231840350_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840350_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M186.938,50L191.104,50C195.271,50,203.604,50,211.271,50C218.938,50,225.938,50,229.438,50L232.938,50" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTg2LjkzNzUsInkiOjUwfSx7IngiOjIxMS45Mzc1LCJ5Ijo1MH0seyJ4IjoyMzYuOTM3NSwieSI6NTB9XQ==" marker-end="url(#mermaid-1771231840350_flowchart-v2-pointEnd)"></path><path d="M330.516,50L334.682,50C338.849,50,347.182,50,354.849,50C362.516,50,369.516,50,373.016,50L376.516,50" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6MzMwLjUxNTYyNSwieSI6NTB9LHsieCI6MzU1LjUxNTYyNSwieSI6NTB9LHsieCI6MzgwLjUxNTYyNSwieSI6NTB9XQ==" marker-end="url(#mermaid-1771231840350_flowchart-v2-pointEnd)"></path><path d="M495.734,50L499.901,50C504.068,50,512.401,50,520.068,50C527.734,50,534.734,50,538.234,50L541.734,50" id="L_C_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_D_0" data-points="W3sieCI6NDk1LjczNDM3NSwieSI6NTB9LHsieCI6NTIwLjczNDM3NSwieSI6NTB9LHsieCI6NTQ1LjczNDM3NSwieSI6NTB9XQ==" marker-end="url(#mermaid-1771231840350_flowchart-v2-pointEnd)"></path><path d="M731.203,50L735.37,50C739.536,50,747.87,50,755.536,50C763.203,50,770.203,50,773.703,50L777.203,50" id="L_D_E_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_D_E_0" data-points="W3sieCI6NzMxLjIwMzEyNSwieSI6NTB9LHsieCI6NzU2LjIwMzEyNSwieSI6NTB9LHsieCI6NzgxLjIwMzEyNSwieSI6NTB9XQ==" marker-end="url(#mermaid-1771231840350_flowchart-v2-pointEnd)"></path><path d="M923.234,50L927.401,50C931.568,50,939.901,50,947.568,50C955.234,50,962.234,50,965.734,50L969.234,50" id="L_E_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_E_F_0" data-points="W3sieCI6OTIzLjIzNDM3NSwieSI6NTB9LHsieCI6OTQ4LjIzNDM3NSwieSI6NTB9LHsieCI6OTczLjIzNDM3NSwieSI6NTB9XQ==" marker-end="url(#mermaid-1771231840350_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_C_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_D_E_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_E_F_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(97.46875, 50)"><rect class="basic label-container" style="" x="-89.46875" y="-28.5" width="178.9375" height="57"></rect><g class="label" style="" transform="translate(-59.46875, -13.5)"><rect></rect><foreignObject width="118.9375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Figmaデザイン</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(283.7265625, 50)"><rect class="basic label-container" style="" x="-46.7890625" y="-28.5" width="93.578125" height="57"></rect><g class="label" style="" transform="translate(-16.7890625, -13.5)"><rect></rect><foreignObject width="33.578125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>MCP</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(438.125, 50)"><rect class="basic label-container" style="" x="-57.609375" y="-28.5" width="115.21875" height="57"></rect><g class="label" style="" transform="translate(-27.609375, -13.5)"><rect></rect><foreignObject width="55.21875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(638.46875, 50)"><rect class="basic label-container" style="" x="-92.734375" y="-42" width="185.46875" height="84"></rect><g class="label" style="" transform="translate(-62.734375, -27)"><rect></rect><foreignObject width="125.46875" height="54"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>コンポーネント<br>コード生成</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-E-7" transform="translate(852.21875, 50)"><rect class="basic label-container" style="" x="-71.015625" y="-42" width="142.03125" height="84"></rect><g class="label" style="" transform="translate(-41.015625, -27)"><rect></rect><foreignObject width="82.03125" height="54"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>GitHub PR<br>作成</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-F-9" transform="translate(1039.234375, 50)"><rect class="basic label-container" style="" x="-66" y="-28.5" width="132" height="57"></rect><g class="label" style="" transform="translate(-36, -13.5)"><rect></rect><foreignObject width="72" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>レビュー</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+
+      <!-- Use Case 6 -->
+      <article class="use-case-card">
+        <div class="use-case-header">
+          <h3 class="use-case-title">6. 定期レポート自動化</h3>
+          <span class="difficulty-badge">難易度: ★★★★☆ (中級〜上級)</span>
+        </div>
+        <p>
+          GitHubの開発状況、データベースの売上数値、Slackの問い合わせ件数など、複数のソースから情報を集め、週次経営レポートや進捗報告を全自動で作成します。
+        </p>
+
+        <div class="server-list">
+          <span class="server-tag">GitHub MCP</span>
+          <span class="server-tag">PostgreSQL MCP</span>
+          <span class="server-tag">Slack MCP</span>
+        </div>
+
+        <table class="before-after-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Before (従来)</th>
+              <th>After (MCP導入)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>集計作業</td>
+              <td class="before-col">各ツールにログインしコピペ・集計</td>
+              <td class="after-col">複数ツールから同時並行でデータ収集</td>
+            </tr>
+            <tr>
+              <td>作成時間</td>
+              <td class="before-col">180分 / 週</td>
+              <td class="after-col">5分 / 週 (97%削減)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="benefits-box">
+          <div class="benefits-title">⚡ 期待される効果</div>
+          <ul>
+            <li>「レポートのための作業」を撲滅し、本質的な業務に集中</li>
+            <li>データ転記ミスや計算ミスの根絶（月4回 → 0回）</li>
+            <li>リアルタイムな状況可視化による迅速な経営判断</li>
+          </ul>
+        </div>
+
+        <h4>実装のポイント</h4>
+        <ul>
+          <li>複数のMCPサーバーを同時に接続し、AIにオーケストレーション（指揮）させます。</li>
+          <li>定期実行にはcronやタスクスケジューラと、Claude CLIなどのCLIツールを組み合わせます。</li>
+          <li>各データソースからの情報取得フォーマットを統一するプロンプトが鍵です。</li>
+        </ul>
+
+        <div class="mermaid" data-processed="true"><svg id="mermaid-1771231840379" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: none;" viewBox="-105.103125 -15 1378.01875 317" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-1771231840379{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1771231840379 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1771231840379 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1771231840379 .error-icon{fill:#552222;}#mermaid-1771231840379 .error-text{fill:#552222;stroke:#552222;}#mermaid-1771231840379 .edge-thickness-normal{stroke-width:1px;}#mermaid-1771231840379 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1771231840379 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1771231840379 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1771231840379 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1771231840379 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1771231840379 .marker{fill:#666;stroke:#666;}#mermaid-1771231840379 .marker.cross{stroke:#666;}#mermaid-1771231840379 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-1771231840379 p{margin:0;}#mermaid-1771231840379 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-1771231840379 .cluster-label text{fill:#333;}#mermaid-1771231840379 .cluster-label span{color:#333;}#mermaid-1771231840379 .cluster-label span p{background-color:transparent;}#mermaid-1771231840379 .label text,#mermaid-1771231840379 span{fill:#000000;color:#000000;}#mermaid-1771231840379 .node rect,#mermaid-1771231840379 .node circle,#mermaid-1771231840379 .node ellipse,#mermaid-1771231840379 .node polygon,#mermaid-1771231840379 .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-1771231840379 .rough-node .label text,#mermaid-1771231840379 .node .label text,#mermaid-1771231840379 .image-shape .label,#mermaid-1771231840379 .icon-shape .label{text-anchor:middle;}#mermaid-1771231840379 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-1771231840379 .rough-node .label,#mermaid-1771231840379 .node .label,#mermaid-1771231840379 .image-shape .label,#mermaid-1771231840379 .icon-shape .label{text-align:center;}#mermaid-1771231840379 .node.clickable{cursor:pointer;}#mermaid-1771231840379 .root .anchor path{fill:#666!important;stroke-width:0;stroke:#666;}#mermaid-1771231840379 .arrowheadPath{fill:#333333;}#mermaid-1771231840379 .edgePath .path{stroke:#666;stroke-width:2.0px;}#mermaid-1771231840379 .flowchart-link{stroke:#666;fill:none;}#mermaid-1771231840379 .edgeLabel{background-color:white;text-align:center;}#mermaid-1771231840379 .edgeLabel p{background-color:white;}#mermaid-1771231840379 .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771231840379 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#mermaid-1771231840379 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#mermaid-1771231840379 .cluster text{fill:#333;}#mermaid-1771231840379 .cluster span{color:#333;}#mermaid-1771231840379 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160, 0%, 93.3333333333%);border:1px solid #707070;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1771231840379 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#mermaid-1771231840379 rect.text{fill:none;stroke-width:0;}#mermaid-1771231840379 .icon-shape,#mermaid-1771231840379 .image-shape{background-color:white;text-align:center;}#mermaid-1771231840379 .icon-shape p,#mermaid-1771231840379 .image-shape p{background-color:white;padding:2px;}#mermaid-1771231840379 .icon-shape rect,#mermaid-1771231840379 .image-shape rect{opacity:0.5;background-color:white;fill:white;}#mermaid-1771231840379 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-1771231840379 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-1771231840379 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-1771231840379_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840379_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840379_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771231840379_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-1771231840379_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-1771231840379_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M140,143.5L144.167,143.5C148.333,143.5,156.667,143.5,164.333,143.5C172,143.5,179,143.5,182.5,143.5L186,143.5" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTQwLCJ5IjoxNDMuNX0seyJ4IjoxNjUsInkiOjE0My41fSx7IngiOjE5MCwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M288.806,115L300.76,101.917C312.714,88.833,336.623,62.667,354.768,49.583C372.914,36.5,385.297,36.5,391.488,36.5L397.68,36.5" id="L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6Mjg4LjgwNjAwMTc1MjMzNjQ0LCJ5IjoxMTV9LHsieCI6MzYwLjUzMTI1LCJ5IjozNi41fSx7IngiOjQwMS42Nzk2ODc1LCJ5IjozNi41fV0=" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M335.531,143.5L339.698,143.5C343.865,143.5,352.198,143.5,359.865,143.5C367.531,143.5,374.531,143.5,378.031,143.5L381.531,143.5" id="L_B_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_D_0" data-points="W3sieCI6MzM1LjUzMTI1LCJ5IjoxNDMuNX0seyJ4IjozNjAuNTMxMjUsInkiOjE0My41fSx7IngiOjM4NS41MzEyNSwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M288.806,172L300.76,185.083C312.714,198.167,336.623,224.333,355.991,237.417C375.359,250.5,390.188,250.5,397.602,250.5L405.016,250.5" id="L_B_E_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_E_0" data-points="W3sieCI6Mjg4LjgwNjAwMTc1MjMzNjQ0LCJ5IjoxNzJ9LHsieCI6MzYwLjUzMTI1LCJ5IjoyNTAuNX0seyJ4Ijo0MDkuMDE1NjI1LCJ5IjoyNTAuNX1d" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M556.773,36.5L563.632,36.5C570.49,36.5,584.206,36.5,601.759,49.075C619.312,61.651,640.702,86.802,651.397,99.377L662.092,111.953" id="L_C_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_F_0" data-points="W3sieCI6NTU2Ljc3MzQzNzUsInkiOjM2LjV9LHsieCI6NTk3LjkyMTg3NSwieSI6MzYuNX0seyJ4Ijo2NjQuNjgzNTU3MjQyOTkwNywieSI6MTE1fV0=" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M572.922,143.5L577.089,143.5C581.255,143.5,589.589,143.5,597.255,143.5C604.922,143.5,611.922,143.5,615.422,143.5L618.922,143.5" id="L_D_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_D_F_0" data-points="W3sieCI6NTcyLjkyMTg3NSwieSI6MTQzLjV9LHsieCI6NTk3LjkyMTg3NSwieSI6MTQzLjV9LHsieCI6NjIyLjkyMTg3NSwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M549.438,250.5L557.518,250.5C565.599,250.5,581.76,250.5,600.536,237.925C619.312,225.349,640.702,200.198,651.397,187.623L662.092,175.047" id="L_E_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_E_F_0" data-points="W3sieCI6NTQ5LjQzNzUsInkiOjI1MC41fSx7IngiOjU5Ny45MjE4NzUsInkiOjI1MC41fSx7IngiOjY2NC42ODM1NTcyNDI5OTA3LCJ5IjoxNzJ9XQ==" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M754.922,143.5L759.089,143.5C763.255,143.5,771.589,143.5,779.255,143.5C786.922,143.5,793.922,143.5,797.422,143.5L800.922,143.5" id="L_F_G_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_F_G_0" data-points="W3sieCI6NzU0LjkyMTg3NSwieSI6MTQzLjV9LHsieCI6Nzc5LjkyMTg3NSwieSI6MTQzLjV9LHsieCI6ODA0LjkyMTg3NSwieSI6MTQzLjV9XQ==" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path><path d="M972.391,143.5L976.557,143.5C980.724,143.5,989.057,143.5,996.724,143.5C1004.391,143.5,1011.391,143.5,1014.891,143.5L1018.391,143.5" id="L_G_H_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_G_H_0" data-points="W3sieCI6OTcyLjM5MDYyNSwieSI6MTQzLjV9LHsieCI6OTk3LjM5MDYyNSwieSI6MTQzLjV9LHsieCI6MTAyMi4zOTA2MjUsInkiOjE0My41fV0=" marker-end="url(#mermaid-1771231840379_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_E_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_C_F_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_D_F_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_E_F_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_F_G_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_G_H_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(74, 143.5)"><rect class="basic label-container" style="" x="-66" y="-42" width="132" height="84"></rect><g class="label" style="" transform="translate(-36, -27)"><rect></rect><foreignObject width="72" height="54"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>定期実行<br>cron</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(262.765625, 143.5)"><rect class="basic label-container" style="" x="-72.765625" y="-28.5" width="145.53125" height="57"></rect><g class="label" style="" transform="translate(-42.765625, -13.5)"><rect></rect><foreignObject width="85.53125" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Claude CLI</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(479.2265625, 36.5)"><rect class="basic label-container" style="" x="-77.546875" y="-28.5" width="155.09375" height="57"></rect><g class="label" style="" transform="translate(-47.546875, -13.5)"><rect></rect><foreignObject width="95.09375" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>GitHub MCP</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(479.2265625, 143.5)"><rect class="basic label-container" style="" x="-93.6953125" y="-28.5" width="187.390625" height="57"></rect><g class="label" style="" transform="translate(-63.6953125, -13.5)"><rect></rect><foreignObject width="127.390625" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>PostgreSQL MCP</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-E-7" transform="translate(479.2265625, 250.5)"><rect class="basic label-container" style="" x="-70.2109375" y="-28.5" width="140.421875" height="57"></rect><g class="label" style="" transform="translate(-40.2109375, -13.5)"><rect></rect><foreignObject width="80.421875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack MCP</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-F-9" transform="translate(688.921875, 143.5)"><rect class="basic label-container" style="" x="-66" y="-28.5" width="132" height="57"></rect><g class="label" style="" transform="translate(-36, -13.5)"><rect></rect><foreignObject width="72" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>情報収集</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-G-15" transform="translate(888.65625, 143.5)"><rect class="basic label-container" style="" x="-83.734375" y="-28.5" width="167.46875" height="57"></rect><g class="label" style="" transform="translate(-53.734375, -13.5)"><rect></rect><foreignObject width="107.46875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>レポート生成</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-H-17" transform="translate(1091.1015625, 143.5)"><rect class="basic label-container" style="" x="-68.7109375" y="-28.5" width="137.421875" height="57"></rect><g class="label" style="" transform="translate(-38.7109375, -13.5)"><rect></rect><foreignObject width="77.421875" height="27"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: none; text-align: center;"><span class="nodeLabel"><p>Slack投稿</p></span></div></foreignObject></g></g></g></g></g></svg></div>
+      </article>
+    </section>
+
+    <!-- 4. Choosing the Right Use Case -->
+    <section>
+      <h2>ユースケース選びのポイント</h2>
+      <p>「どれから始めればいいかわからない」という方のための選定ガイドです。</p>
+
+      <div class="decision-grid">
+        <div class="decision-card">
+          <span class="decision-icon">🔰</span>
+          <h3>まずはここから</h3>
+          <p><strong>議事録自動保存</strong></p>
+          <p>
+            非エンジニアでも効果を実感しやすく、設定も最もシンプルです。Slackを使っているチームなら即日導入可能です。
+          </p>
+        </div>
+        <div class="decision-card">
+          <span class="decision-icon">⏱️</span>
+          <h3>時短効果 最大</h3>
+          <p><strong>定期レポート自動化</strong></p>
+          <p>
+            毎週のルーチンワークがある場合、最もROI（投資対効果）が高くなります。複数のツールを行き来する業務に最適です。
+          </p>
+        </div>
+        <div class="decision-card">
+          <span class="decision-icon">💻</span>
+          <h3>エンジニア向け</h3>
+          <p><strong>CI/CDデバッグ・Issue分析</strong></p>
+          <p>開発フローに組み込むことで、チーム全体の生産性を底上げできます。GitHubを利用しているなら必須級です。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Next Steps -->
+    <section class="next-steps">
+      <h2>次のステップ：学習リソース</h2>
+      <p>MCPを実際に試してみるためのロードマップです。</p>
+      <ol>
+        <li>
+          <strong>環境構築:</strong> Claude Desktopアプリをインストールし、設定ファイル（config json）の場所を確認する。
+        </li>
+        <li>
+          <strong>最初の接続:</strong> 公式の
+          <a href="https://github.com/modelcontextprotocol/servers" target="_blank">MCP Servers リポジトリ</a>
+          から、シンプルな「Filesystem」サーバーを設定してみる。
+        </li>
+        <li>
+          <strong>ツール連携:</strong> 自分の業務でよく使うツール（SlackやGitHubなど）のMCPサーバーを追加してみる。
+        </li>
+      </ol>
+
+      <h3>推奨リソース</h3>
+      <ul>
+        <li>
+          🌐 <a href="https://modelcontextprotocol.io/" target="_blank">MCP 公式ドキュメント (英語)</a> -
+          一次情報はこちら
+        </li>
+        <li>
+          📁
+          <a href="https://github.com/modelcontextprotocol/servers" target="_blank">公式 MCP サーバー集 (GitHub)</a> -
+          すぐ使えるサーバー一覧
+        </li>
+        <li>
+          📚 <strong>Note/Zenn/Qiita</strong> - 「Claude MCP 設定」などで検索すると日本語の解説記事が多く見つかります。
+        </li>
+      </ul>
+    </section>
+
+    <!-- 6. FAQ Section -->
+    <section style="margin-top: 40px">
+      <h2>よくある質問 (FAQ)</h2>
+
+      <details>
+        <summary>Q. プログラミングができなくても使えますか？</summary>
+        <p>
+          A. はい、ある程度使えます。Claude
+          Desktopアプリを使えば、設定ファイル（JSON）をコピペで書き換えるだけで多くの既存MCPサーバーを利用できます。ただし、自社専用のカスタムツールを作るにはプログラミング知識が必要です。
+        </p>
+      </details>
+
+      <details>
+        <summary>Q. セキュリティは大丈夫ですか？</summary>
+        <p>
+          A.
+          MCPは、ユーザーが許可したサーバーとツールのみにアクセス権を与えます。AIが勝手に全てのファイルを見ることはできません。ただし、APIキーの管理や、書き込み権限を与える際は慎重に行う必要があります。
+        </p>
+      </details>
+
+      <details>
+        <summary>Q. ChatGPTでも使えますか？</summary>
+        <p>
+          A.
+          2026年現在、OpenAIもMCPへの対応を進めており、主要なAIプラットフォームで利用可能です。ただし、最も親和性が高く導入が容易なのは、開発元のAnthropicが提供するClaude
+          Desktopです。
+        </p>
+      </details>
+
+      <details>
+        <summary>Q. 既存の社内APIをMCP化できますか？</summary>
+        <p>
+          A. 可能です。既存のWeb
+          APIをラップ（包む）するようなMCPサーバーを作成することで、AIから社内システムを安全に呼び出すことができるようになります。
+        </p>
+      </details>
+    </section>
+
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+  
+
+<div class="mermaidTooltip" style="opacity: 0;"></div></body></html>
