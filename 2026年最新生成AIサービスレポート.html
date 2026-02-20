@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成AIサービス総覧 2026年版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;family=Noto+Serif+JP:wght@400;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+      /* Document Setup resembling Word */
+      body {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 48px 80px;
+        position: relative;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #000000;
+        font-family: 'Noto Serif JP', serif; /* Serif for body text like typical documents */
+        line-height: 1.6;
+        font-size: 11pt;
+      }
+
+      /* Reset Pico specific overrides for document look */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: 'Noto Sans JP', sans-serif; /* Sans-serif for headings */
+        color: #1a202c;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      h1 {
+        font-size: 24pt;
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 14pt;
+        text-align: center;
+        color: #4a5568;
+        margin-bottom: 40px;
+        font-weight: 500;
+      }
+
+      .meta-info {
+        text-align: right;
+        font-size: 10pt;
+        color: #718096;
+        margin-bottom: 40px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 16pt;
+        border-bottom: 1px solid #cbd5e0;
+        padding-bottom: 5px;
+        margin-top: 40px;
+        color: #2c5282; /* Professional Navy Blue */
+      }
+
+      h3 {
+        font-size: 13pt;
+        margin-top: 25px;
+        color: #2d3748;
+      }
+
+      p {
+        margin-bottom: 1em;
+        text-align: justify;
+      }
+
+      ul,
+      ol {
+        margin-bottom: 1em;
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 0.3em;
+      }
+
+      /* Tables for Pricing/Comparison */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 10pt;
+        font-family: 'Noto Sans JP', sans-serif;
+      }
+
+      th,
+      td {
+        border: 1px solid #cbd5e0;
+        padding: 8px 12px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f7fafc;
+        font-weight: 700;
+        color: #2d3748;
+      }
+
+      /* Infographic Image Styling */
+      .infographic-container {
+        width: 100%;
+        margin: 30px 0 50px 0;
+        text-align: center;
+      }
+
+      .infographic-container img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .caption {
+        font-size: 9pt;
+        color: #718096;
+        text-align: center;
+        margin-top: 8px;
+        font-style: italic;
+      }
+
+      /* Utility classes */
+      .highlight-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #3182ce;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 10.5pt;
+      }
+
+      .price-tag {
+        font-weight: bold;
+        color: #2b6cb0;
+      }
+
+      .toc {
+        background-color: #f7fafc;
+        padding: 20px;
+        border: 1px solid #edf2f7;
+        margin-bottom: 40px;
+      }
+
+      .toc h3 {
+        margin-top: 0;
+        font-size: 12pt;
+      }
+
+      .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+      }
+
+      .toc li {
+        margin-bottom: 5px;
+        font-size: 10pt;
+      }
+
+      .toc a {
+        text-decoration: none;
+        color: #2c5282;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body style="">
+    <!-- Cover Section -->
+    <div class="header-section">
+      <h1>生成AIサービス総覧 2026年版</h1>
+      <div class="subtitle">マルチモーダル化・エージェント化時代の到来</div>
+      <div class="meta-info">
+        発行日：2026年2月<br>
+        作成：AIリサーチレポート
+      </div>
+    </div>
+
+    <!-- Infographic Section -->
+    <div class="infographic-container">
+      <img src="https://www.genspark.ai/api/files/s/8egP25YG?cache_control=3600" alt="生成AI進化マップ 2024→2026" data-height-listener-added="true">
+      <div class="caption">図1：生成AI進化マップ（2024年〜2026年）</div>
+    </div>
+
+    <!-- Executive Summary -->
+    <h2>1. エグゼクティブサマリー</h2>
+    <div class="highlight-box">
+      <p>
+        <strong>2026年の現在、生成AI市場は「対話型」から「自律実行型（エージェント）」へとパラダイムシフトを完了しつつあります。</strong>
+      </p>
+    </div>
+    <p>
+      2024年当時はテキストベースの質問応答（Chat）がAI利用の中心でしたが、2025年の急激なマルチモーダル化（画像・動画・音声の統合処理）を経て、2026年はAIが自ら計画を立て、ツールを操作し、成果物を完成させる「エージェント化」の時代に突入しました。
+    </p>
+    <p>主なトレンドとして以下の3点が挙げられます：</p>
+    <ul>
+      <li>
+        <strong>マルチモーダル化の標準実装：</strong>テキスト、画像、動画、音声を単一モデルでシームレスに処理する能力が、汎用LLMの標準機能となりました。
+      </li>
+      <li>
+        <strong>エージェント化（自律実行）：</strong>人間が手順を指示するのではなく、目的を伝えるだけでAIが自律的にタスクを分解・実行するワークフローが普及しています。
+      </li>
+      <li>
+        <strong>価格競争と民主化：</strong>GitHub
+        Copilotの無料化やChatGPTの廉価版プラン（Go）の登場により、導入のハードルが劇的に低下しました。
+      </li>
+    </ul>
+
+    <!-- General LLM Section -->
+    <h2>2. 汎用LLM（マルチモーダル型）</h2>
+    <p>
+      テキスト・画像・コード・映像を横断的に扱う中核モデル群は、処理速度とコンテキスト理解力の向上に焦点を当てています。
+    </p>
+
+    <h3>ChatGPT (OpenAI)</h3>
+    <p>
+      総合型AIのリーダーとして、最新の<strong>GPT-4.1</strong>モデルを展開。対話機能に加え、画像生成、高度なデータ分析、コーディング支援を統合しています。新たに研究用ワークスペース「Prism」も実装されました。
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>プラン名</th>
+          <th>価格</th>
+          <th>特徴</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Free</td>
+          <td>無料</td>
+          <td>基本機能、GPT-4.1 mini利用制限あり</td>
+        </tr>
+        <tr>
+          <td><strong>Go</strong></td>
+          <td><strong>$8/月</strong></td>
+          <td>2026年新設。軽量かつ高速、個人利用向け</td>
+        </tr>
+        <tr>
+          <td>Plus</td>
+          <td>$20/月</td>
+          <td>最新モデル(GPT-4.1)への優先アクセス、全機能利用可能</td>
+        </tr>
+        <tr>
+          <td>Pro</td>
+          <td>$200/月</td>
+          <td>推論能力特化、研究・専門業務向け</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Gemini (Google)</h3>
+    <p>
+      Googleのエコシステムと深く連携する<strong>Gemini 3 / 3.1 Pro</strong>が登場。ネイティブマルチモーダル設計により、動画や長時間の音声データの推論性能が向上しています。Workspace連携により、GmailやDocs内での自律的なタスク処理が可能です。
+    </p>
+
+    <h3>Claude (Anthropic)</h3>
+    <p>
+      <strong>Opus 4.6</strong>および<strong>Sonnet 4.6</strong>を展開。最大の特徴は<strong>100万トークン</strong>という圧倒的なコンテキストウィンドウです。書籍数百冊分に相当する情報を一度に読み込ませることが可能で、長文処理や安全性設計において企業から高い信頼を得ています。
+    </p>
+
+    <h3>Grok (xAI)</h3>
+    <p>
+      2026年Q1に<strong>Grok 5</strong>（6兆パラメータ）を投入予定。X（旧Twitter）からのリアルタイム情報連携を強みとし、最新ニュースやトレンドの分析に優れています。画像生成機能「Imagine
+      1.0」も統合されています。
+    </p>
+
+    <h3>Perplexity</h3>
+    <p>
+      検索特化型AIとして進化。「Deep Research」機能により、複雑な調査課題に対して自律的に深掘り調査を行います。「Model
+      Council」機能では、複数のトップモデルを協調させて最適解を導出します。
+    </p>
+
+    <!-- Coding AI Section -->
+    <h2>3. コーディング特化AI</h2>
+    <p>開発者の役割は「コードを書く」ことから「AIが書いたコードをレビュー・設計する」ことへと変化しています。</p>
+
+    <h3>GitHub Copilot</h3>
+    <p>市場シェアNo.1のコーディング支援ツール。2026年にはGPT-5 miniを統合し、推論能力が向上しました。</p>
+    <ul>
+      <li><strong>Free:</strong> 学生・オープンソース貢献者以外にも一般無料プランを開放。</li>
+      <li><strong>Pro ($10/月):</strong> 1日300回までの高速補完。</li>
+      <li>
+        <strong>Pro+ ($39/月):</strong> 1日1,500回、「Agent Mode」による自律的なリファクタリング・バグ修正が可能。
+      </li>
+    </ul>
+
+    <h3>Cursor</h3>
+    <p>
+      VS
+      Codeをフォークして作られたAIネイティブエディタ。「リポジトリ全体理解」に優れ、コードベース全体を考慮した修正提案を行います。「Plan
+      Mode」では実装計画をAIが立案し、承認後にコードを生成します。
+    </p>
+
+    <h3>Devin (Cognition)</h3>
+    <p>
+      「自律型AIソフトウェアエンジニア」。Devin 2.0では「Devin
+      Search」により未知のコードベースを探索・理解する能力が向上。Goldman
+      Sachs等の金融機関でも導入が進み、並列クラウドエージェントとして開発工程を一括実行します。
+    </p>
+
+    <!-- AI Agents Section -->
+    <h2>4. AIエージェント系（自律実行型）</h2>
+    <p>単なるチャットボットを超え、ツールを使用してタスクを完遂する「エージェント」が2026年の主役です。</p>
+
+    <h3>Genspark</h3>
+    <p>
+      リサーチ特化型エージェント。「調査→情報の整理→資料生成」までのプロセスを自律的に実行し、人間が数時間かけるリサーチ業務を数分で完了させます。
+    </p>
+
+    <h3>各社Agentモード</h3>
+    <p>
+      OpenAI、Google、Anthropic各社が提供する「Computer
+      Use」機能。AIがブラウザを操作し、Webサイトの閲覧、フォーム入力、ファイル操作などを人間と同様に行います。
+    </p>
+
+    <!-- Media AI Section -->
+    <h2>5. 画像・動画・音楽生成AI</h2>
+    <p>クリエイティブ領域では、商用レベルの品質と制御性が確立されました。</p>
+
+    <h3>画像生成</h3>
+    <ul>
+      <li>
+        <strong>Midjourney:</strong> V7およびNiji
+        7がリリース済み。V8（2026年2月予定）では、一貫性（Coherency）がさらに向上し、同じキャラクターを異なるポーズで生成する能力が強化されています。
+      </li>
+      <li>
+        <strong>Adobe Firefly:</strong>
+        知的財産権に配慮した学習データを使用し、商用利用における安全性を担保。Photoshop等のCreative
+        Cloudツールに深く統合されています。
+      </li>
+    </ul>
+
+    <h3>動画生成</h3>
+    <ul>
+      <li>
+        <strong>Sora 2 (OpenAI):</strong>
+        2025年9月にリリース。最大の特徴は完全な音声同期と、物理シミュレーション精度の向上です。2026年には既存動画を拡張する「Extensions」機能が追加されました。
+      </li>
+      <li><strong>Runway:</strong> Gen4 Turboにより、高品質な動画を高速に生成可能。</li>
+    </ul>
+
+    <h3>音楽生成</h3>
+    <ul>
+      <li>
+        <strong>Suno:</strong> 歌詞・ボーカル付きの楽曲生成で独走。「Custom
+        Mode」では歌詞の構造やスタイルを細かく指定でき、プロトタイピングから本制作まで活用されています。
+      </li>
+      <li><strong>Udio:</strong> 音質の高さに定評があり、プロフェッショナルな音楽制作現場での導入が進んでいます。</li>
+    </ul>
+
+    <!-- Builder Platform Section -->
+    <h2>6. AIアプリ構築基盤（ビルダー系）</h2>
+    <p>AIを「使う」側から「システムに組み込む」側へのシフトを支えるプラットフォーム群です。</p>
+
+    <h3>Dify</h3>
+    <p>
+      オープンソースのLLMアプリ開発基盤。直感的なドラッグ＆ドロップUIで、RAG（検索拡張生成）やエージェントワークフローを構築できます。日本国内でもエンタープライズ利用が急増しています。
+    </p>
+
+    <h3>LangChain / LangGraph</h3>
+    <p>
+      開発者向けフレームワークのデファクトスタンダード。「LangGraph」により、状態を持つ複雑なエージェントの挙動制御（オーケストレーション）が可能になりました。
+    </p>
+
+    <h3>Microsoft Copilot Studio</h3>
+    <p>
+      Microsoft
+      365環境における業務アプリへのAI組み込み基盤。新たにxAIのGrokモデルも統合され、モデル選択の幅が広がりました。
+    </p>
+
+    <!-- Market Trends Section -->
+    <h2>7. 市場トレンド分析と2026年の展望</h2>
+
+    <h3>市場トレンド</h3>
+    <ol>
+      <li>
+        <strong>Human + Agent Workforce:</strong>
+        人間とAIエージェントが「同僚」として協働するモデルが確立されつつあります。
+      </li>
+      <li>
+        <strong>開発基盤化:</strong>
+        AIは単体のツールではなく、社内システムやSaaSに組み込まれる「機能」としての利用が一般的になりました。
+      </li>
+      <li>
+        <strong>ROI（投資対効果）の重視:</strong>
+        2024-2025年の実験フェーズを経て、2026年は具体的なビジネス成果とコスト対効果が厳しく問われるフェーズに入っています。
+      </li>
+    </ol>
+
+    <h3>2026年の展望</h3>
+    <p>
+      <strong>AGI（汎用人工知能）への道筋：</strong> 6兆パラメータ級のGrok
+      5やGPT-5世代のモデルにより、特定のタスクだけでなく、未知の課題に対しても推論・解決する能力が飛躍的に向上すると予測されます。
+    </p>
+    <p>
+      <strong>企業導入の加速：</strong>
+      Deloitteの調査によると、40%以上のAIプロジェクトが実証実験（PoC）を脱し、本番環境での運用フェーズに移行しています。
+    </p>
+    <p>
+      <strong>倫理と規制：</strong> 「Identity
+      Security」が重要課題となっており、高度なディープフェイク技術への対抗策や、AIガバナンスの法制化がグローバルで進行しています。
+    </p>
+
+    <h2>8. まとめ</h2>
+    <p>
+      2026年の生成AI市場は、かつての「チャットボット」という枠組みを完全に超え、ビジネスプロセスそのものを変革するインフラへと進化しました。テキスト、画像、動画を自在に操るマルチモーダル性能と、自律的にタスクを遂行するエージェント機能の融合により、人間の創造性と生産性は新たな次元へと拡張されています。
+    </p>
+  
+
+</body></html>
