@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style="" data-kantu="1"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GASのオブジェクトとクラス ― 通常のJavaScriptとの比較</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary-js: #1976d2;
+        --light-js: #e3f2fd;
+        --border-js: #90caf9;
+
+        --primary-gas: #2e7d32;
+        --light-gas: #e8f5e9;
+        --border-gas: #a5d6a7;
+
+        --bg-code: #2d2d2d;
+        --text-code: #f8f8f2;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        max-width: 210mm; /* A4 width */
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #fff;
+        color: #333;
+        line-height: 1.6;
+        box-sizing: border-box;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+
+      header p {
+        margin-top: 10px;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+
+      /* Section Styling */
+      section {
+        margin-bottom: 50px;
+        padding: 25px;
+        border-radius: 12px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      h2 {
+        font-size: 22px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .js-section h2 {
+        color: var(--primary-js);
+        border-bottom-color: var(--border-js);
+      }
+
+      .gas-section h2 {
+        color: var(--primary-gas);
+        border-bottom-color: var(--border-gas);
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: var(--bg-code);
+        color: var(--text-code);
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: hidden; /* Avoid scrollbars for print */
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 14px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border-left: 5px solid #666;
+      }
+
+      .js-code {
+        border-left-color: var(--primary-js);
+      }
+      .gas-code {
+        border-left-color: var(--primary-gas);
+      }
+
+      .keyword {
+        color: #ff79c6;
+      }
+      .string {
+        color: #f1fa8c;
+      }
+      .function {
+        color: #8be9fd;
+      }
+      .class-name {
+        color: #50fa7b;
+      }
+      .comment {
+        color: #6272a4;
+      }
+
+      /* Flow Diagrams */
+      .flow-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px 0;
+        gap: 10px;
+      }
+
+      .flow-box {
+        background-color: white;
+        border: 2px solid #333;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: bold;
+        text-align: center;
+        min-width: 150px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+
+      .arrow {
+        font-size: 24px;
+        color: #666;
+        font-weight: bold;
+      }
+
+      .js-flow .flow-box {
+        border-color: var(--primary-js);
+        background-color: var(--light-js);
+        color: var(--primary-js);
+      }
+
+      .gas-flow .flow-box {
+        border-color: var(--primary-gas);
+        background-color: var(--light-gas);
+        color: var(--primary-gas);
+      }
+
+      /* Comparison Table */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .comparison-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+      }
+
+      .comparison-table th.th-js {
+        background-color: var(--light-js);
+        color: var(--primary-js);
+      }
+      .comparison-table th.th-gas {
+        background-color: var(--light-gas);
+        color: var(--primary-gas);
+      }
+
+      .comparison-table tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      /* Side by Side Layout */
+      .side-by-side {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      .col-js {
+        background-color: rgba(25, 118, 210, 0.05);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-js);
+      }
+
+      .col-gas {
+        background-color: rgba(46, 125, 50, 0.05);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-gas);
+      }
+
+      .label-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .badge-js {
+        background-color: var(--light-js);
+        color: var(--primary-js);
+      }
+      .badge-gas {
+        background-color: var(--light-gas);
+        color: var(--primary-gas);
+      }
+
+      /* Print adjustments */
+      @media print {
+        body {
+          padding: 0;
+          max-width: 100%;
+        }
+        section {
+          break-inside: avoid;
+        }
+        header {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .flow-box,
+        pre,
+        .comparison-table th {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <header>
+      <h1>GASのオブジェクトとクラス</h1>
+      <p>🚀 通常のJavaScriptとの比較で理解する、GASでのオブジェクト操作の基本</p>
+    </header>
+
+    <!-- Section 1: 通常のJavaScript -->
+    <section class="js-section">
+      <h2>1. 💻 通常のJavaScript：クラスのインスタンス化</h2>
+      <p>
+        JavaScriptで新しいモノ（オブジェクト）を作る時は、設計図（クラス）から
+        <code>new</code> を使って実体（インスタンス）を作ります。
+      </p>
+
+      <div class="side-by-side">
+        <div>
+          <strong>① クラス（設計図）の定義</strong>
+          <pre class="js-code"><code><span class="keyword">class</span> <span class="class-name">Car</span> {
+  <span class="function">constructor</span>(name) {
+    <span class="keyword">this</span>.name = name;
+  }
+  <span class="function">drive</span>() {
+    console.log(<span class="keyword">this</span>.name + <span class="string">" が走る"</span>);
+  }
+}</code></pre>
+        </div>
+        <div>
+          <strong>② インスタンス化 &amp; 実行</strong>
+          <pre class="js-code"><code><span class="comment">// new で生成</span>
+<span class="keyword">const</span> car = <span class="keyword">new</span> <span class="class-name">Car</span>(<span class="string">"プリウス"</span>);
+
+<span class="comment">// メソッド実行</span>
+car.<span class="function">drive</span>();</code></pre>
+        </div>
+      </div>
+
+      <div class="flow-container js-flow">
+        <div class="flow-box">クラス（Car）<br><small>設計図</small></div>
+        <div class="arrow">↓ new</div>
+        <div class="flow-box">インスタンス（car）<br><small>実体化された車</small></div>
+        <div class="arrow">↓</div>
+        <div class="flow-box">メソッド実行（drive）<br><small>車が走る</small></div>
+      </div>
+    </section>
+
+    <!-- Section 2: GASの場合 -->
+    <section class="gas-section">
+      <h2>2. 🍀 GASの場合：new を使いません</h2>
+      <p>
+        GASでは <strong><code>new</code> を使って自分でオブジェクトを作ることはほとんどありません。</strong><br>
+        代わりに「サービス」と呼ばれる入口から、メソッドをつなげて目的のモノ（シートなど）を取得します。
+      </p>
+
+      <pre class="gas-code"><code><span class="keyword">const</span> sheet = <span class="class-name">SpreadsheetApp</span>
+    .<span class="function">getActiveSpreadsheet</span>()  <span class="comment">// スプレッドシートを取得</span>
+    .<span class="function">getActiveSheet</span>();      <span class="comment">// その中のアクティブなシートを取得</span></code></pre>
+
+      <div class="flow-container gas-flow">
+        <div class="flow-box">サービス（SpreadsheetApp）<br><small>Google機能への入口</small></div>
+        <div class="arrow">↓ メソッド呼び出し</div>
+        <div class="flow-box">オブジェクト取得（Spreadsheet）<br><small>ファイルそのもの</small></div>
+        <div class="arrow">↓ メソッド呼び出し</div>
+        <div class="flow-box">オブジェクト取得（Sheet）<br><small>特定のシート</small></div>
+      </div>
+    </section>
+
+    <!-- Section 3: 実は裏ではクラスがある -->
+    <section>
+      <h2>3. 🔍 実は裏ではクラスがある</h2>
+      <p>
+        GASにも <code>Spreadsheet</code> や <code>Sheet</code>、<code>Range</code> といったクラスは存在します。<br>
+        しかし、<code>new Spreadsheet()</code> のように自分で作ることはできません。
+      </p>
+
+      <p><strong>なぜ？ 🤔</strong></p>
+      <p>
+        GASは、<strong>Googleがサーバー上に既に持っているデータ（既存のファイルやシート）</strong>を操作するための言語だからです。<br>
+        「新しく作る」のではなく、「そこにあるものを取ってくる（取得する）」という考え方が中心になります。
+      </p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th class="th-js">通常 JavaScript</th>
+            <th class="th-gas">GAS (Google Apps Script)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>インスタンスの生成方法</strong></td>
+            <td><code>new Car()</code></td>
+            <td><code>app.getSheet()</code> <small>※メソッドで取得</small></td>
+          </tr>
+          <tr>
+            <td><strong>クラスの用意</strong></td>
+            <td>自分でコードを書く</td>
+            <td>Googleが用意してくれている</td>
+          </tr>
+          <tr>
+            <td><strong>考え方</strong></td>
+            <td>自分でゼロから生み出す</td>
+            <td>既存のデータにアクセスする</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Section 4: 構造の比較 -->
+    <section>
+      <h2>4. 🔄 構造を並べて比較</h2>
+      <div class="side-by-side">
+        <div class="col-js js-flow">
+          <span class="label-badge badge-js">通常のJavaScript</span>
+          <div class="flow-container" style="margin-top: 0">
+            <div class="flow-box">クラス</div>
+            <div class="arrow">↓ new</div>
+            <div class="flow-box">インスタンス生成</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">メソッド実行</div>
+          </div>
+        </div>
+
+        <div class="col-gas gas-flow">
+          <span class="label-badge badge-gas">GAS</span>
+          <div class="flow-container" style="margin-top: 0">
+            <div class="flow-box">サービス</div>
+            <div class="arrow">↓ メソッド</div>
+            <div class="flow-box">オブジェクト取得</div>
+            <div class="arrow">↓ メソッド</div>
+            <div class="flow-box">さらにオブジェクト取得</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: コード比較 -->
+    <section>
+      <h2>5. 📝 実際のコード比較</h2>
+      <div class="side-by-side">
+        <div>
+          <span class="label-badge badge-js">JavaScript (自分で作る)</span>
+          <pre class="js-code"><code><span class="comment">// 1. 生成</span>
+<span class="keyword">const</span> car = <span class="keyword">new</span> <span class="class-name">Car</span>(<span class="string">"プリウス"</span>);
+
+<span class="comment">// 2. 操作</span>
+car.<span class="function">drive</span>();</code></pre>
+        </div>
+        <div>
+          <span class="label-badge badge-gas">GAS (既存データを取得)</span>
+          <pre class="gas-code"><code><span class="comment">// 1. 取得 (生成ではない)</span>
+<span class="keyword">const</span> sheet = <span class="class-name">SpreadsheetApp</span>
+  .<span class="function">getActiveSpreadsheet</span>()
+  .<span class="function">getActiveSheet</span>();
+
+<span class="comment">// 2. 操作</span>
+sheet.<span class="function">getRange</span>(<span class="string">"A1"</span>).<span class="function">setValue</span>(<span class="string">"Hello"</span>);</code></pre>
+        </div>
+      </div>
+    </section>
+  
+
+</body></html>
