@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style="" data-kantu="1"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高階関数・コールバック・map/filter/reduce 完全ガイド</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --code-bg: #f6f8fa;
+        --border-color: #e1e4e8;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 40px 80px;
+        line-height: 1.8;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--accent-color);
+        padding-bottom: 10px;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        color: var(--secondary-color);
+        border-left: 6px solid var(--accent-color);
+        padding-left: 15px;
+        margin-top: 50px;
+        margin-bottom: 25px;
+        background-color: #f8f9fa;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      h3 {
+        font-size: 1.4rem;
+        color: var(--secondary-color);
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+      }
+
+      p {
+        margin-bottom: 1.5rem;
+        text-align: justify;
+      }
+
+      strong {
+        color: #d35400;
+        font-weight: 700;
+      }
+
+      ul,
+      ol {
+        margin-bottom: 1.5rem;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 15px;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.95rem;
+        overflow-x: hidden; /* スクロールバー防止 */
+        white-space: pre-wrap; /* 折り返し */
+        margin-bottom: 2rem;
+      }
+
+      code {
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        background-color: rgba(27, 31, 35, 0.05);
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-size: 85%;
+      }
+
+      pre code {
+        background-color: transparent;
+        padding: 0;
+        font-size: 100%;
+        color: #24292e;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border-color);
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f1f8ff;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      tr:nth-child(even) {
+        background-color: #fcfcfc;
+      }
+
+      blockquote {
+        background-color: #fff8e1;
+        border-left: 5px solid #ffa000;
+        padding: 15px 20px;
+        margin: 20px 0;
+        font-style: italic;
+        color: #5d4037;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 30px auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .diagram-box {
+        background-color: #f0f4f8;
+        border: 1px dashed #b0c4de;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        text-align: center;
+        font-family: monospace;
+        white-space: pre;
+        line-height: 1.4;
+      }
+
+      .note {
+        background-color: #e8f5e9;
+        border-left: 5px solid #4caf50;
+        padding: 15px;
+        margin: 20px 0;
+      }
+
+      /* 印刷用調整 */
+      @media print {
+        body {
+          padding: 0;
+          max-width: 100%;
+        }
+        h2 {
+          background-color: transparent;
+          border-left: 6px solid #ccc;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <h1>高階関数・コールバック・map/filter/reduce 完全ガイド</h1>
+
+    <h2>高階関数（Higher-Order Function）とは</h2>
+
+    <p><strong>高階関数</strong>とは、次のどちらかを満たす関数です。</p>
+
+    <ol>
+      <li><strong>関数を引数として受け取る</strong></li>
+      <li><strong>関数を返り値として返す</strong></li>
+    </ol>
+
+    <img src="https://sspark.genspark.ai/cfimages?u1=aJNbSSe%2FjBShflNyFqiq2oNfQ1I21AEi%2B2TSRfteXNh8OMBOGBnaEP0FeyLQTt5LjhQVtlwUG%2BMSLaBovOqlJCMUZLHGyWq7n7tE7SpqHzt%2Fx7on2be%2FupXbmYOw8RQFFcKAvb5Awe39%2F0JSkLSIKqDYsrvM2IM%3D&amp;u2=nT9dtt4itNUwZJvC&amp;width=2560" alt="高階関数の概念図" data-height-listener-added="true">
+
+    <h3>基本例：map</h3>
+
+    <pre><code>numbers.map(n =&gt; n * 2)</code></pre>
+
+    <p><code>map</code> は関数を引数として受け取るため、<strong>高階関数</strong>です。</p>
+
+    <h3>構造イメージ</h3>
+
+    <div class="diagram-box">numbers ↓ map（高階関数） ↓ callback（コールバック関数）</div>
+
+    <h2>JavaScriptの関数の基本から整理する</h2>
+
+    <h3>STEP 1：普通の関数</h3>
+
+    <pre><code>function add(a, b) {
+  return a + b;
+}
+add(2, 3);</code></pre>
+
+    <h3>STEP 2：JavaScriptでは「関数 = 値」</h3>
+
+    <p>JavaScriptでは、関数は<strong>値として扱える</strong>ため、以下のような操作が可能です：</p>
+    <ul>
+      <li>変数に入れられる</li>
+      <li>引数として渡せる</li>
+      <li>返り値にできる</li>
+    </ul>
+
+    <pre><code>const add = function(a, b) {
+  return a + b;
+};</code></pre>
+
+    <h3>STEP 3：関数を引数として渡す</h3>
+
+    <pre><code>function run(func) {
+  func();
+}
+
+run(function() {
+  console.log("実行された");
+});</code></pre>
+
+    <p>ここで渡している <code>function(){ ... }</code> が<strong>コールバック関数</strong>です。</p>
+
+    <h3>STEP 4：コールバック関数とは</h3>
+
+    <blockquote>
+      <strong>他の関数に渡して、あとで実行される関数</strong>
+    </blockquote>
+
+    <pre><code>run(function() {
+  console.log("処理");
+});
+// function(){ console.log("処理") } がコールバック</code></pre>
+
+    <h3>STEP 5：高階関数</h3>
+
+    <p>関数を受け取る関数が<strong>高階関数（Higher-Order Function）</strong>です。</p>
+
+    <pre><code>numbers.map(n =&gt; n * 2)
+// map = 高階関数
+// n =&gt; n * 2 = コールバック関数</code></pre>
+
+    <h2>mapの内部構造</h2>
+
+    <p><code>map</code> は概念的に以下のように動いています：</p>
+
+    <pre><code>function map(array, callback) {
+  const result = [];
+  for (const item of array) {
+    result.push(callback(item));
+  }
+  return result;
+}</code></pre>
+
+    <p>
+      <strong><code>callback(item)</code> が要素ごとに実行される</strong>のがポイントです。
+    </p>
+
+    <h2>コールバックの書き方2種類</h2>
+
+    <h3>function式</h3>
+    <pre><code>numbers.map(function(n) {
+  return n * 2;
+});</code></pre>
+
+    <h3>アロー関数（短く書ける）</h3>
+    <pre><code>numbers.map(n =&gt; n * 2);</code></pre>
+
+    <div class="note"><strong>アロー関数</strong> = コールバックを短く書くための書き方</div>
+
+    <h2>用語の関係まとめ</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>用語</th>
+          <th>意味</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>高階関数</strong></td>
+          <td>関数を受け取る関数（例：map）</td>
+        </tr>
+        <tr>
+          <td><strong>コールバック関数</strong></td>
+          <td>渡される関数（例：n =&gt; n * 2）</td>
+        </tr>
+        <tr>
+          <td><strong>アロー関数</strong></td>
+          <td>コールバックを短く書く書き方</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="diagram-box">高階関数 ↓ コールバック関数 ↓ 関数の書き方（function / アロー関数）</div>
+
+    <h2>一言まとめ（講座向け）</h2>
+
+    <blockquote>
+      <strong>高階関数</strong> = 関数を受け取る関数<br>
+      <strong>コールバック関数</strong> = 渡される関数
+    </blockquote>
+
+    <h3>カスタムオーダースーツのたとえ</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>概念</th>
+          <th>たとえ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>高階関数</td>
+          <td>スーツ店</td>
+        </tr>
+        <tr>
+          <td>コールバック関数</td>
+          <td>オーダー内容</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>JavaScriptの代表的な高階関数</h2>
+
+    <ul>
+      <li><code>map</code></li>
+      <li><code>filter</code></li>
+      <li><code>forEach</code></li>
+      <li><code>reduce</code></li>
+      <li><code>sort</code></li>
+    </ul>
+
+    <pre><code>numbers.filter(n =&gt; n &gt; 10)</code></pre>
+
+    <h2>メリット：処理を柔軟に差し替えられる</h2>
+
+    <p><code>map</code> の仕組みは同じで、<strong>何をするか</strong>だけ変えられます：</p>
+
+    <pre><code>numbers.map(n =&gt; n * 2)   // 2倍
+numbers.map(n =&gt; n + 10)  // 10加算
+numbers.map(n =&gt; n ** 2)  // 二乗</code></pre>
+
+    <h2>多言語での高階関数</h2>
+
+    <p>高階関数はJavaScript特有ではなく、多くの言語にある概念です。</p>
+
+    <h3>Python</h3>
+    <pre><code>numbers = [1, 2, 3]
+list(map(lambda x: x * 2, numbers))</code></pre>
+
+    <h3>Kotlin</h3>
+    <pre><code>numbers.map { it * 2 }</code></pre>
+
+    <h3>Swift</h3>
+    <pre><code>numbers.map { $0 * 2 }</code></pre>
+
+    <h3>Rust</h3>
+    <pre><code>numbers.iter().map(|x| x * 2)</code></pre>
+
+    <h2>クラスメソッドとコールバックの違い</h2>
+
+    <p>クラスメソッドの結果を変数に入れることとの比較：</p>
+
+    <h3>クラスメソッドの場合</h3>
+    <pre><code>const sheet = SpreadsheetApp.getActiveSheet();
+// メソッド実行 → 値を返す → 変数に入れる</code></pre>
+
+    <h3>mapのコールバックの場合</h3>
+    <pre><code>numbers.map(n =&gt; n * 2)
+// 関数を渡す → mapが何度も実行 → 結果を配列にまとめる</code></pre>
+
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>メソッド</th>
+          <th>コールバック</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>動き</td>
+          <td>メソッド → 値を返す</td>
+          <td>関数を渡す → 後で実行される</td>
+        </tr>
+        <tr>
+          <td>例</td>
+          <td><code>getActiveSheet()</code></td>
+          <td><code>n =&gt; n * 2</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>共通点</strong>：JavaScriptでは「関数 = 値」なので、どちらも変数や引数として扱える。</p>
+
+    <h3>mapのコールバックにメソッドを渡す例</h3>
+    <pre><code>strings.map(s =&gt; s.toUpperCase())
+numbers.map(Math.sqrt)  // n =&gt; Math.sqrt(n) と同じ</code></pre>
+
+    <h2>配列処理の基本3つ：map / filter / reduce</h2>
+
+    <p>これらはすべて <strong>高階関数 + コールバック関数</strong> という同じ構造で動きます。</p>
+
+    <img src="https://sspark.genspark.ai/cfimages?u1=0n4Jh%2Bip%2FunN%2BZEAiouMywJzYxvTRRXhlNbtGGni%2FYQesr2gW8mVGvoB2GtT0wH%2FnvZWtYrSz%2F2WDv2O2bezUiXO%2FIV4ZyryGfHBAQz9k04DRHA85k2qVqu7sR%2BuYPE%3D&amp;u2=y30W6oFpbCCHWant&amp;width=2560" alt="map/filter/reduce 比較図" data-height-listener-added="true">
+
+    <h2>1. map：配列を変換する</h2>
+
+    <img src="https://sspark.genspark.ai/cfimages?u1=X0VwxY%2FJYg4%2F5fQOJ2Q7wzGBdDaHSAp1zwXENLVPH2KtkJTuS5AHk4jKUs3caRjyLDnPvJY94uYQsDK%2BoirgXnhaWBaTWPDsi%2FTOGWcwHJPwlR5Iac8CDhXl8HE6oXU%3D&amp;u2=off%2F6Hx0nrnbdDvb&amp;width=2560" alt="map/filter/reduceの図解" data-height-listener-added="true">
+
+    <p><strong>役割</strong>：配列の各要素を変換する</p>
+
+    <pre><code>const numbers = [1, 2, 3];
+const result = numbers.map(n =&gt; n * 2);
+// → [2, 4, 6]</code></pre>
+
+    <div class="diagram-box">[1, 2, 3] ↓ map n → n * 2 ↓ [2, 4, 6]</div>
+
+    <div class="note">🏭 <strong>イメージ</strong>：材料 → 加工 → 新しい材料</div>
+
+    <h2>2. filter：条件に合う要素だけ残す</h2>
+
+    <p><strong>役割</strong>：条件に合う要素だけを選別する</p>
+
+    <pre><code>const numbers = [1, 2, 3, 4, 5];
+const result = numbers.filter(n =&gt; n % 2 === 0);
+// → [2, 4]</code></pre>
+
+    <div class="diagram-box">[1, 2, 3, 4, 5] ↓ filter n が偶数？ ↓ [2, 4]</div>
+
+    <div class="note">🔍 <strong>イメージ</strong>：材料 → 選別 → 必要なものだけ</div>
+
+    <h2>3. reduce：配列を1つの値にまとめる</h2>
+
+    <p><strong>役割</strong>：配列を1つの値に集約する</p>
+
+    <pre><code>const numbers = [1, 2, 3, 4];
+const sum = numbers.reduce((acc, n) =&gt; acc + n, 0);
+// → 10</code></pre>
+
+    <div class="diagram-box">[1, 2, 3, 4] 0 + 1 → 1 1 + 2 → 3 3 + 3 → 6 6 + 4 → 10</div>
+
+    <div class="note">📦 <strong>イメージ</strong>：材料 → 集約 → 1つの結果</div>
+
+    <h2>3つの違いまとめ</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>関数</th>
+          <th>役割</th>
+          <th>結果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>map</code></td>
+          <td>変換</td>
+          <td>配列（同じ要素数）</td>
+        </tr>
+        <tr>
+          <td><code>filter</code></td>
+          <td>選別</td>
+          <td>配列（要素数が減る場合も）</td>
+        </tr>
+        <tr>
+          <td><code>reduce</code></td>
+          <td>集約</td>
+          <td>単一の値</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>GASでよく出る例</h2>
+
+    <pre><code>// 各行の1列目を取り出す
+const values = rows.map(row =&gt; row[0]);</code></pre>
+
+    <h2>関数型プログラミングとの関係</h2>
+
+    <p>これらの仕組みは<strong>関数型プログラミング</strong>というスタイルの中心概念です。</p>
+
+    <img src="https://sspark.genspark.ai/cfimages?u1=YEMr%2FyOae%2BGV0Fn%2FeXoUb9Kac%2Fp6I8ReokA2sbvaquWZgAzfqgpPvMtdHbpJueeJkIch6NKPlPz0TsEIL1DH0zt1CrQqkpS3%2Ff8HTjPHe2%2Bte6%2FDdQOQBGMTEknkFXZ4qPMe2OS2%2Be3YGn1So8fbYgo%3D&amp;u2=rRPR2EIR936i803c&amp;width=2560" alt="配列処理まとめ図" data-height-listener-added="true">
+
+    <h3>なぜ「関数型」と呼ばれるのか</h3>
+
+    <p>関数型プログラミングでは、<strong>関数を値として扱う</strong>ことで以下のような利点が生まれます：</p>
+
+    <ul>
+      <li><strong>関数の再利用性が高まる</strong> — 処理を関数として切り出し、様々な場面で再利用できる</li>
+      <li><strong>コードの意図が明確になる</strong> — mapは「変換」、filterは「選別」と、目的が一目で分かる</li>
+      <li><strong>副作用を減らせる</strong> — 元の配列を変更せず、新しい配列を返すため安全</li>
+    </ul>
+
+    <div class="note">
+      <p><strong>💡 ポイント：forループとの違い</strong></p>
+      <p>従来のforループでは「どうやって処理するか」（手続き）を書きますが、map/filter/reduceでは「何をしたいか」（目的）を書きます。これにより、コードが読みやすく、保守しやすくなります。</p>
+    </div>
+
+    <div class="diagram-box">高階関数 ↓ 関数を受け取る ↓ コールバックを実行</div>
+
+    <p>実はこの3つは、<code>for</code>ループを抽象化したものでもあります：</p>
+
+    <div class="diagram-box">for ループ ↓（抽象化） map / filter / reduce</div>
+
+    <h3>具体例で比較</h3>
+
+    <p><strong>従来のforループ（手続き型）</strong></p>
+    <pre><code>// 配列を2倍にする処理
+const numbers = [1, 2, 3];
+const result = [];
+for (let i = 0; i &lt; numbers.length; i++) {
+  result.push(numbers[i] * 2);
+}
+// 「どうやって処理するか」を細かく指定している</code></pre>
+
+    <p><strong>mapを使った方法（関数型）</strong></p>
+    <pre><code>// 配列を2倍にする処理
+const numbers = [1, 2, 3];
+const result = numbers.map(n =&gt; n * 2);
+// 「2倍にしたい」という目的だけを表現している</code></pre>
+
+    <h2>全体の関係図</h2>
+
+    <div class="diagram-box">高階関数 ↓ コールバック関数 ↓ 関数の書き方 ・function ・アロー関数</div>
+
+    <h2>最終まとめ</h2>
+
+    <blockquote>
+      <strong>高階関数</strong> = 関数を受け取る関数<br>
+      <strong>コールバック関数</strong> = 渡される関数<br>
+      <strong>アロー関数</strong> = コールバックを書くための短い書き方
+    </blockquote>
+
+    <h3>具体例で確認</h3>
+
+    <pre><code>const numbers = [1, 2, 3];
+numbers.map(n =&gt; n * 2);
+
+// numbers → map（高階関数）→ n =&gt; n*2（コールバック）→ [2, 4, 6]</code></pre>
+  
+
+</body></html>
