@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dify RAG設定ガイド（実務編）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #eff6ff;
+        --primary-bg: #f8fafc;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --border-color: #e5e7eb;
+        --warning-bg: #fff5f5;
+        --warning-border: #fca5a5;
+        --warning-text: #991b1b;
+        --success-color: #10b981;
+        --sidebar-width: 280px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        color: var(--text-main);
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Layout */
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* Top Navigation */
+      .sidebar {
+        width: 100%;
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        padding: 0 2rem;
+      }
+
+      .nav-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+
+      .sidebar-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        white-space: nowrap;
+        padding: 0.85rem 1.5rem 0.85rem 0;
+        border-right: 1px solid var(--border-color);
+        margin-right: 0.5rem;
+      }
+
+      .nav-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .nav-links li {
+        margin-bottom: 0;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 0.85rem 0.9rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        border-radius: 0;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        font-size: 0.875rem;
+        border-bottom: 3px solid transparent;
+        white-space: nowrap;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary);
+        background-color: var(--primary-light);
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+        font-weight: 700;
+        background-color: transparent;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        padding: 0;
+        background-color: #fff;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+        color: white;
+        padding: 4rem 3rem;
+        text-align: center;
+      }
+
+      .hero h1 {
+        color: white;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .hero p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.25rem;
+        margin-bottom: 0;
+      }
+
+      .content-wrapper {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 3rem;
+      }
+
+      /* Section Styling */
+      section {
+        margin-bottom: 4rem;
+        scroll-margin-top: 5rem; /* Adjusted for sticky header */
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--primary-light);
+        padding-bottom: 1rem;
+      }
+
+      .section-badge {
+        background-color: var(--primary);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        color: var(--text-main);
+        margin: 0;
+      }
+
+      /* Cards & Grid */
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+
+      .card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+        height: 100%;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      }
+
+      .card-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+      }
+
+      .card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+      }
+
+      .card-label {
+        display: inline-block;
+        background-color: var(--primary-light);
+        color: var(--primary);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Dify Quote */
+      .dify-quote {
+        background-color: var(--primary-light);
+        border-left: 5px solid var(--primary);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 0.5rem 0.5rem 0;
+      }
+
+      .dify-quote p {
+        margin: 0;
+        color: var(--text-main);
+        font-style: italic;
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      .dify-quote::before {
+        content: '💡 Dify公式情報';
+        display: block;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+        font-style: normal;
+      }
+
+      /* Table */
+      .settings-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+      }
+
+      .settings-table th {
+        background-color: var(--primary);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+      }
+
+      .settings-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+        vertical-align: top;
+      }
+
+      .settings-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .settings-table tr:nth-child(even) {
+        background-color: #f9fafb;
+      }
+
+      /* Warning Box */
+      .warning-box {
+        background-color: var(--warning-bg);
+        border-left: 5px solid var(--warning-border);
+        padding: 1.5rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .warning-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .warning-content h4 {
+        color: var(--warning-text);
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+      }
+
+      .warning-content p {
+        margin: 0;
+        color: #7f1d1d;
+        font-size: 0.95rem;
+      }
+
+      /* Summary Box */
+      .summary-box {
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        border: 2px solid var(--primary);
+        border-radius: 1rem;
+        padding: 3rem;
+        text-align: center;
+        margin-top: 2rem;
+      }
+
+      .summary-box h3 {
+        color: var(--primary);
+        font-size: 1.5rem;
+        margin-bottom: 0;
+        font-weight: 700;
+      }
+
+      /* Info Box (New) */
+      .info-box {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 2px solid #22c55e;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-top: 2rem;
+      }
+
+      .info-box h3 {
+        color: #166534;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Badge List */
+      .badge-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .badge {
+        background: #f3f4f6;
+        color: #4b5563;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .badge-green {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .badge-orange {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-purple {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+      .badge-gray {
+        background: #f3f4f6;
+        color: #4b5563;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .grid-3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          overflow-x: auto;
+          padding: 0 1rem;
+        }
+        .nav-inner {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+        }
+        .sidebar-title {
+          font-size: 0.85rem;
+          padding: 0.75rem 0.75rem 0.75rem 0;
+        }
+        .nav-links a {
+          font-size: 0.78rem;
+          padding: 0.75rem 0.6rem;
+        }
+        .grid-3,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .content-wrapper {
+          padding: 1.5rem;
+        }
+        .hero {
+          padding: 3rem 1.5rem;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      /* Print Styles */
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main-content {
+          margin-left: 0;
+          margin-top: 0;
+        }
+        .hero {
+          background: none;
+          color: black;
+          padding: 0;
+          margin-bottom: 2rem;
+          text-align: left;
+          border-bottom: 2px solid black;
+        }
+        .hero h1 {
+          color: black;
+        }
+        .hero p {
+          color: black;
+        }
+        .card,
+        .warning-box,
+        .dify-quote,
+        .info-box {
+          break-inside: avoid;
+          box-shadow: none;
+          border: 1px solid #ccc;
+        }
+        .section-badge {
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+        body {
+          font-size: 12pt;
+        }
+        a {
+          text-decoration: none;
+          color: black;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <div class="app-container">
+      <!-- Top Navigation -->
+      <nav class="sidebar">
+        <div class="nav-inner">
+          <div class="sidebar-title">📘 Dify RAG実務編</div>
+          <ul class="nav-links">
+            <li><a href="#chunk-structure">① チャンク構造</a></li>
+            <li><a href="#index-method">② インデックス方法</a></li>
+            <li><a href="#embedding-model">③ 埋め込みモデル</a></li>
+            <li><a href="#search-method">④ 検索方式</a></li>
+            <li><a href="#design-summary">⑤ 設計まとめ</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Hero Section -->
+        <header class="hero">
+          <h1>📘 Dify RAG設定ガイド<br><span style="font-size: 0.7em; font-weight: 500">（実務編）</span></h1>
+          <p>チャンク構造・インデックス・埋め込みモデル・検索方式を深掘り解説</p>
+        </header>
+
+        <div class="content-wrapper">
+          <!-- 1. チャンク構造の種類 -->
+          <section id="chunk-structure">
+            <div class="section-header">
+              <div class="section-badge">1</div>
+              <h2>チャンク構造の種類</h2>
+            </div>
+            <p>Difyではチャンクの作り方（構造）に3つのモードがあります。それぞれの特徴と使い分けを理解しましょう。</p>
+
+            <div class="grid-3">
+              <!-- General -->
+              <div class="card">
+                <span class="card-label badge-green">今回使用</span>
+                <h3>
+                  🏷️ General<br><small style="font-size: 0.8em; color: var(--text-muted)">（汎用モード）</small>
+                </h3>
+                <p>テキストをシンプルに指定したルールで分割。扱いやすく、検索結果がそのまま回答の根拠になります。</p>
+                <div class="dify-quote" style="font-size: 0.8rem; margin: 1rem 0; padding: 1rem">
+                  <p>
+                    すべてのチャンクが同じ設定を共有する汎用モードです。マッチしたチャンクは検索結果として直接AIに返されます。
+                  </p>
+                </div>
+                <div class="badge-list">
+                  <span class="badge">FAQ</span>
+                  <span class="badge">マニュアル</span>
+                  <span class="badge">ナレッジ全般</span>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--primary)">
+                  <strong>今回使う理由：</strong><br>FAQは「1問1答」で独立しており、複雑な階層構造を持たせる必要がないため。
+                </p>
+              </div>
+
+              <!-- Parent-Child -->
+              <div class="card">
+                <span class="card-label badge-orange">高度な設定</span>
+                <h3>
+                  🌲 Parent-Child<br><small style="font-size: 0.8em; color: var(--text-muted)">（親子モード）</small>
+                </h3>
+                <p>
+                  <strong>親（全体文脈）→ 子（具体情報）</strong><br>検索は「子」で精緻に行い、LLMには「親」で広い文脈を渡します。
+                </p>
+                <div class="dify-quote" style="font-size: 0.8rem; margin: 1rem 0; padding: 1rem">
+                  <p>
+                    検索用には『具体的な情報を含む小さなチャンク（子）』を使い、LLMには回答生成用のコンテキストとして『広範な情報を持つ大きなチャンク（親）』を渡します。
+                  </p>
+                </div>
+                <div class="badge-list">
+                  <span class="badge">長いドキュメント</span>
+                  <span class="badge">論文</span>
+                  <span class="badge">仕様書</span>
+                </div>
+              </div>
+
+              <!-- Q&A Mode -->
+              <div class="card">
+                <span class="card-label badge-purple">FAQ特化</span>
+                <h3>💬 Q&amp;Aモード</h3>
+                <p>
+                  ナレッジのテキストから、AIが自動で「想定される質問（Q）」と「回答（A）」のペアを生成する形式です。
+                </p>
+                <div class="badge-list">
+                  <span class="badge">FAQ専用データ</span>
+                  <span class="badge">CSサポート</span>
+                </div>
+                <p style="
+                    margin-top: 1rem;
+                    font-size: 0.9rem;
+                    border-top: 1px dashed var(--border-color);
+                    padding-top: 0.5rem;
+                  ">
+                  <strong>今回との違い：</strong><br>今回は手動でQ&amp;A形式を作成し「General」で制御しています。自動生成より確実で実務的な運用が可能です。
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. インデックス方法 -->
+          <section id="index-method">
+            <div class="section-header">
+              <div class="section-badge">2</div>
+              <h2>インデックス方法</h2>
+            </div>
+            <p>
+              インデックスとは、ナレッジを検索しやすい形に変換・整理する方式です。精度とコストのトレードオフを理解しましょう。
+            </p>
+
+            <div class="grid-2">
+              <!-- High Quality -->
+              <div class="card">
+                <span class="card-label badge-green">今回使用</span>
+                <h3>⭐ 高品質 (High Quality)</h3>
+                <p>テキスト → 高性能な埋め込みモデルで「ベクトル化（数値化）」 → 意味合いベースの高精度検索</p>
+                <div class="dify-quote" style="font-size: 0.85rem; margin: 1rem 0">
+                  <p>
+                    OpenAIなどの外部APIを用いてドキュメント全体を高精度にベクトル化するため、検索精度が向上し、LLMが文脈に沿った正確な回答を生成しやすくなります。
+                  </p>
+                </div>
+                <div class="badge-list">
+                  <span class="badge badge-green">高精度</span>
+                  <span class="badge badge-green">意味・文脈理解</span>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted)">
+                  デメリット：APIコストあり、処理時間増
+                </p>
+              </div>
+
+              <!-- Economy -->
+              <div class="card">
+                <span class="card-label badge-gray">低コスト</span>
+                <h3>💰 経済的 (Economy)</h3>
+                <p>ベクトル化（外部API）を使わず、キーワード検索ベースの軽量なインデックスを作成します。</p>
+                <div class="dify-quote" style="font-size: 0.85rem; margin: 1rem 0">
+                  <p>
+                    APIを使用せずにベクトル化を行い、トークンの消費量を抑えることができます。回答速度は早くなりますが『高品質モード』と比較すると精度は低くなる傾向にあります。
+                  </p>
+                </div>
+                <div class="badge-list">
+                  <span class="badge badge-gray">処理が速い</span>
+                  <span class="badge badge-gray">APIコスト無料</span>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted)">
+                  デメリット：精度低め、意味理解が弱い
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. 埋め込みモデル -->
+          <section id="embedding-model">
+            <div class="section-header">
+              <div class="section-badge">3</div>
+              <h2>埋め込みモデル (Embedding)</h2>
+            </div>
+            <p>
+              埋め込みモデルとは、テキストを『意味のベクトル（数値の羅列）』に変換するモデルです。モデルの選択が検索精度を大きく左右します。
+            </p>
+
+            <div style="
+                background: var(--primary-light);
+                border: 2px solid var(--primary);
+                border-radius: 1rem;
+                padding: 2rem;
+                text-align: center;
+                margin-bottom: 2rem;
+              ">
+              <h3 style="color: var(--primary); margin-bottom: 0.5rem">今回の設定：text-embedding-3-large (OpenAI)</h3>
+              <p style="margin-bottom: 1.5rem; font-weight: 500">非常に高精度・多言語対応・文脈理解が深い</p>
+
+              <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap">
+                <div style="
+                    background: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.5rem;
+                    border: 1px solid var(--primary);
+                  ">
+                  面接ってどんな感じ
+                </div>
+                <div style="color: var(--primary); font-weight: bold">➡</div>
+                <div style="
+                    background: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.5rem;
+                    border: 1px solid var(--primary);
+                  ">
+                  面接内容
+                </div>
+                <div style="color: var(--primary); font-weight: bold">➡</div>
+                <div style="
+                    background: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.5rem;
+                    border: 1px solid var(--primary);
+                  ">
+                  面接で聞かれること
+                </div>
+              </div>
+              <p style="margin-top: 1rem; font-size: 0.9rem">
+                👉 言葉の表現が違っても「全て同じ意味」とAIが判断して該当ナレッジを引き出せます
+              </p>
+            </div>
+
+            <h3>プロバイダー比較</h3>
+            <table class="settings-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%">プロバイダー</th>
+                  <th>特徴</th>
+                  <th style="width: 30%">向いているケース</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1️⃣ OpenAI</strong></td>
+                  <td>スタンダード。small（軽量・安価）/ large（高精度・推奨）</td>
+                  <td>迷ったらコレ。王道</td>
+                </tr>
+                <tr>
+                  <td><strong>2️⃣ Cohere</strong></td>
+                  <td>意味検索（RAG）に特化。Rerank機能も強力</td>
+                  <td>RAGの精度をさらに極めたい</td>
+                </tr>
+                <tr>
+                  <td><strong>3️⃣ ローカル (Ollama)</strong></td>
+                  <td>オフライン動作、外部にデータ送信なし</td>
+                  <td>機密情報・完全なセキュリティが必要</td>
+                </tr>
+                <tr>
+                  <td><strong>4️⃣ クラウド</strong><br><small>(Azure/Gemini)</small></td>
+                  <td>企業クラウド契約と統合</td>
+                  <td>社内エンタープライズ基準を満たしたい</td>
+                </tr>
+                <tr>
+                  <td><strong>5️⃣ その他</strong><br><small>(DeepSeek等)</small></td>
+                  <td>特定用途・地域特化</td>
+                  <td>特定言語・コスト最適化</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="card" style="margin-top: 1.5rem; background: #f8fafc">
+              <h3>💡 実務での選び方</h3>
+              <ul style="margin: 0; padding-left: 1.5rem">
+                <li>迷ったら・王道 → <strong>OpenAI</strong>（large または small）</li>
+                <li>RAGの検索精度をさらに極めたい → <strong>Cohere</strong></li>
+                <li>機密性が絶対条件 → <strong>Ollama</strong>（ローカル運用）</li>
+                <li>社内クラウド契約を使いたい → <strong>Azure OpenAI / Gemini</strong></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- 4. 検索方式の違い -->
+          <section id="search-method">
+            <div class="section-header">
+              <div class="section-badge">4</div>
+              <h2>検索方式の違い</h2>
+            </div>
+            <p>
+              ナレッジから情報を探し出す「検索方式」にも3種類あります。それぞれの特徴と今回の選択理由を確認しましょう。
+            </p>
+
+            <div class="grid-3">
+              <!-- Vector Search -->
+              <div class="card">
+                <span class="card-label badge-green">今回使用</span>
+                <h3>🔵 ベクトル検索</h3>
+                <p>「意味」で関連する情報を検索します。</p>
+                <p style="
+                    font-size: 0.85rem;
+                    background: var(--primary-light);
+                    padding: 0.5rem;
+                    border-radius: 0.5rem;
+                    margin: 0.5rem 0;
+                  ">
+                  例：「面接ってどんな感じ」→「面接内容」「面接質問」<br>（文字は違うけど同じ意味だと判断）
+                </p>
+                <div class="badge-list">
+                  <span class="badge badge-green">表記揺れに強い</span>
+                  <span class="badge badge-green">意味ベース</span>
+                </div>
+              </div>
+
+              <!-- Full Text Search -->
+              <div class="card">
+                <span class="card-label badge-gray">参考</span>
+                <h3>
+                  🔤 全文検索<br><small style="font-size: 0.8em; color: var(--text-muted)">（キーワード検索）</small>
+                </h3>
+                <p>「入力したキーワードと完全に一致するか」で検索します。</p>
+                <p style="
+                    font-size: 0.85rem;
+                    background: #f3f4f6;
+                    padding: 0.5rem;
+                    border-radius: 0.5rem;
+                    margin: 0.5rem 0;
+                  ">
+                  例：「面接」→「面接」という単語が含まれる文章のみヒット
+                </p>
+
+                <div class="warning-box" style="margin-top: 1rem; padding: 0.75rem">
+                  <div class="warning-content" style="width: 100%">
+                    <p style="font-size: 0.8rem">⚠️ 「面談」や「お話しする機会」など表現が違うとヒットしません。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hybrid Search -->
+              <div class="card">
+                <span class="card-label badge-orange">上級者向け</span>
+                <h3>🔀 ハイブリッド検索</h3>
+                <p>「ベクトル検索（意味）」＋「全文検索（キーワード）」の掛け合わせ（いいとこ取り）。</p>
+                <div class="dify-quote" style="font-size: 0.75rem; margin: 0.5rem 0; padding: 0.75rem">
+                  <p>
+                    社内独自の『固有名詞』の検索漏れを防ぎ、かつ曖昧な表現も理解するという両方のメリットを高めることが可能です。
+                  </p>
+                </div>
+                <div class="badge-list">
+                  <span class="badge badge-orange">最高精度</span>
+                  <span class="badge badge-orange">専門用語に強い</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. 設計まとめ -->
+          <section id="design-summary">
+            <div class="section-header">
+              <div class="section-badge">5</div>
+              <h2>今回の設計まとめ</h2>
+            </div>
+
+            <table class="settings-table">
+              <thead>
+                <tr>
+                  <th>設定項目</th>
+                  <th>選択内容</th>
+                  <th>理由</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>チャンク構造</td>
+                  <td><strong>General</strong></td>
+                  <td>1問1答のシンプルなFAQ構造に最も適している</td>
+                </tr>
+                <tr>
+                  <td>インデックス</td>
+                  <td><strong>高品質</strong></td>
+                  <td>意味を深く理解させて回答精度をUPさせるために必須</td>
+                </tr>
+                <tr>
+                  <td>埋め込みモデル</td>
+                  <td><strong>text-embedding-3-large</strong></td>
+                  <td>日本語の表現揺れを吸収し、自然な問いかけに対応</td>
+                </tr>
+                <tr>
+                  <td>検索方式</td>
+                  <td><strong>ベクトル検索</strong></td>
+                  <td>キーワード不一致による取りこぼしを防ぐ</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="summary-box">
+              <p style="font-size: 1.1rem; font-weight: 500; line-height: 1.8; color: var(--text-main)">
+                「ユーザーが『面接ってどんな感じ』『面接内容は？』『面接で何聞かれる？』と聞いても、<br>
+                言葉が違っても意味が同じなら、ちゃんとFAQを特定して拾い上げられる、<br>
+                <strong style="color: var(--primary); font-size: 1.25rem">非常に堅牢な設計です。</strong>」
+              </p>
+            </div>
+
+            <div class="info-box">
+              <h3>🚀 さらに上級（エンタープライズ級）の運用になると...</h3>
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8">
+                <li>
+                  <strong>Rerank ON</strong>：ヒットした上位結果をさらに高度なモデルで再評価・並び替えし、精度を極限までUP
+                </li>
+                <li><strong>ハイブリッド検索</strong>：独自の社内用語や固有名詞の検索漏れを防ぐ</li>
+                <li>
+                  <strong>クエリ変換 (Query Rewrite)</strong>：ユーザーの短く曖昧な質問を、検索しやすい完璧な文章にAIが直してから検索を実行する
+                </li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- JavaScript for Scroll Spy -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        // Click smooth scroll
+        navLinks.forEach((link) => {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+
+            // Header height offset calculation
+            const headerOffset = 60;
+            const elementPosition = targetSection.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth',
+            });
+          });
+        });
+
+        // Scroll Spy
+        window.addEventListener('scroll', () => {
+          let current = '';
+          const scrollPosition = window.pageYOffset + 100; // Offset for better triggering
+
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollPosition >= sectionTop) {
+              current = section.getAttribute('id');
+            }
+          });
+
+          navLinks.forEach((link) => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+              link.classList.add('active');
+            }
+          });
+        });
+      });
+    </script>
+  
+
+</body></html>
