@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dify RAG設定ガイド（初学者向け）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
+            --primary-light: #EFF6FF;
+            --primary-bg: #F8FAFC;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --warning-bg: #FFF5F5;
+            --warning-border: #FCA5A5;
+            --warning-text: #991B1B;
+            --success-color: #10B981;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--text-main);
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .sidebar {
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 0 2rem;
+        }
+
+        .nav-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+            padding: 0.85rem 1.5rem 0.85rem 0;
+            border-right: 1px solid var(--border-color);
+            margin-right: 0.5rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+
+        .nav-links li {
+            margin-bottom: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 0.85rem 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 0;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+            background-color: transparent;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: 4rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .content-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 1rem;
+        }
+
+        .section-badge {
+            background-color: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* Cards & Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .card-label {
+            display: inline-block;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Flow Chart */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: var(--primary-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            flex: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Dify Quote */
+        .dify-quote {
+            background-color: var(--primary-light);
+            border-left: 5px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .dify-quote p {
+            margin: 0;
+            color: var(--text-main);
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .dify-quote::before {
+            content: "💡 Dify公式情報";
+            display: block;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-style: normal;
+        }
+
+        /* Code Block */
+        .code-block {
+            background-color: #1E293B;
+            color: #E2E8F0;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        /* Visual Score Bar */
+        .score-visual {
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Table */
+        .settings-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .settings-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .settings-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .settings-table tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background-color: var(--warning-bg);
+            border-left: 5px solid var(--warning-border);
+            padding: 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .warning-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .warning-content h4 {
+            color: var(--warning-text);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .warning-content p {
+            margin: 0;
+            color: #7F1D1D;
+            font-size: 0.95rem;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 100%);
+            border: 2px solid var(--primary);
+            border-radius: 1rem;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .summary-box h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        /* Badge List */
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .badge {
+            background: #F3F4F6;
+            color: #4B5563;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+            .nav-inner {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+            .sidebar-title {
+                font-size: 0.85rem;
+                padding: 0.75rem 0.75rem 0.75rem 0;
+            }
+            .nav-links a {
+                font-size: 0.78rem;
+                padding: 0.75rem 0.6rem;
+            }
+            .grid-3, .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .flow-container {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            .content-wrapper {
+                padding: 1.5rem;
+            }
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+            .hero {
+                background: none;
+                color: black;
+                padding: 0;
+                margin-bottom: 2rem;
+                text-align: left;
+                border-bottom: 2px solid black;
+            }
+            .hero h1 {
+                color: black;
+            }
+            .hero p {
+                color: black;
+            }
+            .card, .warning-box, .dify-quote, .flow-step {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .section-badge {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            body {
+                font-size: 12pt;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body style="">
+
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <nav class="sidebar">
+            <div class="nav-inner">
+                <div class="sidebar-title">📘 Dify RAGガイド</div>
+                <ul class="nav-links">
+                    <li><a href="#about-rag">① RAGとは？</a></li>
+                    <li><a href="#flow">② 全体の流れ</a></li>
+                    <li><a href="#about-chunk">③ チャンクとは？</a></li>
+                    <li><a href="#chunk-settings">④ チャンク設定</a></li>
+                    <li><a href="#search-settings">⑤ 検索設定</a></li>
+                    <li><a href="#summary-table">⑥ 設定まとめ</a></li>
+                    <li><a href="#common-mistakes">⑦ よくある失敗</a></li>
+                    <li><a href="#conclusion">⑧ まとめ</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <header class="hero">
+                <h1>📘 Dify RAG設定ガイド<br><span style="font-size: 0.7em; font-weight: 500;">（初学者向け）</span></h1>
+                <p>採用FAQチャットボットの設定をやさしく解説</p>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <!-- 1. そもそもRAGとは？ -->
+                <section id="about-rag">
+                    <div class="section-header">
+                        <div class="section-badge">1</div>
+                        <h2>そもそもRAGとは？</h2>
+                    </div>
+                    <p>RAG（ラグ）とは、事前に用意した資料（ナレッジ）を見ながらAIが回答する仕組みです。</p>
+                    
+                    <div class="grid-3">
+                        <div class="card">
+                            <span class="card-icon">📂</span>
+                            <h3>ナレッジ</h3>
+                            <p>採用FAQ（MDファイル）<br>AIがカンニングする教科書です。</p>
+                        </div>
+                        <div class="card">
+                            <span class="card-icon">🤖</span>
+                            <h3>AI</h3>
+                            <p>チャットボット<br>質問に答えるロボットです。</p>
+                        </div>
+                        <div class="card">
+                            <span class="card-icon">👤</span>
+                            <h3>ユーザー</h3>
+                            <p>応募検討者<br>質問をしてくる人です。</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; text-align: center; font-weight: 700; color: var(--primary); font-size: 1.2rem;">
+                        👉 「FAQを見ながら回答する採用担当AI」を作ります
+                    </div>
+                </section>
+
+                <!-- 2. 全体の流れ -->
+                <section id="flow">
+                    <div class="section-header">
+                        <div class="section-badge">2</div>
+                        <h2>全体の流れ</h2>
+                    </div>
+                    <p>ユーザーが質問した時、システムの中では以下の処理が行われます。</p>
+
+                    <div class="flow-container">
+                        <div class="flow-step">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
+                            <strong>1. 検索</strong>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">ナレッジの中から<br>「関係ありそうな文章」を探す</p>
+                        </div>
+                        <div class="flow-arrow">➡</div>
+                        <div class="flow-step">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📥</div>
+                            <strong>2. AIへ渡す</strong>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">見つけた文章を<br>AIに参考情報として渡す</p>
+                        </div>
+                        <div class="flow-arrow">➡</div>
+                        <div class="flow-step">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+                            <strong>3. 回答</strong>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">AIが情報を元に<br>ユーザーへ答える</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. チャンクとは？ -->
+                <section id="about-chunk">
+                    <div class="section-header">
+                        <div class="section-badge">3</div>
+                        <h2>チャンクとは？</h2>
+                    </div>
+                    <p>ナレッジを<strong>「小さなかたまり」に分けたもの</strong>です。</p>
+
+                    <div class="dify-quote">
+                        <p>「チャンクとは、Difyのナレッジベースにインポートされたドキュメントが、小さなセグメントに分割されたものを指します。これは、大きな本を章や段落に整理するのと同様で、システムがこれらのチャンクから関連情報を効率的に検索し、LLMにコンテキストとして提供するために必要です。」</p>
+                    </div>
+
+                    <p>例えば、以下のように1つのQ&amp;Aを1セットとして扱います：</p>
+                    <div class="code-block">
+&lt;&lt;<faq_end>&gt;&gt;<br>
+Q: 面接は何回ありますか？<br>
+A: 2〜3回です。
+                    </faq_end></div>
+                </section>
+
+                <!-- 4. チャンク設定 -->
+                <section id="chunk-settings">
+                    <div class="section-header">
+                        <div class="section-badge">4</div>
+                        <h2>チャンク設定</h2>
+                    </div>
+                    
+                    <div class="grid-3">
+                        <!-- チャンク識別子 -->
+                        <div class="card">
+                            <span class="card-label">重要</span>
+                            <h3>🔖 チャンク識別子</h3>
+                            <p class="code-block" style="margin: 0.5rem 0; padding: 0.5rem; text-align: center;">&lt;&lt;&lt;FAQ_END&gt;&gt;&gt;</p>
+                            <p>「ここで1つの情報を区切る」という目印。これがないと全部繋がってAIが正しく探せなくなります。</p>
+                            <div class="dify-quote" style="font-size: 0.8rem; margin-top: 1rem; padding: 1rem;">
+                                <p>情報の損失を避けるため、ドキュメント内に自然に出現しない文字を使用することが推奨されます。</p>
+                            </div>
+                        </div>
+
+                        <!-- 最大チャンク長 -->
+                        <div class="card">
+                            <span class="card-label">サイズ</span>
+                            <h3>📏 最大チャンク長</h3>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0;">800</div>
+                            <p>1チャンクの最大文字数。小さすぎると内容が分断され、大きすぎると無関係な情報が混ざります。FAQには中くらいがベスト。</p>
+                            <div class="dify-quote" style="font-size: 0.8rem; margin-top: 1rem; padding: 1rem;">
+                                <p>この制限を超えるテキストは、区切り文字の設定に関わらず強制的に分割されます。</p>
+                            </div>
+                        </div>
+
+                        <!-- オーバーラップ -->
+                        <div class="card">
+                            <span class="card-label">重なり</span>
+                            <h3>🔄 オーバーラップ</h3>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0;">20</div>
+                            <p>チャンク同士を少しだけ重ねる設定。文脈をつなぐために使いますが、FAQはそれぞれ独立しているため最小限でOK。</p>
+                            <div class="dify-quote" style="font-size: 0.8rem; margin-top: 1rem; padding: 1rem;">
+                                <p>チャンク化によって失われがちな文脈や情報の連続性を保持します。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. 検索設定 -->
+                <section id="search-settings">
+                    <div class="section-header">
+                        <div class="section-badge">5</div>
+                        <h2>検索設定</h2>
+                    </div>
+
+                    <div class="grid-3">
+                        <!-- トップK -->
+                        <div class="card">
+                            <h3>🔢 トップK</h3>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0;">5</div>
+                            <p>AIに見せる「検索でヒットした候補の数」。<br>少なすぎると情報を取りこぼし、多すぎるとノイズが増えます。5が最もバランスが良い設定です。</p>
+                        </div>
+
+                        <!-- スコア閾値 -->
+                        <div class="card">
+                            <h3>🎯 スコア閾値</h3>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0;">0.2</div>
+                            <p>「どれくらい関係あるか」の足切りライン。</p>
+                            <div class="score-visual">
+                                <div class="score-row"><span>0.8</span> <span style="color:var(--success-color);">████████░░ (高)</span></div>
+                                <div class="score-row"><span>0.5</span> <span style="color:orange;">█████░░░░░ (中)</span></div>
+                                <div class="score-row"><span>0.2</span> <span style="color:var(--primary);">██░░░░░░░░ (閾値)</span></div>
+                            </div>
+                            <p style="margin-top: 0.5rem;">FAQは短いため、厳格にしすぎると何もヒットしなくなるのを防ぐため0.2に設定。</p>
+                        </div>
+
+                        <!-- Rerank -->
+                        <div class="card">
+                            <h3>⚡ Rerank</h3>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-muted); margin: 0.5rem 0;">OFF</div>
+                            <p>検索結果を再ランク付けする機能ですが、今回は不要です。</p>
+                            <div class="badge-list">
+                                <span class="badge">シンプルで十分</span>
+                                <span class="badge">コスト削減</span>
+                                <span class="badge">1問1答に最適</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. 設定まとめ -->
+                <section id="summary-table">
+                    <div class="section-header">
+                        <div class="section-badge">6</div>
+                        <h2>設定まとめ</h2>
+                    </div>
+                    <table class="settings-table">
+                        <thead>
+                            <tr>
+                                <th>設定項目</th>
+                                <th>推奨値</th>
+                                <th>目的</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>チャンク識別子</td>
+                                <td style="font-family: monospace; font-weight: bold;">&lt;&lt;&lt;FAQ_END&gt;&gt;&gt;</td>
+                                <td>1つのQ&amp;Aを1セットとして認識させる</td>
+                            </tr>
+                            <tr>
+                                <td>最大チャンク長</td>
+                                <td><strong>800</strong></td>
+                                <td>情報が途切れないちょうどよい量</td>
+                            </tr>
+                            <tr>
+                                <td>オーバーラップ</td>
+                                <td><strong>20</strong></td>
+                                <td>最小限の重複で無駄を省く</td>
+                            </tr>
+                            <tr>
+                                <td>トップK</td>
+                                <td><strong>5</strong></td>
+                                <td>関連候補を上位5個までAIに渡す</td>
+                            </tr>
+                            <tr>
+                                <td>スコア閾値</td>
+                                <td><strong>0.2</strong></td>
+                                <td>少しでも関係あれば拾うようにする</td>
+                            </tr>
+                            <tr>
+                                <td>Rerank</td>
+                                <td><strong>OFF</strong></td>
+                                <td>シンプル・低コスト運用</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- 7. よくある失敗 -->
+                <section id="common-mistakes">
+                    <div class="section-header">
+                        <div class="section-badge">7</div>
+                        <h2>よくある失敗</h2>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-icon">❌</div>
+                        <div class="warning-content">
+                            <h4>チャンク識別子が違う</h4>
+                            <p>FAQの区切りが消失して複数のQ&amp;Aが混ざってしまいます。結果、AIが混乱して精度が崩壊します。</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-icon">❌</div>
+                        <div class="warning-content">
+                            <h4>チャンクが大きすぎる</h4>
+                            <p>質問と無関係な別のQ&amp;Aまで大量に読み込まれてしまい、回答に無関係な情報が混ざります。</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-icon">❌</div>
+                        <div class="warning-content">
+                            <h4>トップKが少ない</h4>
+                            <p>本当に必要な情報が上位に食い込めず回答の根拠として拾われないため、AIに「わかりません」と言われてしまいます。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. まとめ -->
+                <section id="conclusion">
+                    <div class="section-header">
+                        <div class="section-badge">8</div>
+                        <h2>まとめ</h2>
+                    </div>
+                    
+                    <div class="summary-box">
+                        <h3>今回の設定を一言でいうと...</h3>
+                        <p style="font-size: 1.25rem; font-weight: 500; margin-top: 1rem; color: var(--text-main);">
+                            「FAQを1つずつ綺麗に分けて、<br>AIが迷わず探しやすくするための最適化設定」
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Scroll Spy -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            // Click smooth scroll
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 40,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Scroll Spy
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const scrollPosition = window.pageYOffset + 200; // Offset for better triggering
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollPosition >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body></html>
