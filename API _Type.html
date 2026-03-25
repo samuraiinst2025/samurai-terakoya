@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <title>APIの種類を理解しよう ― 初学者向けガイド</title>
+    <style>
+      /* Document Layout & Typography */
+      body {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 32px 80px;
+        position: relative;
+        box-sizing: border-box;
+        font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        line-height: 1.8;
+        color: #333333;
+        text-align: justify;
+      }
+
+      /* Headings */
+      h1 {
+        color: #1e3a8a;
+        font-size: 28px;
+        margin-bottom: 8px;
+        text-align: center;
+        border-bottom: 2px solid #1e3a8a;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #475569;
+        font-size: 18px;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 40px;
+        font-weight: normal;
+      }
+      h3 {
+        color: #1e3a8a;
+        font-size: 22px;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 8px;
+      }
+      h4 {
+        color: #334155;
+        font-size: 18px;
+        margin-top: 24px;
+        margin-bottom: 12px;
+      }
+
+      /* Badges */
+      .badge {
+        display: inline-block;
+        background-color: #e0e7ff;
+        color: #3730a3;
+        padding: 4px 16px;
+        border-radius: 9999px;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+
+      /* Code Blocks - No scrollbars allowed per constraints */
+      .code-container {
+        margin: 16px 0;
+      }
+      .code-label {
+        display: inline-block;
+        background-color: #475569;
+        color: #ffffff;
+        padding: 4px 12px;
+        font-size: 12px;
+        font-family: monospace;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        margin-bottom: 0;
+      }
+      pre {
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+        padding: 16px;
+        margin-top: 0;
+        border-radius: 0 4px 4px 4px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap; /* Prevents horizontal scroll */
+        word-wrap: break-word; /* Prevents horizontal scroll */
+        word-break: break-all; /* Prevents horizontal scroll */
+      }
+
+      /* Diagrams */
+      .diagram {
+        background-color: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        padding: 16px;
+        text-align: center;
+        font-weight: bold;
+        color: #475569;
+        border-radius: 4px;
+        margin: 16px 0;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 24px 0;
+        font-size: 14px;
+      }
+      th,
+      td {
+        border: 1px solid #cbd5e1;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #f1f5f9;
+        color: #1e3a8a;
+        font-weight: bold;
+      }
+
+      /* Callout Boxes */
+      .tip-box {
+        background-color: #fff8e1;
+        border-left: 6px solid #f59e0b;
+        padding: 16px 20px;
+        margin: 24px 0;
+        border-radius: 0 4px 4px 0;
+      }
+      .tip-box-title {
+        font-weight: bold;
+        color: #b45309;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .reference-box {
+        background-color: #f8f9fa;
+        border-left: 6px solid #94a3b8;
+        padding: 16px 20px;
+        margin: 20px 0;
+        border-radius: 0 4px 4px 0;
+        font-size: 14px;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 60px;
+        text-align: right;
+        font-size: 12px;
+        color: #94a3b8;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 16px;
+      }
+
+      /* Lists */
+      ul {
+        padding-left: 24px;
+        margin-bottom: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body style="">
+    <h1>APIの種類を理解しよう</h1>
+    <h2>初学者向けガイド</h2>
+
+    <p>
+      「APIってよく聞くけれど、色々な文脈で使われていてよく分からない…」<br>
+      このドキュメントは、そんな初学者の方に向けて、APIの広い意味と、代表的な3つの種類（区分）を分かりやすくまとめたガイドです。
+    </p>
+
+    <!-- Section 0 -->
+    <h3>0. そもそもAPIとは？（広義の定義）</h3>
+    <p>APIとは「<strong>A</strong>pplication <strong>P</strong>rogramming <strong>I</strong>nterface」の略です。</p>
+    <ul>
+      <li><strong>Application（アプリ）</strong>：ソフトウェアや機能のこと</li>
+      <li><strong>Interface（インターフェース）</strong>：何かと何かをつなぐ「窓口」や「接点」のこと</li>
+    </ul>
+    <p>
+      つまり、広義のAPIとは<strong>「外部の機能を呼び出して使うための、あらゆる手段や窓口」</strong>を指します。日常会話やビジネスの場では「Web
+      API（インターネットを使ったHTTP通信）」を指すことが多いですが、プログラミングの世界ではより広い意味で使われます。本資料では、この「広義のAPI」として全体を整理します。
+    </p>
+
+    <div class="reference-box">
+      <strong>🍽️ レストランのメニューに例えると…</strong><br>
+      APIはレストランの「メニュー表」のようなものです。厨房の中でシェフがどのように料理を作っているか（複雑な内部処理）を知らなくても、メニューから「オムライス」を注文（APIを呼び出し）すれば、完成した料理（結果）を受け取ることができます。
+    </div>
+
+    <!-- Section 1 -->
+    <h3>1. 区分① ライブラリ/SDK型API</h3>
+    <span class="badge">設定不要・即使える</span>
+
+    <p>
+      <strong>概念：</strong>自分のコードの中にインポート（読み込み）して使う関数の集まりです。最初から環境に用意されている標準装備のものや、追加でインストールして使うものがあります。
+    </p>
+
+    <ul>
+      <li><strong>特徴：</strong>HTTP通信（インターネット通信）が不要で、コード内だけで完結します。</li>
+      <li><strong>メリット：</strong>設定が少なく、最も手軽に呼び出すことができます。</li>
+    </ul>
+
+    <div class="code-container">
+      <div class="code-label">Python の例</div>
+      <pre># pandasライブラリを読み込んで機能（API）を使う
+import pandas as pd
+
+df = pd.read_csv("data.csv")  # CSVファイルを読み込む
+print(df.head())              # 最初の5行を表示</pre>
+    </div>
+
+    <div class="code-container">
+      <div class="code-label">GAS（Google Apps Script）の例</div>
+      <pre>// ※ GASの組み込みサービスはimport宣言も不要！最初から使えます
+const sheet = SpreadsheetApp.getActiveSheet();
+const value = sheet.getRange("A1").getValue();</pre>
+    </div>
+
+    <p>
+      <strong>いつ使うか：</strong>そのプログラミング環境（言語やプラットフォーム）にすでに用意されている標準機能を使いたいとき。何かやりたいことがあったら、<strong>まず最初にこの区分で解決できないか確認する</strong>のが基本です。
+    </p>
+
+    <!-- Section 2 -->
+    <h3>2. 区分② 外部API型（REST API / HTTP API）</h3>
+    <span class="badge">インターネット越しに機能を借りる</span>
+
+    <p>
+      <strong>概念：</strong>HTTPリクエストという通信手段を使って、インターネット越しに外部サービス（他社）の機能を呼び出す形式です。一般的に「API連携」と呼ばれるものの多くはこれに該当します。
+    </p>
+
+    <ul>
+      <li><strong>特徴：</strong>呼び出しには認証（APIキーやOAuthなど）が必要です。</li>
+      <li>
+        <strong>ルール：</strong>相手が公開しているAPI仕様書（リファレンス）に従って、GETやPOSTなどのメソッドを使って通信します。
+      </li>
+    </ul>
+
+    <div class="diagram">
+      自分のコード ── [HTTP リクエストを送信] ──▶ 外部サービス<br>
+      自分のコード ◀── [結果（レスポンス）を返却] ── 外部サービス
+    </div>
+
+    <div class="code-container">
+      <div class="code-label">GAS の例：Slack APIにメッセージを送信する</div>
+      <pre>const url = "https://slack.com/api/chat.postMessage";
+const options = {
+  method: "post",
+  headers: {
+    "Authorization": "Bearer YOUR_TOKEN"
+  },
+  payload: JSON.stringify({
+    channel: "#general",
+    text: "こんにちは！GASから送信しました🎉"
+  })
+};
+UrlFetchApp.fetch(url, options);  // ← HTTPリクエストを送る</pre>
+    </div>
+
+    <div class="code-container">
+      <div class="code-label">Python の例：OpenAI APIを呼び出す（簡易）</div>
+      <pre>import requests
+
+response = requests.post(
+  "https://api.openai.com/v1/chat/completions",
+  headers={"Authorization": "Bearer YOUR_API_KEY"},
+  json={"model": "gpt-4", "messages": [{"role": "user", "content": "こんにちは"}]}
+)
+print(response.json())</pre>
+    </div>
+
+    <p>
+      <strong>いつ使うか：</strong>Slackに通知を送る、OpenAIで文章を生成する、freeeに経理データを登録するなど、<strong>外部のサービスとデータをやり取りしたいとき</strong>に使用します。
+    </p>
+
+    <div class="reference-box">
+      <strong>💡 参考：その他の外部通信系API</strong><br>
+      REST
+      API以外にも、必要なデータだけを柔軟に取得できるクエリ言語ベースの「<strong>GraphQL</strong>」や、リアルタイムな双方向通信に特化した「<strong>WebSocket</strong>」といった技術もあります。これらも「外部と通信して機能を利用する」という点では同じ系統のAPIと言えます。
+    </div>
+
+    <!-- Section 3 -->
+    <h3>3. 区分③ Webhook型</h3>
+    <span class="badge">向きが逆！相手から通知を受け取る</span>
+
+    <p>
+      <strong>概念：</strong>外部API型とは「通信の向きが逆」になります。自分からリクエストを送るのではなく、こちらが受け皿となるURL（エンドポイント）を公開しておき、外部サービスで何かが起きたときに<strong>Push（通知）を受け取る</strong>仕組みです。
+    </p>
+
+    <ul>
+      <li><strong>特徴：</strong>イベント駆動型です（例：「メッセージが投稿された時」だけ発火する）。</li>
+      <li>
+        <strong>メリット：</strong>こちらから定期的に「新しいデータある？」と聞きに行く（ポーリング）必要がありません。
+      </li>
+    </ul>
+
+    <div class="diagram">外部サービス ── [イベント発生時にPush送信] ──▶ 自分のURL（受信） ──▶ 処理実行</div>
+
+    <p>
+      <strong>Slackでのイメージ例：</strong><br>
+      Slack上でユーザーがメッセージを書き込んだり、リアクションを付けたりする（イベント発生）と、Slack側からあなたの設定したURL宛に「こんな書き込みがありましたよ！」というPOSTリクエストが飛んできます。
+    </p>
+
+    <div class="code-container">
+      <div class="code-label">GAS の例：Webhookを受信する（doPost関数）</div>
+      <pre>// このスクリプトをWebアプリとして公開するとURLが発行される
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);  // 受け取ったデータを解析
+  const message = data.text;                      // メッセージを取得
+  
+  // スプレッドシートに記録する
+  SpreadsheetApp.getActiveSheet()
+    .appendRow([new Date(), message]);
+  
+  return ContentService.createTextOutput("OK");
+}</pre>
+    </div>
+
+    <p>
+      <strong>いつ使うか：</strong>「誰かがフォームを送信した時」「GitHubにコードがPushされた時」「チャットに特定のキーワードが書き込まれた時」など、<strong>外部で起きたアクションをトリガー（引き金）にして、自分のプログラムを動かしたいとき</strong>に使います。
+    </p>
+
+    <!-- Section 4 -->
+    <h3>4. 比較まとめ表</h3>
+    <p>ここまでの3つの区分を、それぞれの特徴で比較してみましょう。</p>
+    <table>
+      <thead>
+        <tr>
+          <th>区分</th>
+          <th>HTTP通信</th>
+          <th>通信の向き</th>
+          <th>設定難易度</th>
+          <th>代表例</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ライブラリ/SDK型</strong></td>
+          <td>不要</td>
+          <td>―（コード内で完結）</td>
+          <td>★☆☆ 低</td>
+          <td>pandas, SpreadsheetApp</td>
+        </tr>
+        <tr>
+          <td><strong>外部API型</strong></td>
+          <td>必要</td>
+          <td>自分 → 外部サービス</td>
+          <td>★★☆ 中〜高</td>
+          <td>Slack API, OpenAI API</td>
+        </tr>
+        <tr>
+          <td><strong>Webhook型</strong></td>
+          <td>必要（受信）</td>
+          <td>外部サービス → 自分</td>
+          <td>★★☆ 中</td>
+          <td>Slack Webhook, GitHub Webhook</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section 5 -->
+    <h3>5. 開発をスムーズに進めるためのTIPS</h3>
+
+    <div class="tip-box">
+      <span class="tip-box-title">💡 TIP 1: 迷ったらまず「ライブラリ型」で済まないか考えよう</span>
+      プログラムで新しい処理を作りたいとき、まずは「今使っている環境（GASの組み込みサービスや、Pythonの標準ライブラリなど）で解決できないか？」を確認しましょう。通信の設定や認証が不要なため、一番とっつきやすくバグも起きにくい王道のアプローチです。
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-box-title">💡 TIP 2: 外部API型とWebhookは組み合わせて使うことが多い</span>
+      実際のシステム開発では、この2つをセットで使うことがよくあります。<br>
+      【例：Slackボットの開発】<br>
+      ① ユーザーからのメンションを受け取る ＝ <strong>Webhook型</strong>（Slack → 自分）<br>
+      ② 受け取った内容にAIで返信する ＝ <strong>外部API型</strong>（自分 → Slack API）<br>
+      このように両方を組み合わせることで、双方向の豊かなコミュニケーションが実現できます。
+    </div>
+
+    <div class="footer">作成日：2026年3月25日　APIの種類を理解しよう ― 初学者向けガイド</div>
+  
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>
