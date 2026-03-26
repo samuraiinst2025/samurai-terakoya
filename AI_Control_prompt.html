@@ -3,708 +3,737 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>生成AIとの壁打ちで迷子にならないための実践プロンプトテンプレート集</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
     <style>
       :root {
-        --text-color: #2d3748;
         --bg-color: #f8f9fa;
         --card-bg: #ffffff;
         --accent: #0d9488;
-        --accent-hover: #0f766e;
-        --sidebar-bg: #f1f5f9;
+        --highlight: #fef08a;
         --template-bg: #f0fdf4;
-        --placeholder-bg: #fef9c3;
-        --placeholder-text: #92400e;
+        --text-main: #2d3748;
         --border-color: #e2e8f0;
       }
 
+      /* System Document Requirements */
       body {
         max-width: 880px;
         margin: 0 auto;
         padding: 32px 80px;
         position: relative;
         box-sizing: border-box;
-        font-family: 'Noto Sans JP', sans-serif;
-        color: var(--text-color);
-        background-color: var(--bg-color);
-        line-height: 1.6;
+        background-color: var(--card-bg);
+        color: var(--text-main);
+        font-family: 'Times New Roman', 'Hiragino Mincho ProN', 'MS PMincho', serif;
+        line-height: 1.8;
       }
 
-      h1 {
+      /* Sidebar Styling (Fixed to the left of the centered body) */
+      .sidebar {
+        position: fixed;
+        top: 32px;
+        left: max(20px, calc(50% - 440px - 220px));
+        width: 220px;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+        background: var(--card-bg);
+        padding: 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .sidebar h4 {
+        margin-top: 0;
         color: var(--accent);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        font-size: 1rem;
+      }
+
+      .sidebar a {
+        display: block;
+        color: var(--text-main);
+        text-decoration: none;
+        padding: 6px 0;
+        font-size: 0.85rem;
+        border-bottom: 1px dashed var(--border-color);
+      }
+
+      .sidebar a:last-child {
+        border-bottom: none;
+      }
+
+      /* Typography */
+      h1 {
         font-size: 2rem;
-        border-bottom: 2px solid var(--accent);
-        padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
+        color: var(--text-main);
+        border-bottom: 3px double var(--border-color);
+        padding-bottom: 10px;
+        margin-bottom: 24px;
+        text-align: center;
       }
 
       h2 {
-        color: var(--text-color);
         font-size: 1.5rem;
-        margin-top: 2.5rem;
-        padding: 0.75rem 1rem;
-        background-color: var(--card-bg);
-        border-left: 5px solid var(--accent);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        border-radius: 0 4px 4px 0;
+        color: var(--accent);
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 6px;
+        margin-top: 48px;
       }
 
       h3 {
         font-size: 1.2rem;
-        color: var(--text-color);
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
+        color: var(--text-main);
+        margin-top: 32px;
+        margin-bottom: 12px;
       }
 
       p {
-        margin-bottom: 1.5rem;
+        margin-bottom: 16px;
+        text-align: justify;
       }
 
-      .intro {
-        background: var(--card-bg);
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-        border: 1px solid var(--border-color);
+      /* Template Box Styles */
+      .template-wrapper {
+        position: relative;
+        margin-bottom: 32px;
+        page-break-inside: avoid;
       }
 
-      /* テンプレートボックス */
       .template-box {
         background-color: var(--template-bg);
-        border-left: 4px solid var(--accent);
-        border-radius: 4px 8px 8px 4px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        position: relative;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
+        border: 1px solid #bbf7d0;
+        padding: 24px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #1f2937;
       }
 
-      .template-box:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* The core hanging indent classes */
+      .hanging-indent {
+        padding-left: 1.5em;
+        text-indent: -1.5em;
       }
 
-      .template-content {
-        white-space: pre-wrap;
-        font-family: monospace, 'Noto Sans JP';
-        font-size: 0.95rem;
-        margin-top: 0.5rem;
-        color: #1a202c;
+      .hanging-indent-wide {
+        padding-left: 2.5em;
+        text-indent: -1.5em;
       }
 
-      /* プレースホルダーハイライト */
-      .ph {
-        background-color: var(--placeholder-bg);
-        color: var(--placeholder-text);
-        padding: 0.1rem 0.3rem;
-        border-radius: 3px;
-        font-weight: 600;
+      mark.placeholder {
+        background-color: var(--highlight);
+        color: #000;
+        padding: 0 4px;
       }
 
-      /* コピーボタン */
+      /* Copy Button */
       .copy-btn {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        top: 8px;
+        right: 8px;
         background-color: var(--accent);
         color: white;
         border: none;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-        border-radius: 4px;
+        padding: 4px 12px;
+        font-size: 12px;
         cursor: pointer;
-        transition: background-color 0.2s;
-        font-weight: bold;
-        width: auto;
-        margin: 0;
+        font-family: Arial, sans-serif;
+        z-index: 10;
       }
 
-      .copy-btn:hover {
-        background-color: var(--accent-hover);
-      }
-
-      /* サイドバー目次 */
-      .toc-sidebar {
-        position: fixed;
-        top: 2rem;
-        left: max(1rem, calc(50% - 650px));
-        width: 200px;
-        background: var(--sidebar-bg);
-        padding: 1.5rem 1rem;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        font-size: 0.85rem;
-        max-height: calc(100vh - 4rem);
-        overflow-y: auto;
-        display: none;
-      }
-
-      .toc-sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .toc-sidebar li {
-        margin-bottom: 0.8rem;
-      }
-
-      .toc-sidebar a {
-        color: var(--text-color);
-        text-decoration: none;
-        transition: color 0.2s;
-        display: block;
-      }
-
-      .toc-sidebar a:hover,
-      .toc-sidebar a.active {
-        color: var(--accent);
-        font-weight: bold;
-      }
-
-      /* テーブル */
+      /* Table Styles */
       table {
         width: 100%;
         border-collapse: collapse;
-        background: var(--card-bg);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 2rem;
+        margin: 24px 0;
+        font-family: Arial, sans-serif;
       }
 
       th,
       td {
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
+        border: 1px solid var(--border-color);
+        padding: 12px;
         text-align: left;
+        font-size: 0.95rem;
       }
 
       th {
-        background-color: var(--accent);
-        color: white;
+        background-color: #f1f5f9;
+        color: var(--text-main);
         font-weight: bold;
       }
 
-      /* スクロールアニメーション */
-      .fade-in-section {
-        opacity: 0;
-        transform: translateY(20px);
-        transition:
-          opacity 0.6s ease-out,
-          transform 0.6s ease-out;
-        will-change: opacity, visibility;
-      }
-      .fade-in-section.is-visible {
-        opacity: 1;
-        transform: none;
-      }
-
-      @media (min-width: 1300px) {
-        .toc-sidebar {
-          display: block;
+      /* Responsive & Print Rules */
+      @media (max-width: 1200px) {
+        .sidebar {
+          display: none;
+        }
+        body {
+          padding: 24px 40px;
         }
       }
-
       @media (max-width: 768px) {
         body {
-          padding: 20px;
+          padding: 16px;
         }
       }
     </style>
   </head>
   <body style="">
-    <nav class="toc-sidebar">
-      <strong>目次</strong>
-      <ul>
-        <li><a href="#method1">手法1: アンカーを下ろす</a></li>
-        <li><a href="#method2">手法2: 軌道修正役</a></li>
-        <li><a href="#method3">手法3: フェーズ分割</a></li>
-        <li><a href="#method4">手法4: パーキングロット</a></li>
-        <li><a href="#method5">手法5: 要約と進捗確認</a></li>
-        <li><a href="#method6">手法6: アウトライナー</a></li>
-        <li><a href="#guide">状況別おすすめ・ガイド</a></li>
-      </ul>
+    <nav class="sidebar">
+      <h4>目次</h4>
+      <a href="#method-1">手法1: アンカーを下ろす</a>
+      <a href="#method-2">手法2: 軌道修正役を振る</a>
+      <a href="#method-3">手法3: フェーズ分割と合意</a>
+      <a href="#method-4">手法4: パーキングロット</a>
+      <a href="#method-5">手法5: 要約と進捗確認</a>
+      <a href="#method-6">手法6: アウトライナー的アプローチ</a>
+      <a href="#guide">状況別ガイド</a>
     </nav>
 
-    <h1>生成AIとの壁打ちで迷子にならないための実践プロンプトテンプレート集</h1>
+    <h1>生成AIとの壁打ちで迷子にならないための<br>実践プロンプトテンプレート集</h1>
 
-    <div class="intro fade-in-section is-visible">
-      <p>
-        生成AIとの対話が深まるほど、最初に目指していたゴールからいつの間にか離れてしまう「思考の迷子」現象がある。AIが多様な選択肢を提示してくれることで、あれも気になる、これも気になる、というループに陥るケースだ。このドキュメントは、そうした状況を構造的に回避するための6つのメソッドと、すぐに使えるプロンプトテンプレートをまとめたものである。
-      </p>
-    </div>
+    <p>
+      生成AIとの対話が深まるほど、最初に目指していたゴールからいつの間にか離れてしまう「思考の迷子」現象がある。AIが多様な選択肢を提示してくれることで、あれも気になる、これも気になる、というループに陥るケースだ。このドキュメントは、そうした状況を構造的に回避するための6つのメソッドと、すぐに使えるプロンプトテンプレートをまとめたものである。
+    </p>
 
-    <!-- 手法1 -->
-    <div id="method1" class="fade-in-section is-visible">
-      <h2>【手法1】最初に「アンカー（錨）」を下ろす</h2>
-      <p>
-        <strong>説明:</strong>
-        会話を開始する際、「最終的に得たい成果物（アウトプット）」と「絶対にブレたくない軸」を最初に定義して固定します。単に「〜について考えたい」と始めるのではなく、ゴールと制約を宣言することで、会話全体の方向性を固定します。
-      </p>
+    <h2 id="method-1">【手法1】最初に「アンカー（錨）」を下ろす</h2>
+    <p>
+      <strong>説明:</strong>
+      会話を開始する際、「最終的に得たい成果物（アウトプット）」と「絶対にブレたくない軸」を最初に定義して固定します。単に「〜について考えたい」と始めるのではなく、ゴールと制約を宣言することで、会話全体の方向性を固定します。
+    </p>
 
+    <h3>テンプレート1【企画書・成果物作成向け】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【企画書・成果物作成向け】</h3>
-        <div class="template-content">
-          今日のセッションのゴールを最初に宣言します。 ■ 最終アウトプット:
-          <span class="ph">[企画書 / 提案資料 / アイデア整理]</span> ■ 達成したいゴール:
-          <span class="ph">[ターゲット顧客に対するUSPを1行で定義する]</span> ■ ブレたくない軸:
-          <span class="ph">[既存リソースで実現できる範囲に限定]</span> ■ 今回のスコープ外:
-          <span class="ph">[マーケティング戦略・詳細な実装方法は今日は扱わない]</span>
-
-          このゴールから外れそうになったら、その都度指摘してください。 では、<span class="ph">[新サービスの企画]</span>について考えていきましょう。
+        <div>今日のセッションのゴールを最初に宣言します。</div>
+        <div class="hanging-indent">
+          ■ 最終アウトプット: <mark class="placeholder">[企画書 / 提案資料 / アイデア整理]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【意思決定・選択向け】</h3>
-        <div class="template-content">
-          今から意思決定の壁打ちをしたいと思います。 ■ 決めたいこと:
-          <span class="ph">[AかBか、どちらの選択肢を選ぶか]</span> ■ 決定の期限:
-          <span class="ph">[今日中に結論を出す]</span> ■ 判断基準（優先順位順）: 1.
-          <span class="ph">[コストが最小であること]</span> 2. <span class="ph">[3ヶ月以内に実行できること]</span> 3.
-          <span class="ph">[チームの合意が得やすいこと]</span> ■ 今回考慮しないこと:
-          <span class="ph">[長期的なスケーラビリティ]</span>
-
-          この基準から外れた視点での提案は、一旦保留にしてください。
+        <div class="hanging-indent">
+          ■ 達成したいゴール: <mark class="placeholder">[ターゲット顧客に対するUSPを1行で定義する]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【問題解決向け】</h3>
-        <div class="template-content">
-          以下の問題を解決するための議論を始めます。 ■ 解決したい問題:
-          <span class="ph">[具体的な課題・困りごと]</span> ■ 理想の状態（ゴール）:
-          <span class="ph">[問題が解決された状態の具体的なイメージ]</span> ■ 制約条件:
-          <span class="ph">[予算・時間・人員などの制約]</span> ■ 今日のゴール:
-          <span class="ph">[解決策の方向性を1〜3つに絞り込む]</span>
-
-          解決策の深掘りは次のセッションで行うので、 今日は「方向性の選定」だけに集中させてください。
+        <div class="hanging-indent">
+          ■ ブレたくない軸: <mark class="placeholder">[既存リソースで実現できる範囲に限定]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【学習・理解深化向け】</h3>
-        <div class="template-content">
-          今日は<span class="ph">[テーマ]</span>について深く理解することが目的です。 ■ 学習ゴール:
-          <span class="ph">[〜を自分の言葉で説明できるようになる]</span> ■ 現在の理解レベル:
-          <span class="ph">[初心者 / 概念は知っているが詳細は不明]</span> ■ 学習後に使いたい場面:
-          <span class="ph">[〜の場面で活用したい]</span> ■ 今日のスコープ:
-          <span class="ph">[基本概念と実践例の理解まで。応用・例外は次回]</span>
-
-          関連する発展的なトピックが出てきたら、 「それは今日のスコープ外です」と教えてください。
+        <div class="hanging-indent">
+          ■ 今回のスコープ外: <mark class="placeholder">[マーケティング戦略・詳細な実装方法は今日は扱わない]</mark>
         </div>
+        <div>このゴールから外れそうになったら、その都度指摘してください。</div>
+        <div>では、<mark class="placeholder">[新サービスの企画]</mark>について考えていきましょう。</div>
       </div>
     </div>
 
-    <!-- 手法2 -->
-    <div id="method2" class="fade-in-section">
-      <h2>【手法2】AIに「軌道修正役（ガードレール）」の役割を振る</h2>
-      <p>
-        <strong>説明:</strong>
-        AIの柔軟さを逆手に取り、自分の思考が拡散しすぎた時にブレーキをかけてもらう役割をプロンプトに組み込みます。
-      </p>
-
+    <h3>テンプレート2【意思決定・選択向け】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【汎用ガードレール設定】</h3>
-        <div class="template-content">
-          あなたには今日の会話で「ガードレール役」を担ってもらいます。 【役割】
-          私が本来のゴールから外れた方向に話が向かいそうになった時、 以下の質問で軌道修正を促してください。
-          ・「それは当初の目的である<span class="ph">[ゴール]</span>とどう関係しますか？」
-          ・「今それを議論することの優先順位は高いですか？」 ・「本筋に戻りましょうか、それともこの話題を続けますか？」
-          【当初のゴール】: <span class="ph">[ここにゴールを記入]</span>
-
-          この役割を忘れないよう、会話の最初に確認した上で始めてください。
+        <div>今から意思決定の壁打ちをしたいと思います。</div>
+        <div class="hanging-indent">
+          ■ 決めたいこと: <mark class="placeholder">[AかBか、どちらの選択肢を選ぶか]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【厳格モード（強めにブレーキ）】</h3>
-        <div class="template-content">
-          今日は「厳格モード」でガードレール役をお願いします。 私が以下の行動をとった場合、すぐに止めてください。 🚨
-          止めてほしいパターン: ・「あ、でもこっちも気になるんですが…」と話が広がり始めた時
-          ・「ちょっと関係ないかもですが…」と前置きした時 ・同じ話題を3回以上繰り返している時
-          ・決断を先延ばしにする発言をした時 止め方: 「⚠️ ゴールから外れています。<span class="ph">[ゴール]</span>に戻りましょう。」 とはっきり言ってください。私が抵抗しても従ってください。 【今日のゴール】:
-          <span class="ph">[ここにゴールを記入]</span>
+        <div class="hanging-indent">■ 決定の期限: <mark class="placeholder">[今日中に結論を出す]</mark></div>
+        <div class="hanging-indent">■ 判断基準（優先順位順）:</div>
+        <div class="hanging-indent-wide">　1. <mark class="placeholder">[コストが最小であること]</mark></div>
+        <div class="hanging-indent-wide">　2. <mark class="placeholder">[3ヶ月以内に実行できること]</mark></div>
+        <div class="hanging-indent-wide">　3. <mark class="placeholder">[チームの合意が得やすいこと]</mark></div>
+        <div class="hanging-indent">
+          ■ 今回考慮しないこと: <mark class="placeholder">[長期的なスケーラビリティ]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【ソフトモード（気づきを促す）】</h3>
-        <div class="template-content">
-          今日の会話では、私の思考が拡散しそうになったら 「気づき」を与えるサポートをしてください。 【スタイル】
-          ・責めずに、優しく「気づき」を促してください ・「少し話が広がってきましたね。一度整理しませんか？」のように
-          ・強制はせず、私に選択肢を提示してください → 「A) 今の話を続ける　B) 本筋に戻る　どちらにしますか？」
-          【今日のゴール】: <span class="ph">[ここにゴールを記入]</span>
-
-          このスタイルで進めながら、<span class="ph">[テーマ]</span>について考えていきましょう。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【タイムボックス付き】</h3>
-        <div class="template-content">
-          今日は<span class="ph">[X分 / X往復]</span>という制限の中でゴールに到達したいと思います。
-          【タイムボックス設定】 ・制限: <span class="ph">[30分 / 10往復のやりとり]</span> ・ゴール:
-          <span class="ph">[最終的に決めたいこと]</span>
-
-          【タイムキーパーとしての役割】 ・<span class="ph">[5往復]</span>経過したら「現在<span class="ph">[ゴール]</span>に対して何%進んでいるか」を教えてください ・残り<span class="ph">[2往復]</span>になったら「そろそろまとめに入りましょう」と提案してください
-          ・制限に達したら、その時点での結論を強制的にまとめてください では始めましょう。
-        </div>
+        <div>この基準から外れた視点での提案は、一旦保留にしてください。</div>
       </div>
     </div>
 
-    <!-- 手法3 -->
-    <div id="method3" class="fade-in-section">
-      <h2>【手法3】「フェーズ分割」と「合意形成」の徹底</h2>
-      <p>
-        <strong>説明:</strong>
-        一気に最後まで行こうとせず、ステップごとに「今は何を確定させるフェーズか」を宣言し、そのステップが終わるまで次の話題には触れないようにします。
-      </p>
-
+    <h3>テンプレート3【問題解決向け】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【フェーズ宣言テンプレート】</h3>
-        <div class="template-content">
-          今から「フェーズ<span class="ph">[番号]</span>: <span class="ph">[フェーズ名]</span>」を開始します。
-          【このフェーズのゴール】
-          <span class="ph">[このステップで確定させたいこと]</span>
-
-          【このフェーズでやること】 ・<span class="ph">[タスク1]</span> ・<span class="ph">[タスク2]</span>
-
-          【このフェーズでやらないこと】 ・<span class="ph">[次のフェーズで扱うこと]</span> ・<span class="ph">[スコープ外のこと]</span>
-
-          このフェーズが完了するまで、上記の「やらないこと」には触れないでください。 では始めましょう。
+        <div>以下の問題を解決するための議論を始めます。</div>
+        <div class="hanging-indent">■ 解決したい問題: <mark class="placeholder">[具体的な課題・困りごと]</mark></div>
+        <div class="hanging-indent">
+          ■ 理想の状態（ゴール）: <mark class="placeholder">[問題が解決された状態の具体的なイメージ]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【フェーズ終了・合意確認】</h3>
-        <div class="template-content">
-          フェーズ<span class="ph">[番号]</span>の議論をここで一度止めて、確認させてください。
-          【このフェーズで確定したこと】 （あなたが今までの議論をもとに整理してください） 確認質問: 1.
-          上記の理解は正しいですか？ 2. このフェーズのゴール「<span class="ph">[ゴール]</span>」は達成できましたか？ 3.
-          次のフェーズ「<span class="ph">[次のフェーズ名]</span>」に進んで問題ありませんか？ 問題なければ「フェーズ<span class="ph">[次の番号]</span>に進む」と宣言してください。
+        <div class="hanging-indent">■ 制約条件: <mark class="placeholder">[予算・時間・人員などの制約]</mark></div>
+        <div class="hanging-indent">
+          ■ 今日のゴール: <mark class="placeholder">[解決策の方向性を1〜3つに絞り込む]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【次フェーズへの移行】</h3>
-        <div class="template-content">
-          フェーズ<span class="ph">[番号]</span>の内容で合意しました。 確定事項: ✅
-          <span class="ph">[確定したこと1]</span> ✅ <span class="ph">[確定したこと2]</span>
-
-          では、フェーズ<span class="ph">[次の番号]</span>: <span class="ph">[次のフェーズ名]</span> に進みます。
-          【次のフェーズのゴール】: <span class="ph">[次フェーズで確定させること]</span>
-
-          引き続きよろしくお願いします。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【全体フェーズ設計】</h3>
-        <div class="template-content">
-          今日の会話を始める前に、全体のフェーズを設計したいと思います。 【最終ゴール】:
-          <span class="ph">[セッション全体で達成したいこと]</span>
-
-          このゴールに向けて、どのようなフェーズに分けて進めるのが適切か提案してください。 提案のフォーマット:
-          フェーズ1: <span class="ph">[名前]</span> → ゴール: <span class="ph">[確定させること]</span> フェーズ2:
-          <span class="ph">[名前]</span> → ゴール: <span class="ph">[確定させること]</span> ... 各フェーズは<span class="ph">[15〜20分 / 5往復]</span>で完了できる粒度にしてください。
-        </div>
+        <div>解決策の深掘りは次のセッションで行うので、</div>
+        <div>今日は「方向性の選定」だけに集中させてください。</div>
       </div>
     </div>
 
-    <!-- 手法4 -->
-    <div id="method4" class="fade-in-section">
-      <h2>【手法4】「パーキングロット（一時保管場所）」の活用</h2>
-      <p>
-        <strong>説明:</strong>
-        AIが提案してくれた魅力的な横道や、ふと思いついた別のアイデアを「今は議論しないことリスト」として隔離します。
-      </p>
-
+    <h3>テンプレート4【学習・理解深化向け】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【パーキングロット登録指示】</h3>
-        <div class="template-content">
-          今出てきた「<span class="ph">[アイデア・話題]</span>」は、 今日の本筋には直接関係しないと判断します。
-          このアイデアを「パーキングロット」に入れてください。 パーキングロット形式: 🅿️
-          <span class="ph">[アイデア名]</span>: <span class="ph">[一言でどんなアイデアか]</span> 追記メモ:
-          <span class="ph">[思いついた背景や、後で検討したいポイント]</span>
-
-          今は本筋「<span class="ph">[現在のゴール]</span>」に戻りましょう。
+        <div>今日は<mark class="placeholder">[テーマ]</mark>について深く理解することが目的です。</div>
+        <div class="hanging-indent">
+          ■ 学習ゴール: <mark class="placeholder">[〜を自分の言葉で説明できるようになる]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【パーキングロット確認・一覧表示】</h3>
-        <div class="template-content">
-          現在のパーキングロットの一覧を表示してください。 表示フォーマット: 🅿️ パーキングロット一覧 --- No.1
-          <span class="ph">[アイデア名]</span> - <span class="ph">[登録したタイミング]</span> No.2
-          <span class="ph">[アイデア名]</span> - <span class="ph">[登録したタイミング]</span> ... --- 合計:
-          <span class="ph">[X]</span>件 その後、本筋の議論に戻ってください。
+        <div class="hanging-indent">
+          ■ 現在の理解レベル: <mark class="placeholder">[初心者 / 概念は知っているが詳細は不明]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【パーキングロットから本筋へ戻る】</h3>
-        <div class="template-content">
-          パーキングロットに入っている「<span class="ph">[アイデア名]</span>」を 正式に今日の議論に昇格させます。
-          【本筋への組み込み方】 ・現在のゴール「<span class="ph">[ゴール]</span>」との関連性を確認した上で
-          ・どのフェーズで扱うべきかを提案してください もし今日のゴールに関係が薄い場合は、
-          「次のセッションの議題」として保留にしてください。
+        <div class="hanging-indent">
+          ■ 学習後に使いたい場面: <mark class="placeholder">[〜の場面で活用したい]</mark>
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【セッション終了時の振り返り】</h3>
-        <div class="template-content">
-          今日のセッションを終える前に、 パーキングロットの全アイテムを振り返りましょう。
-          各アイテムについて以下を教えてください: 1. <span class="ph">[アイデア名]</span>:
-          今日のゴールとの関連度（高/中/低） 2. 次のアクション: 次回のセッションで扱う / 捨てる / 要検討
-          振り返り後、「次回のセッションアジェンダ」として 優先度順に並べ直してください。
+        <div class="hanging-indent">
+          ■ 今日のスコープ: <mark class="placeholder">[基本概念と実践例の理解まで。応用・例外は次回]</mark>
         </div>
+        <div>関連する発展的なトピックが出てきたら、</div>
+        <div>「それは今日のスコープ外です」と教えてください。</div>
       </div>
     </div>
 
-    <!-- 手法5 -->
-    <div id="method5" class="fade-in-section">
-      <h2>【手法5】定期的な「要約」と「進捗確認」の要求</h2>
-      <p><strong>説明:</strong> 会話が5〜10往復したタイミングで意識的に現在地を確認します。</p>
+    <h2 id="method-2">【手法2】AIに「軌道修正役（ガードレール）」の役割を振る</h2>
+    <p>
+      <strong>説明:</strong>
+      AIの柔軟さを逆手に取り、自分の思考が拡散しすぎた時にブレーキをかけてもらう役割をプロンプトに組み込みます。
+    </p>
 
+    <h3>テンプレート1【汎用ガードレール設定】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【進捗確認（基本）】</h3>
-        <div class="template-content">
-          ここで一度立ち止まって、進捗を確認させてください。 以下の形式でまとめてください: 【当初のゴール】:
-          <span class="ph">[最初に設定したゴール]</span> 【現在地】: ここまでの議論で決まったこと 【達成度】:
-          体感で<span class="ph">[?]</span>% 【残りのタスク】: まだ決めていないこと 【軌道のズレ】:
-          当初のゴールから外れている部分があれば指摘 この確認を踏まえて、次に何をすべきか提案してください。
+        <div>あなたには今日の会話で「ガードレール役」を担ってもらいます。</div>
+        <div>【役割】</div>
+        <div>私が本来のゴールから外れた方向に話が向かいそうになった時、</div>
+        <div>以下の質問で軌道修正を促してください。</div>
+        <div class="hanging-indent">
+          ・「それは当初の目的である<mark class="placeholder">[ゴール]</mark>とどう関係しますか？」
         </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【ゴール達成度の可視化】</h3>
-        <div class="template-content">
-          今のゴール達成度を「見える化」してください。 出力フォーマット: 🎯 ゴール:
-          <span class="ph">[最初に設定したゴール]</span>
-
-          進捗バー: [●●●●●○○○○○] 50% ✅ 決まったこと: ・<span class="ph">[確定事項1]</span> ・<span class="ph">[確定事項2]</span>
-
-          ⬜ 残っていること: ・<span class="ph">[未確定事項1]</span> ・<span class="ph">[未確定事項2]</span>
-
-          ⚠️ リスク・懸念: ・<span class="ph">[注意すべき点]</span>
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【残タスクの洗い出し】</h3>
-        <div class="template-content">
-          今日のゴール「<span class="ph">[ゴール]</span>」に到達するために、 残りのタスクを洗い出してください。
-          出力フォーマット: 残タスク一覧（優先度順）: 1. <span class="ph">[タスク名]</span> - 重要度: 高/中/低 -
-          所要時間: <span class="ph">[?分]</span> 2. <span class="ph">[タスク名]</span> - 重要度: 高/中/低 - 所要時間:
-          <span class="ph">[?分]</span> ... 今日のセッションで完了できそうなタスクと、
-          次回以降に回すべきタスクを分けて提示してください。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【セッションリセット（長期化した会話の再整理）】</h3>
-        <div class="template-content">
-          この会話がかなり長くなってきたので、一度リセットします。 以下の内容を整理してください: 1. 【最初のゴール】:
-          会話の冒頭で私が設定したゴール 2. 【現時点での結論】: ここまでで確定したこと（箇条書き） 3. 【迷走した部分】:
-          本筋から外れていた議論（あれば） 4. 【推奨する次の一手】: ゴールに最短で近づくための次のアクション
-          整理が終わったら、「リセット後の会話」として 【推奨する次の一手】から再スタートしてください。
-        </div>
+        <div class="hanging-indent">・「今それを議論することの優先順位は高いですか？」</div>
+        <div class="hanging-indent">・「本筋に戻りましょうか、それともこの話題を続けますか？」</div>
+        <div>【当初のゴール】: <mark class="placeholder">[ここにゴールを記入]</mark></div>
+        <div>この役割を忘れないよう、会話の最初に確認した上で始めてください。</div>
       </div>
     </div>
 
-    <!-- 手法6 -->
-    <div id="method6" class="fade-in-section">
-      <h2>【手法6】アウトライナー的なアプローチ（逆算思考）</h2>
-      <p>
-        <strong>説明:</strong>
-        先に全体の地図（アウトライン）を作り、今はその地図のどの部分を掘り下げているのかを常に意識しながら進めます。
-      </p>
-
+    <h3>テンプレート2【厳格モード（強めにブレーキ）】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
       <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート1【アウトライン先行作成】</h3>
-        <div class="template-content">
-          本題に入る前に、全体のアウトライン（目次）を先に作ってください。 【最終アウトプット】:
-          <span class="ph">[作りたいもの・到達したいゴール]</span> 【用途・目的】:
-          <span class="ph">[誰のために、何のために]</span> 【制約】:
-          <span class="ph">[分量・形式・含めてはいけないこと]</span>
-
-          アウトラインの形式: 1. <span class="ph">[大項目]</span> 1-1. <span class="ph">[中項目]</span> 1-2.
-          <span class="ph">[中項目]</span> 2. <span class="ph">[大項目]</span> ...
-          アウトラインが完成したら、どの項目から着手するか私に選ばせてください。 一度に全部進めないでください。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート2【現在地の確認】</h3>
-        <div class="template-content">
-          今の議論は、最初に作ったアウトラインのどの部分に相当しますか？ 以下の形式で教えてください: 📍 現在地:
-          <span class="ph">[アウトラインの項目番号と名前]</span>
-
-          アウトライン全体: 1. <span class="ph">[項目]</span> ✅ 完了 2. <span class="ph">[項目]</span> 👈 ← 現在ここ 3.
-          <span class="ph">[項目]</span> ⬜ 未着手 ... この確認をした上で、現在の項目の議論を続けましょう。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート3【特定セクションへのドリルダウン指示】</h3>
-        <div class="template-content">
-          アウトラインの「<span class="ph">[項目番号]</span>: <span class="ph">[項目名]</span>」に集中して深掘りします。
-          【このセクションのゴール】: <span class="ph">[このセクションで明確にしたいこと]</span> 【アウトプット形式】:
-          <span class="ph">[箇条書き / 文章 / 表]</span> 【深さ】:
-          <span class="ph">[概要だけ / 詳細まで / 実装レベルまで]</span>
-
-          このセクションが完了するまで、 他のセクションには触れないでください。 完了したら「<span class="ph">[項目名]</span>完了」と宣言してください。
-        </div>
-      </div>
-
-      <div class="template-box">
-        <button class="copy-btn">コピー</button>
-        <h3>テンプレート4【アウトライン更新・修正指示】</h3>
-        <div class="template-content">
-          議論を進める中で、アウトラインを修正したいと思います。 【修正内容】: ・<span class="ph">[項目番号]</span>を削除する / 追加する / 変更する ・理由: <span class="ph">[なぜ修正が必要か]</span> ・新しい優先順位:
-          <span class="ph">[変更後の順序]</span>
-
-          修正後のアウトラインを全体表示してください。 修正が当初のゴール「<span class="ph">[ゴール]</span>」に影響する場合は、 影響の有無と対処法を合わせて教えてください。
-        </div>
+        <div>今日は「厳格モード」でガードレール役をお願いします。</div>
+        <div>私が以下の行動をとった場合、すぐに止めてください。</div>
+        <div class="hanging-indent">🚨 止めてほしいパターン:</div>
+        <div class="hanging-indent">・「あ、でもこっちも気になるんですが…」と話が広がり始めた時</div>
+        <div class="hanging-indent">・「ちょっと関係ないかもですが…」と前置きした時</div>
+        <div class="hanging-indent">・同じ話題を3回以上繰り返している時</div>
+        <div class="hanging-indent">・決断を先延ばしにする発言をした時</div>
+        <div>止め方: 「⚠️ ゴールから外れています。<mark class="placeholder">[ゴール]</mark>に戻りましょう。」</div>
+        <div>とはっきり言ってください。私が抵抗しても従ってください。</div>
+        <div>【今日のゴール】: <mark class="placeholder">[ここにゴールを記入]</mark></div>
       </div>
     </div>
 
-    <!-- ガイド・おすすめ -->
-    <div id="guide" class="fade-in-section">
-      <h2>状況別おすすめ手法・ガイド</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>状況</th>
-            <th>推奨手法</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>迷子になりそうな予感がある</td>
-            <td>手法1＋2を最初に設定</td>
-          </tr>
-          <tr>
-            <td>会話が長くなってきた</td>
-            <td>手法5で現在地確認</td>
-          </tr>
-          <tr>
-            <td>あれもこれも気になって発散してきた</td>
-            <td>手法4でパーキングロット活用</td>
-          </tr>
-          <tr>
-            <td>複雑なアウトプットを作りたい</td>
-            <td>手法6でアウトラインを先に作る</td>
-          </tr>
-          <tr>
-            <td>重要な決断をしなければならない</td>
-            <td>手法3でフェーズ分割して段階的に合意</td>
-          </tr>
-          <tr>
-            <td>1時間以上の長いセッションになりそう</td>
-            <td>手法2＋5を組み合わせる</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="intro">
-        <h3 style="margin-top: 0">組み合わせガイド</h3>
-        <p>🔰 <strong>初心者向け:</strong> 手法1→3→5の順で使うのが最も効果的</p>
-        <p>🌟 <strong>中級者向け:</strong> 手法1＋2で開始し、手法4＋5で管理</p>
-        <p>👑 <strong>上級者向け:</strong> 全6手法を状況に応じて使い分ける</p>
-        <hr>
-        <p>
-          💡
-          <strong>ワンポイントアドバイス:</strong>
-          最初のプロンプトに「手法1（アンカー）」を仕込むだけで、多くの「迷子」状態は回避できる。完璧を目指さず、まずは手法1から始めてみよう。
-        </p>
+    <h3>テンプレート3【ソフトモード（気づきを促す）】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今日の会話では、私の思考が拡散しそうになったら</div>
+        <div>「気づき」を与えるサポートをしてください。</div>
+        <div>【スタイル】</div>
+        <div class="hanging-indent">・責めずに、優しく「気づき」を促してください</div>
+        <div class="hanging-indent">・「少し話が広がってきましたね。一度整理しませんか？」のように</div>
+        <div class="hanging-indent">・強制はせず、私に選択肢を提示してください</div>
+        <div class="hanging-indent">→ 「A) 今の話を続ける　B) 本筋に戻る　どちらにしますか？」</div>
+        <div>【今日のゴール】: <mark class="placeholder">[ここにゴールを記入]</mark></div>
+        <div>このスタイルで進めながら、<mark class="placeholder">[テーマ]</mark>について考えていきましょう。</div>
       </div>
+    </div>
+
+    <h3>テンプレート4【タイムボックス付き】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今日は<mark class="placeholder">[X分 / X往復]</mark>という制限の中でゴールに到達したいと思います。</div>
+        <div>【タイムボックス設定】</div>
+        <div class="hanging-indent">・制限: <mark class="placeholder">[30分 / 10往復のやりとり]</mark></div>
+        <div class="hanging-indent">・ゴール: <mark class="placeholder">[最終的に決めたいこと]</mark></div>
+        <div>【タイムキーパーとしての役割】</div>
+        <div class="hanging-indent">
+          ・<mark class="placeholder">[5往復]</mark>経過したら「現在<mark class="placeholder">[ゴール]</mark>に対して何%進んでいるか」を教えてください
+        </div>
+        <div class="hanging-indent">
+          ・残り<mark class="placeholder">[2往復]</mark>になったら「そろそろまとめに入りましょう」と提案してください
+        </div>
+        <div class="hanging-indent">・制限に達したら、その時点での結論を強制的にまとめてください</div>
+        <div>では始めましょう。</div>
+      </div>
+    </div>
+
+    <h2 id="method-3">【手法3】「フェーズ分割」と「合意形成」の徹底</h2>
+    <p>
+      <strong>説明:</strong>
+      一気に最後まで行こうとせず、ステップごとに「今は何を確定させるフェーズか」を宣言し、そのステップが終わるまで次の話題には触れないようにします。
+    </p>
+
+    <h3>テンプレート1【フェーズ宣言テンプレート】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>
+          今から「フェーズ<mark class="placeholder">[番号]</mark>:
+          <mark class="placeholder">[フェーズ名]</mark>」を開始します。
+        </div>
+        <div>【このフェーズのゴール】</div>
+        <div><mark class="placeholder">[このステップで確定させたいこと]</mark></div>
+        <div>【このフェーズでやること】</div>
+        <div class="hanging-indent">・<mark class="placeholder">[タスク1]</mark></div>
+        <div class="hanging-indent">・<mark class="placeholder">[タスク2]</mark></div>
+        <div>【このフェーズでやらないこと】</div>
+        <div class="hanging-indent">・<mark class="placeholder">[次のフェーズで扱うこと]</mark></div>
+        <div class="hanging-indent">・<mark class="placeholder">[スコープ外のこと]</mark></div>
+        <div>このフェーズが完了するまで、上記の「やらないこと」には触れないでください。</div>
+        <div>では始めましょう。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート2【フェーズ終了・合意確認】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>フェーズ<mark class="placeholder">[番号]</mark>の議論をここで一度止めて、確認させてください。</div>
+        <div>【このフェーズで確定したこと】</div>
+        <div>（あなたが今までの議論をもとに整理してください）</div>
+        <div>確認質問:</div>
+        <div class="hanging-indent">1. 上記の理解は正しいですか？</div>
+        <div class="hanging-indent">
+          2. このフェーズのゴール「<mark class="placeholder">[ゴール]</mark>」は達成できましたか？
+        </div>
+        <div class="hanging-indent">
+          3. 次のフェーズ「<mark class="placeholder">[次のフェーズ名]</mark>」に進んで問題ありませんか？
+        </div>
+        <div>問題なければ「フェーズ<mark class="placeholder">[次の番号]</mark>に進む」と宣言してください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート3【次フェーズへの移行】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>フェーズ<mark class="placeholder">[番号]</mark>の内容で合意しました。</div>
+        <div>確定事項:</div>
+        <div class="hanging-indent">✅ <mark class="placeholder">[確定したこと1]</mark></div>
+        <div class="hanging-indent">✅ <mark class="placeholder">[確定したこと2]</mark></div>
+        <div>
+          では、フェーズ<mark class="placeholder">[次の番号]</mark>:
+          <mark class="placeholder">[次のフェーズ名]</mark> に進みます。
+        </div>
+        <div>【次のフェーズのゴール】: <mark class="placeholder">[次フェーズで確定させること]</mark></div>
+        <div>引き続きよろしくお願いします。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート4【全体フェーズ設計】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今日の会話を始める前に、全体のフェーズを設計したいと思います。</div>
+        <div>【最終ゴール】: <mark class="placeholder">[セッション全体で達成したいこと]</mark></div>
+        <div>このゴールに向けて、どのようなフェーズに分けて進めるのが適切か提案してください。</div>
+        <div>提案のフォーマット:</div>
+        <div>
+          フェーズ1: <mark class="placeholder">[名前]</mark> → ゴール: <mark class="placeholder">[確定させること]</mark>
+        </div>
+        <div>
+          フェーズ2: <mark class="placeholder">[名前]</mark> → ゴール: <mark class="placeholder">[確定させること]</mark>
+        </div>
+        <div>...</div>
+        <div>各フェーズは<mark class="placeholder">[15〜20分 / 5往復]</mark>で完了できる粒度にしてください。</div>
+      </div>
+    </div>
+
+    <h2 id="method-4">【手法4】「パーキングロット（一時保管場所）」の活用</h2>
+    <p>
+      <strong>説明:</strong>
+      AIが提案してくれた魅力的な横道や、ふと思いついた別のアイデアを「今は議論しないことリスト」として隔離します。
+    </p>
+
+    <h3>テンプレート1【パーキングロット登録指示】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今出てきた「<mark class="placeholder">[アイデア・話題]</mark>」は、</div>
+        <div>今日の本筋には直接関係しないと判断します。</div>
+        <div>このアイデアを「パーキングロット」に入れてください。</div>
+        <div>パーキングロット形式:</div>
+        <div class="hanging-indent">
+          🅿️ <mark class="placeholder">[アイデア名]</mark>: <mark class="placeholder">[一言でどんなアイデアか]</mark>
+        </div>
+        <div>追記メモ: <mark class="placeholder">[思いついた背景や、後で検討したいポイント]</mark></div>
+        <div>今は本筋「<mark class="placeholder">[現在のゴール]</mark>」に戻りましょう。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート2【パーキングロット確認・一覧表示】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>現在のパーキングロットの一覧を表示してください。</div>
+        <div>表示フォーマット:</div>
+        <div>🅿️ パーキングロット一覧</div>
+        <div>---</div>
+        <div>
+          No.1 <mark class="placeholder">[アイデア名]</mark> - <mark class="placeholder">[登録したタイミング]</mark>
+        </div>
+        <div>
+          No.2 <mark class="placeholder">[アイデア名]</mark> - <mark class="placeholder">[登録したタイミング]</mark>
+        </div>
+        <div>...</div>
+        <div>---</div>
+        <div>合計: <mark class="placeholder">[X]</mark>件</div>
+        <div>その後、本筋の議論に戻ってください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート3【パーキングロットから本筋へ戻る】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>パーキングロットに入っている「<mark class="placeholder">[アイデア名]</mark>」を</div>
+        <div>正式に今日の議論に昇格させます。</div>
+        <div>【本筋への組み込み方】</div>
+        <div class="hanging-indent">
+          ・現在のゴール「<mark class="placeholder">[ゴール]</mark>」との関連性を確認した上で
+        </div>
+        <div class="hanging-indent">・どのフェーズで扱うべきかを提案してください</div>
+        <div>もし今日のゴールに関係が薄い場合は、</div>
+        <div>「次のセッションの議題」として保留にしてください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート4【セッション終了時の振り返り】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今日のセッションを終える前に、</div>
+        <div>パーキングロットの全アイテムを振り返りましょう。</div>
+        <div>各アイテムについて以下を教えてください:</div>
+        <div class="hanging-indent">
+          1. <mark class="placeholder">[アイデア名]</mark>: 今日のゴールとの関連度（高/中/低）
+        </div>
+        <div class="hanging-indent">2. 次のアクション: 次回のセッションで扱う / 捨てる / 要検討</div>
+        <div>振り返り後、「次回のセッションアジェンダ」として</div>
+        <div>優先度順に並べ直してください。</div>
+      </div>
+    </div>
+
+    <h2 id="method-5">【手法5】定期的な「要約」と「進捗確認」の要求</h2>
+    <p><strong>説明:</strong> 会話が5〜10往復したタイミングで意識的に現在地を確認します。</p>
+
+    <h3>テンプレート1【進捗確認（基本）】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>ここで一度立ち止まって、進捗を確認させてください。</div>
+        <div>以下の形式でまとめてください:</div>
+        <div>【当初のゴール】: <mark class="placeholder">[最初に設定したゴール]</mark></div>
+        <div>【現在地】: ここまでの議論で決まったこと</div>
+        <div>【達成度】: 体感で<mark class="placeholder">[?]</mark>%</div>
+        <div>【残りのタスク】: まだ決めていないこと</div>
+        <div>【軌道のズレ】: 当初のゴールから外れている部分があれば指摘</div>
+        <div>この確認を踏まえて、次に何をすべきか提案してください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート2【ゴール達成度の可視化】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今のゴール達成度を「見える化」してください。</div>
+        <div>出力フォーマット:</div>
+        <div class="hanging-indent">🎯 ゴール: <mark class="placeholder">[最初に設定したゴール]</mark></div>
+        <div>進捗バー: <mark class="placeholder">[●●●●●○○○○○]</mark> 50%</div>
+        <div class="hanging-indent">✅ 決まったこと:</div>
+        <div class="hanging-indent">・<mark class="placeholder">[確定事項1]</mark></div>
+        <div class="hanging-indent">・<mark class="placeholder">[確定事項2]</mark></div>
+        <div class="hanging-indent">⬜ 残っていること:</div>
+        <div class="hanging-indent">・<mark class="placeholder">[未確定事項1]</mark></div>
+        <div class="hanging-indent">・<mark class="placeholder">[未確定事項2]</mark></div>
+        <div class="hanging-indent">⚠️ リスク・懸念:</div>
+        <div class="hanging-indent">・<mark class="placeholder">[注意すべき点]</mark></div>
+      </div>
+    </div>
+
+    <h3>テンプレート3【残タスクの洗い出し】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今日のゴール「<mark class="placeholder">[ゴール]</mark>」に到達するために、</div>
+        <div>残りのタスクを洗い出してください。</div>
+        <div>出力フォーマット:</div>
+        <div>残タスク一覧（優先度順）:</div>
+        <div class="hanging-indent">
+          1. <mark class="placeholder">[タスク名]</mark> - 重要度: 高/中/低 - 所要時間:
+          <mark class="placeholder">[?分]</mark>
+        </div>
+        <div class="hanging-indent">
+          2. <mark class="placeholder">[タスク名]</mark> - 重要度: 高/中/低 - 所要時間:
+          <mark class="placeholder">[?分]</mark>
+        </div>
+        <div>...</div>
+        <div>今日のセッションで完了できそうなタスクと、</div>
+        <div>次回以降に回すべきタスクを分けて提示してください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート4【セッションリセット（長期化した会話の再整理）】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>この会話がかなり長くなってきたので、一度リセットします。</div>
+        <div>以下の内容を整理してください:</div>
+        <div class="hanging-indent">1. 【最初のゴール】: 会話の冒頭で私が設定したゴール</div>
+        <div class="hanging-indent">2. 【現時点での結論】: ここまでで確定したこと（箇条書き）</div>
+        <div class="hanging-indent">3. 【迷走した部分】: 本筋から外れていた議論（あれば）</div>
+        <div class="hanging-indent">4. 【推奨する次の一手】: ゴールに最短で近づくための次のアクション</div>
+        <div>整理が終わったら、「リセット後の会話」として</div>
+        <div>【推奨する次の一手】から再スタートしてください。</div>
+      </div>
+    </div>
+
+    <h2 id="method-6">【手法6】アウトライナー的なアプローチ（逆算思考）</h2>
+    <p>
+      <strong>説明:</strong>
+      先に全体の地図（アウトライン）を作り、今はその地図のどの部分を掘り下げているのかを常に意識しながら進めます。
+    </p>
+
+    <h3>テンプレート1【アウトライン先行作成】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>本題に入る前に、全体のアウトライン（目次）を先に作ってください。</div>
+        <div>【最終アウトプット】: <mark class="placeholder">[作りたいもの・到達したいゴール]</mark></div>
+        <div>【用途・目的】: <mark class="placeholder">[誰のために、何のために]</mark></div>
+        <div>【制約】: <mark class="placeholder">[分量・形式・含めてはいけないこと]</mark></div>
+        <div>アウトラインの形式:</div>
+        <div class="hanging-indent">1. <mark class="placeholder">[大項目]</mark></div>
+        <div class="hanging-indent-wide">　1-1. <mark class="placeholder">[中項目]</mark></div>
+        <div class="hanging-indent-wide">　1-2. <mark class="placeholder">[中項目]</mark></div>
+        <div class="hanging-indent">2. <mark class="placeholder">[大項目]</mark></div>
+        <div>...</div>
+        <div>アウトラインが完成したら、どの項目から着手するか私に選ばせてください。</div>
+        <div>一度に全部進めないでください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート2【現在地の確認】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>今の議論は、最初に作ったアウトラインのどの部分に相当しますか？</div>
+        <div>以下の形式で教えてください:</div>
+        <div class="hanging-indent">📍 現在地: <mark class="placeholder">[アウトラインの項目番号と名前]</mark></div>
+        <div>アウトライン全体:</div>
+        <div class="hanging-indent">1. <mark class="placeholder">[項目]</mark> ✅ 完了</div>
+        <div class="hanging-indent">2. <mark class="placeholder">[項目]</mark> 👈 ← 現在ここ</div>
+        <div class="hanging-indent">3. <mark class="placeholder">[項目]</mark> ⬜ 未着手</div>
+        <div>...</div>
+        <div>この確認をした上で、現在の項目の議論を続けましょう。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート3【特定セクションへのドリルダウン指示】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>
+          アウトラインの「<mark class="placeholder">[項目番号]</mark>:
+          <mark class="placeholder">[項目名]</mark>」に集中して深掘りします。
+        </div>
+        <div>【このセクションのゴール】: <mark class="placeholder">[このセクションで明確にしたいこと]</mark></div>
+        <div>【アウトプット形式】: <mark class="placeholder">[箇条書き / 文章 / 表]</mark></div>
+        <div>【深さ】: <mark class="placeholder">[概要だけ / 詳細まで / 実装レベルまで]</mark></div>
+        <div>このセクションが完了するまで、</div>
+        <div>他のセクションには触れないでください。</div>
+        <div>完了したら「<mark class="placeholder">[項目名]</mark>完了」と宣言してください。</div>
+      </div>
+    </div>
+
+    <h3>テンプレート4【アウトライン更新・修正指示】</h3>
+    <div class="template-wrapper">
+      <button class="copy-btn" onclick="copyTemplate(this)">コピー</button>
+      <div class="template-box">
+        <div>議論を進める中で、アウトラインを修正したいと思います。</div>
+        <div>【修正内容】:</div>
+        <div class="hanging-indent">・<mark class="placeholder">[項目番号]</mark>を削除する / 追加する / 変更する</div>
+        <div class="hanging-indent">・理由: <mark class="placeholder">[なぜ修正が必要か]</mark></div>
+        <div class="hanging-indent">・新しい優先順位: <mark class="placeholder">[変更後の順序]</mark></div>
+        <div>修正後のアウトラインを全体表示してください。</div>
+        <div>修正が当初のゴール「<mark class="placeholder">[ゴール]</mark>」に影響する場合は、</div>
+        <div>影響の有無と対処法を合わせて教えてください。</div>
+      </div>
+    </div>
+
+    <h2 id="guide">状況別おすすめ手法・ガイド</h2>
+    <h3>組み合わせガイド</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>状況</th>
+          <th>推奨手法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>迷子になりそうな予感がある</td>
+          <td>手法1＋2を最初に設定</td>
+        </tr>
+        <tr>
+          <td>会話が長くなってきた</td>
+          <td>手法5で現在地確認</td>
+        </tr>
+        <tr>
+          <td>あれもこれも気になって発散してきた</td>
+          <td>手法4でパーキングロット活用</td>
+        </tr>
+        <tr>
+          <td>複雑なアウトプットを作りたい</td>
+          <td>手法6でアウトラインを先に作る</td>
+        </tr>
+        <tr>
+          <td>重要な決断をしなければならない</td>
+          <td>手法3でフェーズ分割して段階的に合意</td>
+        </tr>
+        <tr>
+          <td>1時間以上の長いセッションになりそう</td>
+          <td>手法2＋5を組み合わせる</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:16px 24px; margin-top:24px; font-family:Arial,sans-serif; font-size:0.95rem; line-height:1.8;">
+      <div>🔰 <strong>初心者向け:</strong> 手法1→3→5の順で使うのが最も効果的</div>
+      <div>🌟 <strong>中級者向け:</strong> 手法1＋2で開始し、手法4＋5で管理</div>
+      <div>👑 <strong>上級者向け:</strong> 全6手法を状況に応じて使い分ける</div>
+    </div>
+
+    <div style="background:#fffbeb; border:1px solid #fde68a; padding:16px 24px; margin-top:32px; margin-bottom:48px; font-family:Arial,sans-serif; border-radius:4px;">
+      <strong>💡 ワンポイントアドバイス:</strong> 最初のプロンプトに「手法1（アンカー）」を仕込むだけで、多くの「迷子」状態は回避できる。完璧を目指さず、まずは手法1から始めてみよう。
     </div>
 
     <script>
-      // コピー機能
-      document.querySelectorAll('.copy-btn').forEach((button) => {
-        button.addEventListener('click', () => {
-          const templateContent = button.nextElementSibling.nextElementSibling.innerText;
-          navigator.clipboard.writeText(templateContent).then(() => {
-            const originalText = button.innerText;
-            button.innerText = 'コピーしました！';
-            button.style.backgroundColor = '#0F766E';
-            setTimeout(() => {
-              button.innerText = originalText;
-              button.style.backgroundColor = '';
-            }, 2000);
-          });
+      function copyTemplate(btn) {
+        const box = btn.nextElementSibling;
+        const lines = box.querySelectorAll('div');
+        let text = '';
+        lines.forEach(function(line) {
+          text += line.innerText.trim() + '\n';
         });
-      });
-
-      // スクロールアニメーション（フェードイン）
-      const fadeElements = document.querySelectorAll('.fade-in-section');
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
-
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
+        navigator.clipboard.writeText(text.trim()).then(function() {
+          const orig = btn.textContent;
+          btn.textContent = 'コピーしました！';
+          btn.style.backgroundColor = '#059669';
+          setTimeout(function() {
+            btn.textContent = orig;
+            btn.style.backgroundColor = '';
+          }, 1500);
         });
-      }, observerOptions);
-
-      fadeElements.forEach((el) => observer.observe(el));
-
-      // サイドバー目次ハイライト
-      const sections = document.querySelectorAll('div[id^="method"], div[id="guide"]');
-      const navLinks = document.querySelectorAll('.toc-sidebar a');
-
-      window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach((section) => {
-          const sectionTop = section.offsetTop;
-          if (scrollY >= sectionTop - 150) {
-            current = section.getAttribute('id');
-          }
-        });
-
-        navLinks.forEach((link) => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-          }
-        });
-      });
+      }
     </script>
   
 
