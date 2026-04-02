@@ -297,9 +297,361 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
         white-space: nowrap;
       }
+
+      /* ===== Diagram Page Styles ===== */
+      .diagram-page {
+        background: #f8fafc;
+        border: 1px solid #e0e8f0;
+        border-radius: 10px;
+        padding: 36px 40px 32px;
+        margin-bottom: 40px;
+      }
+      .diagram-page-label {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: #1a3a5c;
+        opacity: 0.6;
+        margin-bottom: 4px;
+      }
+      .diagram-page-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 1.25em;
+        font-weight: 700;
+        color: #1a3a5c;
+        margin: 0 0 6px 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .diagram-page-sub {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.83em;
+        color: #556677;
+        margin-bottom: 28px;
+      }
+
+      /* Flow diagram — compact stepper */
+      .flow-container {
+        display: grid;
+        grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr 24px 1fr;
+        align-items: start;
+        gap: 0;
+        margin-bottom: 28px;
+      }
+      .flow-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 18px;
+        color: #1a3a5c;
+        font-size: 1.1em;
+        font-weight: 700;
+      }
+      .flow-step {
+        background: #ffffff;
+        border: 1.5px solid #cddaeb;
+        border-radius: 8px;
+        padding: 12px 12px 10px;
+        position: relative;
+        min-width: 0;
+      }
+      .flow-step.highlight {
+        background: linear-gradient(135deg, #e8f0fb 0%, #f0f6ff 100%);
+        border-color: #1a3a5c;
+      }
+      .flow-step-head {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 9px;
+      }
+      .flow-step-num {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 0.68em;
+        font-weight: 700;
+        color: #ffffff;
+        background: #1a3a5c;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .flow-step-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.77em;
+        font-weight: 700;
+        color: #1a3a5c;
+        line-height: 1.3;
+      }
+      .flow-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .flow-tag {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.67em;
+        background: #eef3f9;
+        color: #3a5570;
+        border-radius: 3px;
+        padding: 2px 6px;
+        white-space: nowrap;
+      }
+      .flow-step.highlight .flow-tag {
+        background: #d8e8f8;
+        color: #1a3a5c;
+      }
+
+      /* 3-approach comparison */
+      .approach-section-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.82em;
+        font-weight: 700;
+        color: #1a3a5c;
+        letter-spacing: 0.05em;
+        border-left: 3px solid #1a3a5c;
+        padding-left: 10px;
+        margin-bottom: 14px;
+      }
+      .approach-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .approach-card {
+        background: #ffffff;
+        border: 1.5px solid #e0e8f0;
+        border-radius: 8px;
+        padding: 18px 16px 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      .approach-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+      }
+      .approach-card.type-a::before { background: #4a90d9; }
+      .approach-card.type-b::before { background: #2a7a5a; }
+      .approach-card.type-c::before { background: #7a4ab0; }
+      .approach-type-tag {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.67em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 2px 8px;
+        border-radius: 3px;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+      .type-a .approach-type-tag { background: #e8f2fb; color: #4a90d9; }
+      .type-b .approach-type-tag { background: #e6f5ee; color: #2a7a5a; }
+      .type-c .approach-type-tag { background: #f0e8f8; color: #7a4ab0; }
+      .approach-card-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.9em;
+        font-weight: 700;
+        color: #1a3a5c;
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+      .approach-card-en {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 0.68em;
+        color: #889aaa;
+        margin-bottom: 12px;
+        font-style: italic;
+      }
+      .approach-detail {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.76em;
+        color: #445566;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+      .approach-accuracy {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 0.72em;
+        border-radius: 4px;
+        padding: 6px 10px;
+        line-height: 1.4;
+      }
+      .type-a .approach-accuracy { background: #e8f2fb; color: #336699; }
+      .type-b .approach-accuracy { background: #e6f5ee; color: #1a6040; }
+      .type-c .approach-accuracy { background: #f0e8f8; color: #5a3090; }
+      .approach-accuracy strong { font-weight: 700; }
+      .approach-example {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.72em;
+        color: #778899;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #eef2f6;
+        line-height: 1.4;
+      }
+      .diagram-source-note {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.72em;
+        color: #889aaa;
+        text-align: right;
+        margin-top: 6px;
+      }
+      .page-divider-diagram {
+        border: none;
+        border-top: 2px dashed #d0d0d0;
+        margin: 36px 0;
+        position: relative;
+      }
+      .page-divider-diagram::after {
+        content: '経営幹部向けエグゼクティブサマリー';
+        position: absolute;
+        top: -0.7em;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #f8fafc;
+        padding: 0 12px;
+        font-size: 0.75em;
+        color: #889aaa;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        white-space: nowrap;
+      }
     </style>
   </head>
   <body style="">
+    <!-- ===== DIAGRAM PAGE ===== -->
+    <div class="diagram-page">
+      <div class="diagram-page-label">図解｜OVERVIEW</div>
+      <h2 class="diagram-page-title">AIエージェントシミュレーションはどう実現されるのか</h2>
+      <div class="diagram-page-sub">データ入力からマーケティング洞察までの処理フローと、3つの主要アプローチの特徴</div>
+
+      <!-- Flow Diagram -->
+      <div class="flow-container">
+        <div class="flow-step">
+          <div class="flow-step-head">
+            <span class="flow-step-num">1</span>
+            <div class="flow-step-title">実世界データの収集</div>
+          </div>
+          <div class="flow-tags">
+            <span class="flow-tag">インタビュー逐語録</span>
+            <span class="flow-tag">購買履歴</span>
+            <span class="flow-tag">行動ログ</span>
+            <span class="flow-tag">レビュー・UGC</span>
+            <span class="flow-tag">アンケート</span>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step highlight">
+          <div class="flow-step-head">
+            <span class="flow-step-num">2</span>
+            <div class="flow-step-title">LLMによるエージェント構築</div>
+          </div>
+          <div class="flow-tags">
+            <span class="flow-tag">ファインチューニング</span>
+            <span class="flow-tag">RAG</span>
+            <span class="flow-tag">プロンプト設計</span>
+            <span class="flow-tag">反省構造</span>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step highlight">
+          <div class="flow-step-head">
+            <span class="flow-step-num">3</span>
+            <div class="flow-step-title">合成エージェントの生成</div>
+          </div>
+          <div class="flow-tags">
+            <span class="flow-tag">個性・価値観付与</span>
+            <span class="flow-tag">記憶・習慣形成</span>
+            <span class="flow-tag">相互作用</span>
+            <span class="flow-tag">自律的判断</span>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-head">
+            <span class="flow-step-num">4</span>
+            <div class="flow-step-title">マーケティング施策の試行</div>
+          </div>
+          <div class="flow-tags">
+            <span class="flow-tag">価格・割引</span>
+            <span class="flow-tag">広告反応</span>
+            <span class="flow-tag">Web導線</span>
+            <span class="flow-tag">新商品評価</span>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-head">
+            <span class="flow-step-num">5</span>
+            <div class="flow-step-title">マーケティング洞察の出力</div>
+          </div>
+          <div class="flow-tags">
+            <span class="flow-tag">WTP推定</span>
+            <span class="flow-tag">CVR予測</span>
+            <span class="flow-tag">購買パターン</span>
+            <span class="flow-tag">社会ダイナミクス</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Approaches -->
+      <div class="approach-section-title">3つの主要アプローチの比較（精度・用途・データ要件）</div>
+      <div class="approach-grid">
+
+        <div class="approach-card type-a">
+          <span class="approach-type-tag">タイプ A</span>
+          <div class="approach-card-title">シリコンサンプル</div>
+          <div class="approach-card-en">Silicon Samples / LLM Personas</div>
+          <div class="approach-detail">
+            属性記述プロンプトでLLMに「消費者ペルソナ」を与え、調査票・実験への回答を生成。低コスト・高速で仮説出しや事前スクリーニングに向く。人間調査データなしでも実行可能。
+          </div>
+          <div class="approach-accuracy">
+            <strong>定量再現：制限あり</strong><br>
+            定量実験の97%で原著と不一致（Yoo et al., 2025）。平均的反応は出せるが属性差の再現・因果推論は困難。
+          </div>
+          <div class="approach-example">📌 適用例：広告コピーの粗選別、コンジョイント分析のWTPラフ推定、理論構築サポート</div>
+        </div>
+
+        <div class="approach-card type-b">
+          <span class="approach-type-tag">タイプ B</span>
+          <div class="approach-card-title">顧客デジタルツイン</div>
+          <div class="approach-card-en">Digital Twins of Customers (DToC)</div>
+          <div class="approach-detail">
+            購買履歴・レビュー・インタビューでLLMをファインチューニング＋RAG。個人レベルの嗜好・行動を模倣。データが豊富なほど高精度化。プライバシー管理が必須。
+          </div>
+          <div class="approach-accuracy">
+            <strong>購買予測精度：83%</strong><br>
+            レビュー内容のコサイン類似度 &gt; 0.94（Li et al., 2025）。個人差を保持した高精度シミュレーションが可能。
+          </div>
+          <div class="approach-example">📌 適用例：個人化キャンペーンのセグメント別反応予測、NPS変動モデリング、チャーン分析</div>
+        </div>
+
+        <div class="approach-card type-c">
+          <span class="approach-type-tag">タイプ C</span>
+          <div class="approach-card-title">マルチエージェント市場シミュレーション</div>
+          <div class="approach-card-en">Multi-Agent Market Simulation</div>
+          <div class="approach-detail">
+            複数のLLMエージェントが市場内で相互作用・対話し、集合的行動・社会的ダイナミクスを創発的に生成。口コミ拡散・価格競争・集団的意思決定を模倣。
+          </div>
+          <div class="approach-accuracy">
+            <strong>CVR評価との相関：r = 0.622</strong><br>
+            Webキャンペーン効果をオフラインで試算（Kasuga &amp; Yonetani, 2024）。ルールなしの自律的判断が特徴。
+          </div>
+          <div class="approach-example">📌 適用例：価格割引施策の事前テスト、口コミ拡散シミュレーション、施策のA/Bテスト代替</div>
+        </div>
+
+      </div>
+
+      <div class="diagram-source-note">出典：Yoo et al. (JAMS 2025), Li et al. (SSRN 5256223), Kasuga &amp; Yonetani (ACM CIKM 2024), Park et al. (arXiv:2411.10109), Chu et al. (IEEE ICEBE 2025)</div>
+    </div>
+
+    <hr class="page-divider-diagram">
+
     <!-- ===== EXECUTIVE SUMMARY PAGE ===== -->
     <div class="exec-page">
       <div class="exec-page-label">経営幹部向け エグゼクティブサマリー</div>
