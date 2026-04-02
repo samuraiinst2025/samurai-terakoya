@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja-JP" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マーケティングにおけるAIエージェントシミュレーション：方法論と検証結果の文献レビュー</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&amp;family=Noto+Serif+JP:wght@400;600&amp;display=swap" rel="stylesheet">
+    <style>
+      body {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 32px 80px;
+        position: relative;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        border-top: 8px solid #1a3a5c;
+        font-family: Georgia, 'Times New Roman', 'Noto Serif JP', serif;
+        color: #333333;
+        line-height: 1.8;
+        font-size: 11pt;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        color: #1a3a5c;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+      }
+      h1 {
+        font-size: 1.8em;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.4;
+        margin-bottom: 0.2em;
+        margin-top: 0.5em;
+      }
+      h2 {
+        font-size: 1.3em;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 4px;
+      }
+      h3 {
+        font-size: 1.1em;
+        font-weight: 600;
+      }
+      p {
+        margin-bottom: 1.2em;
+        text-align: justify;
+      }
+      .date {
+        text-align: right;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        color: #555;
+        margin-bottom: 2em;
+      }
+      .abstract {
+        background-color: #f0f4f8;
+        padding: 24px;
+        margin: 24px 0;
+        border-radius: 4px;
+        border-left: 4px solid #1a3a5c;
+      }
+      .abstract-title {
+        font-weight: 700;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        color: #1a3a5c;
+        margin-bottom: 10px;
+        display: block;
+      }
+      sup {
+        color: #1a3a5c;
+        font-weight: bold;
+        font-size: 0.75em;
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+        top: -0.5em;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 24px 0;
+        font-size: 0.9em;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+      }
+      th,
+      td {
+        border: 1px solid #d0d0d0;
+        padding: 12px 16px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background-color: #1a3a5c;
+        color: #ffffff;
+        font-weight: 600;
+      }
+      tr:nth-child(even) {
+        background-color: #f9fbfd;
+      }
+      ul {
+        margin-bottom: 1.5em;
+        padding-left: 2em;
+      }
+      li {
+        margin-bottom: 0.5em;
+        text-align: justify;
+      }
+      .references {
+        margin-top: 3em;
+      }
+      .reference-item {
+        padding-left: 2em;
+        text-indent: -2em;
+        margin-bottom: 0.8em;
+        font-size: 0.9em;
+        line-height: 1.6;
+      }
+      .footer {
+        margin-top: 40px;
+        padding-top: 16px;
+        border-top: 1px solid #d0d0d0;
+        text-align: center;
+        font-size: 0.85em;
+        color: #666666;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+      }
+      em {
+        font-style: italic;
+      }
+
+      /* ===== Executive Summary Styles ===== */
+      .exec-page {
+        background: linear-gradient(135deg, #1a3a5c 0%, #2a5490 100%);
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 36px 40px;
+        margin-bottom: 48px;
+      }
+      .exec-page-label {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #a8c8f0;
+        margin-bottom: 6px;
+      }
+      .exec-page-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #ffffff;
+        margin-top: 0;
+        margin-bottom: 4px;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .exec-page-sub {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.88em;
+        color: #a8c8f0;
+        margin-bottom: 28px;
+      }
+      .exec-context {
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.92em;
+        line-height: 1.7;
+        color: #e8f0f8;
+      }
+      .exec-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .exec-card {
+        background: rgba(255,255,255,0.12);
+        border-radius: 6px;
+        padding: 18px 20px;
+        border-top: 3px solid #5ba3f5;
+      }
+      .exec-card.red-top {
+        border-top-color: #f47c7c;
+      }
+      .exec-card.green-top {
+        border-top-color: #5fcf80;
+      }
+      .exec-card.amber-top {
+        border-top-color: #f5c842;
+      }
+      .exec-card-num {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #ffffff;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        line-height: 1.1;
+        margin-bottom: 4px;
+      }
+      .exec-card-label {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.75em;
+        color: #a8c8f0;
+        letter-spacing: 0.04em;
+        margin-bottom: 8px;
+      }
+      .exec-card-text {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.86em;
+        color: #e0ecf8;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .exec-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .exec-do {
+        background: rgba(95, 207, 128, 0.15);
+        border: 1px solid rgba(95, 207, 128, 0.4);
+        border-radius: 6px;
+        padding: 16px 20px;
+      }
+      .exec-caution {
+        background: rgba(244, 124, 124, 0.15);
+        border: 1px solid rgba(244, 124, 124, 0.4);
+        border-radius: 6px;
+        padding: 16px 20px;
+      }
+      .exec-box-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.78em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+      }
+      .exec-do .exec-box-title { color: #5fcf80; }
+      .exec-caution .exec-box-title { color: #f47c7c; }
+      .exec-list {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.84em;
+        color: #e0ecf8;
+        padding-left: 0;
+        margin: 0;
+        list-style: none;
+      }
+      .exec-list li {
+        padding-left: 1.2em;
+        margin-bottom: 6px;
+        position: relative;
+        line-height: 1.5;
+        text-align: left;
+      }
+      .exec-list li::before {
+        content: '›';
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+      .exec-do .exec-list li::before { color: #5fcf80; }
+      .exec-caution .exec-list li::before { color: #f47c7c; }
+      .exec-source-note {
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        font-size: 0.75em;
+        color: #7aa4cc;
+        margin-top: 20px;
+        text-align: right;
+      }
+      .page-divider {
+        border: none;
+        border-top: 2px dashed #d0d0d0;
+        margin: 40px 0;
+        position: relative;
+      }
+      .page-divider::after {
+        content: '本文（方法論・検証結果の詳細）';
+        position: absolute;
+        top: -0.7em;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 0 12px;
+        font-size: 0.78em;
+        color: #999;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body style="">
+    <!-- ===== EXECUTIVE SUMMARY PAGE ===== -->
+    <div class="exec-page">
+      <div class="exec-page-label">経営幹部向け エグゼクティブサマリー</div>
+      <h2 class="exec-page-title">マーケティングAIエージェントシミュレーション：最新研究の要点</h2>
+      <div class="exec-page-sub">2026年4月 ／ 査読論文・学術機関報告9件に基づく文献レビューより</div>
+
+      <div class="exec-context">
+        <strong>背景：</strong>AIが「合成消費者」として市場調査やキャンペーン事前評価を代替できるか、という問いが急速に実用化を迎えている。本サマリーは、Stanford・HBS・Cambridge等の最新研究から、意思決定に直結する知見を抜粋する。
+      </div>
+
+      <div class="exec-cards">
+        <div class="exec-card green-top">
+          <div class="exec-card-num">85%</div>
+          <div class="exec-card-label">回答再現精度（Park et al., 2024）</div>
+          <p class="exec-card-text">Stanford／Google DeepMind が1,052人のインタビューからAIエージェントを構築。一般社会調査の回答を「人間が2週後に自己回答する精度」の85%水準で再現。社会実験の効果量相関はr = 0.98。</p>
+        </div>
+        <div class="exec-card green-top">
+          <div class="exec-card-num">83%</div>
+          <div class="exec-card-label">将来購買予測精度（Li et al., 2025）</div>
+          <p class="exec-card-text">Amazonデータで構築した306人分の顧客デジタルツインが、将来購買を83%精度で予測。生成レビュー文の意味類似度も0.94超。Fine-tuning＋RAGの組合せが鍵。</p>
+        </div>
+        <div class="exec-card amber-top">
+          <div class="exec-card-num">0.622</div>
+          <div class="exec-card-label">CVR評価との相関（Kasuga &amp; Yonetani, 2024）</div>
+          <p class="exec-card-text">未配信Webキャンペーンの効果をオフラインで試算するCXSimulatorが、上級マーケター判断との相関0.622を達成。A/Bテスト前の事前スクリーニングに有望。</p>
+        </div>
+        <div class="exec-card red-top">
+          <div class="exec-card-num">97%</div>
+          <div class="exec-card-label">定量実験で不一致（Yoo et al., 2025）</div>
+          <p class="exec-card-text">JAMS掲載論文35本を ChatGPT-4oで複製した実験では、定量結果の97%が原著と不一致。AIは「もっともらしい平均」を出しても、実験的因果推論の再現には現時点で不向き。</p>
+        </div>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-do">
+          <div class="exec-box-title">✓ 有効な活用場面（研究コンセンサス）</div>
+          <ul class="exec-list">
+            <li>コンセプト・広告案の<strong>初期スクリーニング</strong>と仮説生成</li>
+            <li>Webキャンペーン・導線の<strong>A/Bテスト前評価</strong></li>
+            <li>新商品属性のWTP（支払意思額）<strong>ラフ推定</strong></li>
+            <li>既存顧客データを用いた<strong>セグメント別シナリオ分析</strong></li>
+            <li>営業・CS向け顧客ペルソナの<strong>トレーニング素材</strong>生成</li>
+          </ul>
+        </div>
+        <div class="exec-caution">
+          <div class="exec-box-title">✗ 現時点での限界（要注意）</div>
+          <ul class="exec-list">
+            <li>属性差・セグメント間差の精密な<strong>定量再現</strong>は困難</li>
+            <li>未知カテゴリ・新市場への<strong>外挿精度</strong>は低い</li>
+            <li>モデル更新により<strong>結果が変動</strong>し再現性に懸念</li>
+            <li>プロンプト設計次第で<strong>恣意的な結果</strong>が生じるリスク</li>
+            <li>高精度化には個人データが必要で<strong>プライバシー課題</strong>が発生</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exec-source-note">出典：Park et al. (arXiv:2411.10109), Li et al. (SSRN 5256223), Kasuga &amp; Yonetani (ACM CIKM 2024), Yoo et al. (JAMS 2025), Bail et al. (Political Analysis 2024) 他</div>
+    </div>
+
+    <!-- ===== MAIN DOCUMENT ===== -->
+    <h1>マーケティングにおけるAIエージェントシミュレーション：方法論と検証結果の文献レビュー</h1>
+    <div class="date">作成日：2026年4月2日</div>
+
+    <hr class="page-divider">
+
+    <div class="abstract">
+      <span class="abstract-title">要旨</span>
+      大規模言語モデル（LLM）を活用したAIエージェントシミュレーションは、マーケティング研究において急速に注目を集めている。本稿は、2021年〜2026年に公表された査読論文・プレプリント・学術機関報告を中心に、(1)
+      シミュレーション方法論の系譜、(2) 精度検証の定量的結果、(3)
+      限界と課題、の3点を整理する。主要な知見として、AIエージェントは仮説生成・実験設計・事前スクリーニングにおいて有望な性能を示す一方、人口統計的異質性の再現・未知カテゴリへの外挿・結果の時系列安定性には重大な課題が残る。
+    </div>
+
+    <h2>1. はじめに</h2>
+    <p>
+      マーケティング領域におけるシミュレーションの活用は、エージェントベースモデル（ABM）を起点として約20年以上の研究蓄積がある（Romero
+      et al.,
+      2023）<sup>1</sup>。しかし近年、大規模言語モデル（LLM）の台頭により、ルールベースの合成エージェントから「推論・対話・感情表現が可能な合成消費者」へと方法論が大きく転換しつつある。本文献レビューは、マーケティングにおけるAIエージェントシミュレーションの最前線を、方法論と検証結果の両面から整理することを目的とする。
+    </p>
+
+    <h2>2. シミュレーション方法論の系譜</h2>
+
+    <h3>2.1 古典的エージェントベースモデル（ABM）</h3>
+    <p>
+      Romero et
+      al.（2023）による書誌計量分析は、マーケティングにおけるABM研究20年間を対象に41本の主要論文を特定し、イノベーション普及・口コミ・消費者意思決定が主要テーマであることを示した<sup>1</sup>。ABMは、エージェントの行動ルールを研究者が手動で定義する「ルールベース型」であり、解釈のしやすさという強みを持つ。一方、実際の消費者行動の複雑性・文脈依存性を過度に単純化するという批判も長く指摘されてきた。
+    </p>
+
+    <h3>2.2 LLMベースの合成消費者（Silicon Samples）</h3>
+    <p>
+      LLMを「人工的な実験参加者」として活用するアプローチは "silicon samples"（シリコンサンプル）と呼ばれ、Brand et
+      al.（2023）およびSarstedt et al.（2024）によって本格的な方法論的検討が行われた<sup>2,3</sup>。Brand et
+      al.は、コンジョイント分析の枠組みでGPTの支払意思額（WTP）推定能力を検証した。方法は、既存の人間調査データをもとにGPTをファインチューニングし、新しい商品属性に対するWTP推定を生成するというものである。Yoo
+      et
+      al.（2025）はさらに進んで、マーケティング上位5誌に掲載された35本の実証研究の消費者調査段階をChatGPT-4oで再現する大規模な複製実験を実施した<sup>4</sup>。方法は「チェーン・オブ・ソート・プロンプティング」を用い、原著論文の刺激材料（テキスト・画像）をそのままLMMに提示して、原著と同数のシリコンサンプルを生成・分析するものである。
+    </p>
+
+    <h3>2.3 顧客デジタルツインとマルチエージェントシステム</h3>
+    <p>
+      より高精度な個人模倣を目指すアプローチとして、複数のデータソースを組み合わせた「顧客デジタルツイン（Digital Twin
+      of Customer; DToC）」が近年注目されている。Li et al.（2025）は、Amazon
+      Eコマースデータを用い、ファインチューニングとRAG（検索拡張生成）を組み合わせて306人分の個人化デジタルツインを構築した<sup>5</sup>。さらに、Chu
+      et
+      al.（2025）は、LLMを核としたマルチエージェントシミュレーションフレームワークを開発し、価格割引シナリオ下での消費者の意思決定と社会的ダイナミクスの再現を試みた<sup>6</sup>。Kasuga
+      &amp;
+      Yonetani（2024）は、Webマーケティング特化のフレームワーク「CXSimulator」を提案し、ユーザー行動をイベント遷移グラフでモデル化することで、未配信キャンペーンの効果をオフラインで試算するシステムを構築した<sup>7</sup>。
+    </p>
+
+    <h2>3. 検証結果の定量的整理</h2>
+
+    <table>
+      <caption>
+        <strong>表1. 主要研究における検証指標と精度報告の比較</strong>
+      </caption>
+      <thead>
+        <tr>
+          <th>研究</th>
+          <th>方法論タイプ</th>
+          <th>検証基準</th>
+          <th>主要精度指標</th>
+          <th>出典</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Park et al. (2024/2025)</td>
+          <td>LLM生成エージェント（インタビューベース）</td>
+          <td>一般社会調査（GSS）への回答整合性</td>
+          <td>正規化精度 85%；実験効果量相関 r = 0.98</td>
+          <td>arXiv:2411.10109 <sup>8</sup></td>
+        </tr>
+        <tr>
+          <td>Li et al. (2025)</td>
+          <td>ファインチューニング＋RAGデジタルツイン</td>
+          <td>将来購買予測・レビュー内容の一致</td>
+          <td>購買予測精度 83%；コサイン類似度 &gt; 0.94</td>
+          <td>SSRN 5256223 <sup>5</sup></td>
+        </tr>
+        <tr>
+          <td>Kasuga &amp; Yonetani (2024)</td>
+          <td>LLM埋め込み × イベント遷移グラフ</td>
+          <td>上級専門家によるCVR評価との相関</td>
+          <td>Pearson r = 0.622；F1スコア 0.853</td>
+          <td>arXiv:2407.21553 <sup>7</sup></td>
+        </tr>
+        <tr>
+          <td>Yoo et al. (2025)</td>
+          <td>シリコンサンプル（LMM複製実験）</td>
+          <td>原著の実験結果との一致率</td>
+          <td>定量的実験の97%で不一致</td>
+          <td>JAMS 2025 <sup>4</sup></td>
+        </tr>
+        <tr>
+          <td>Brand et al. (2023)</td>
+          <td>コンジョイント分析によるWTP推定</td>
+          <td>人間調査との整合（ファインチューニング有無）</td>
+          <td>未調整時：現実的だが限界あり；調整後：改善</td>
+          <td>HBS WP 23-062 <sup>2</sup></td>
+        </tr>
+        <tr>
+          <td>Bail et al. (2024)</td>
+          <td>LLMペルソナによる世論調査模倣</td>
+          <td>ANESデータとの回帰係数比較</td>
+          <td>係数の48%が有意差あり；符号反転32%</td>
+          <td>Political Analysis 32(4) <sup>9</sup></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. 限界と方法論的課題</h2>
+
+    <h3>4.1 属性差・異質性の再現困難</h3>
+    <ul>
+      <li>
+        Brand et
+        al.（2023）は、LLMが人口集団の平均的なWTPは推定できても、性別・所得・政治的属性による差異を意味ある形で再現できないことを報告した<sup>2</sup>。
+      </li>
+      <li>
+        Yoo et al.（2025）も、シリコンサンプルが正答に偏る傾向（"correct answer
+        effect"）を示し、自然な分布・ばらつきが失われると指摘した<sup>4</sup>。
+      </li>
+      <li>
+        Bail et
+        al.（2024）は、LLMが民主党寄りのイデオロギーバイアスを持ち、多様なペルソナを付与しても根本的な傾向が残存することを示した<sup>9</sup>。
+      </li>
+    </ul>
+
+    <h3>4.2 時系列安定性とプロンプト依存性</h3>
+    <ul>
+      <li>
+        Bail et
+        al.（2024）の再現実験では、2023年4月と同年7月に同一プロンプトを実行した結果の分布が、モデルのアップデートにより変化した。これはLLMベースのシミュレーションが「再現可能な実験基盤」として機能しない可能性を示唆する<sup>9</sup>。
+      </li>
+      <li>
+        プロンプトの微細な差異が出力を大きく左右する「研究者の自由度」問題は、複数の研究が共通して指摘する構造的課題である<sup>2,4</sup>。
+      </li>
+    </ul>
+
+    <h3>4.3 未知カテゴリ・ドメイン外挿の限界</h3>
+    <ul>
+      <li>
+        Brand et
+        al.（2023）の実験では、ファインチューニングの効果が同一カテゴリ内の新属性には波及するが、全く異なる商品カテゴリへの外挿では改善が見られなかった<sup>2</sup>。
+      </li>
+      <li>
+        Kasuga &amp;
+        Yonetani（2024）も、LLMの常識的推論の射程外にあるドメイン（例：実在しないメンバーシップシステムに依存する施策）では精度が著しく低下することを報告した<sup>7</sup>。
+      </li>
+    </ul>
+
+    <h2>5. 考察と今後の展望</h2>
+    <p>以上の文献を横断的に検討すると、いくつかの重要な含意が浮かび上がる。</p>
+    <p>
+      第一に、方法論的深化による精度向上のトレードオフが明確になっている。単純なペルソナプロンプト（属性記述）に比べ、インタビュー逐語録（Park
+      et al., 2024/2025）やファインチューニング＋RAG（Li et al.,
+      2025）を組み合わせることで、精度は大幅に改善する。しかし、高精度化のためには個人を識別できる質の高い文脈情報が必要であり、プライバシー・同意・データガバナンスの課題が表裏一体となって浮上する<sup>8</sup>。
+    </p>
+    <p>
+      第二に、マーケティングの「段階」によって有用性が大きく異なる。Yoo et
+      al.（2025）の包括的検証が示すように、LMMは理論構築・実験設計・定性的プレテストには高い効果を発揮するが、定量的な因果推論（メディエーション・モデレーション）や実験結果の再現では現時点で信頼性が低い<sup>4</sup>。
+    </p>
+    <p>
+      第三に、「補助ツール」としての位置づけが現時点での学術的コンセンサスである。既存の人間調査データと組み合わせてLLMを使うことで、新しい商品属性の評価を高速化・低コスト化できる（Brand
+      et al.,
+      2023）<sup>2</sup>。ただし、シミュレーション単体で最終意思決定の根拠とすることに対しては、複数の論文が明確に警告している<sup>2,4,9</sup>。
+    </p>
+
+    <h2>6. 結論</h2>
+    <p>
+      マーケティングにおけるAIエージェントシミュレーションは、単純な対話型AIから複雑な社会的相互作用を扱うマルチエージェントシステムまで急速に方法論が多様化している。検証研究が積み重なりつつある中で、有望な精度指標と重大な限界の双方が明確になってきた。今後の研究には、(a)
+      実際のマーケティング意思決定への予測妥当性の検証、(b) 人間調査とシミュレーションを組み合わせた混合手法の確立、(c)
+      プライバシー保護とシミュレーション精度の両立、という三点が特に重要な課題として挙げられる。
+    </p>
+
+    <div class="references">
+      <h2>参考文献</h2>
+      <div class="reference-item">
+        1. Romero, E., Chica, M., Damas, S., &amp; Rand, W. (2023). Two decades of agent-based modeling in marketing: A
+        bibliometric analysis. <em>Progress in Artificial Intelligence</em>. https://doi.org/10.1007/s13748-023-00303-y
+      </div>
+      <div class="reference-item">
+        2. Brand, J., Israeli, A., &amp; Ngwe, D. (2023). Using LLMs for market research.
+        <em>Harvard Business School Marketing Unit Working Paper</em>, No. 23-062.
+        https://www.hbs.edu/ris/Publication%20Files/23-062_6bfe7a5b-3ed9-4afd-a4c1-c91b60dd82e5.pdf
+      </div>
+      <div class="reference-item">
+        3. Sarstedt, M., et al. (2024). Using large language models to generate silicon samples in consumer and
+        marketing research: Challenges, opportunities, and guidelines. <em>Psychology &amp; Marketing</em>.
+        https://doi.org/10.1002/mar.21982
+      </div>
+      <div class="reference-item">
+        4. Yoo, K., Haenlein, M., &amp; Hewett, K. (2025). A whole new world, a new fantastic point of view: Charting
+        unexplored territories in consumer research with generative artificial intelligence.
+        <em>Journal of the Academy of Marketing Science</em>. https://doi.org/10.1007/s11747-025-01097-2
+      </div>
+      <div class="reference-item">
+        5. Li, B., Wei, Q. O., &amp; Wang, X. S. (2025). Predicting behaviors with large language model (LLM)-powered
+        digital twins of customers. <em>SSRN Working Paper</em> No. 5256223. https://ssrn.com/abstract=5256223
+      </div>
+      <div class="reference-item">
+        6. Chu, M. L., Terhorst, L., Reed, K., &amp; Ni, T. (2025). LLM-based multi-agent system for simulating and
+        analyzing marketing and consumer behavior. <em>Proceedings of IEEE ICEBE 2025</em>.
+        https://doi.org/10.48550/arXiv.2510.18155
+      </div>
+      <div class="reference-item">
+        7. Kasuga, A., &amp; Yonetani, R. (2024). CXSimulator: A user behavior simulation using LLM embeddings for
+        web-marketing campaign assessment.
+        <em>Proceedings of the 33rd ACM International Conference on Information and Knowledge Management (CIKM)</em>.
+        https://doi.org/10.48550/arXiv.2407.21553
+      </div>
+      <div class="reference-item">
+        8. Park, J. S., Zou, C. Q., Shaw, A., Hill, B. M., Cai, C. J., Morris, M. R., Willer, R., Liang, P., &amp;
+        Bernstein, M. S. (2024). Generative agent simulations of 1,000 people. <em>arXiv preprint</em>,
+        arXiv:2411.10109. https://doi.org/10.48550/arXiv.2411.10109
+      </div>
+      <div class="reference-item">
+        9. Bail, C. A., et al. (2024). Synthetic replacements for human survey data? The perils of large language
+        models. <em>Political Analysis</em>, 32(4), 401–416. https://doi.org/10.1017/pan.2024.5
+      </div>
+    </div>
+
+    <div class="footer">本文献レビューに引用した文献はすべて英語原文であり、著者名・誌名・DOIは原典に基づく。</div>
+  
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>
