@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>要件定義の新常識 — プログラミング学習者・実務初心者のための中間ガイド</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+      :root {
+        --primary: #4f6ef7;
+        --accent: #f7c94f;
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --card-bg: #f8f9fa;
+        --border-color: #e0e0e0;
+        --font-family: 'Noto Sans JP', sans-serif;
+      }
+      body {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 32px 80px;
+        position: relative;
+        box-sizing: border-box;
+        font-family: var(--font-family);
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        line-height: 1.6;
+      }
+      h1 {
+        color: var(--primary);
+        font-weight: 700;
+        border-bottom: 3px solid var(--accent);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+      }
+      h2 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-top: 2.5rem;
+        border-left: 5px solid var(--primary);
+        padding-left: 1rem;
+        background-color: #f0f4ff;
+        padding: 0.5rem 1rem;
+        font-size: 1.5rem;
+      }
+      h3 {
+        color: #444;
+        font-weight: 700;
+        margin-top: 2rem;
+        font-size: 1.25rem;
+      }
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+      .toc {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+      }
+      .toc li {
+        margin-bottom: 0.5rem;
+      }
+      .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .card-red {
+        border-left: 5px solid #e74c3c;
+      }
+      .card-yellow {
+        border-left: 5px solid #f1c40f;
+      }
+      .card-green {
+        border-left: 5px solid #2ecc71;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+      }
+      th,
+      td {
+        border: 1px solid var(--border-color);
+        padding: 0.75rem;
+        text-align: left;
+      }
+      th {
+        background-color: #f0f4ff;
+        color: var(--primary);
+      }
+      code,
+      pre {
+        background-color: #f4f4f4;
+        padding: 0.2rem 0.4rem;
+        font-family: monospace;
+        color: #c7254e;
+      }
+      pre {
+        padding: 1rem;
+        overflow-x: auto;
+        color: #333;
+      }
+      .step-box {
+        display: flex;
+        align-items: center;
+        background-color: #f0f4ff;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid var(--primary);
+      }
+      .step-number {
+        background-color: var(--primary);
+        color: white;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 1rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <h1>
+      要件定義の新常識 <br><small style="font-size: 1.2rem; color: #666">— プログラミング学習者・実務初心者のための中間ガイド</small>
+    </h1>
+
+    <div class="toc">
+      <strong>📋 目次</strong>
+      <ul>
+        <li><a href="#sec0">Section 0: はじめに</a></li>
+        <li><a href="#sec1">Section 1: 従来の要件定義とは？</a></li>
+        <li><a href="#sec2">Section 2: バイブコーディング時代の変化</a></li>
+        <li><a href="#sec3">Section 3: 何が変わり、何が変わらないのか</a></li>
+        <li><a href="#sec4">Section 4: AI時代の実践フロー</a></li>
+        <li><a href="#sec5">Section 5: AIで効率的に成果物を作る方法</a></li>
+        <li><a href="#sec6">Section 6: AI時代の要件整理チェックリスト</a></li>
+        <li><a href="#sec7">Section 7: 参考資料・出典</a></li>
+      </ul>
+    </div>
+
+    <h2 id="sec0">👋 Section 0: はじめに</h2>
+    <p>
+      本書は、プログラミング初学者の段階を卒業しつつある方や、講師、非エンジニアのプロジェクトマネージャー（PM）、そして<strong>「AIを使って開発を効率的に進めたい実務初心者」</strong>に向けたガイドです。
+    </p>
+    <p>
+      「要件定義」と聞くと、難しそうな分厚いドキュメントを想像するかもしれません。しかし、AIと協働する時代において、その形は大きく変わりつつあります。本書は、初学者向けの「ざっくりした説明」よりも一歩踏み込み、開発者向けの「専門的すぎる仕様書」よりも噛み砕いた、<strong>ちょうど中間（実践で使えるレベル）の知識</strong>をまとめたものです。
+    </p>
+
+    <h2 id="sec1">🏗️ Section 1: 従来の要件定義とは？</h2>
+    <p>まずは、AIが登場する前の「従来の要件定義」がどのようなものだったかをおさらいしましょう。</p>
+
+    <h3>🎯 要件定義の目的</h3>
+    <p>
+      プロジェクトマネジメントの世界標準である<strong>PMI（Project Management Institute）</strong>によれば、ビジネス分析の基本は「ニーズを特定し、解決策を推奨し、要求を引き出し、文書化し、管理すること」です。つまり、<strong>「誰のどんな課題を、どんなシステムで解決するのかを明確にし、合意すること」</strong>が目的です。
+    </p>
+
+    <h3>📄 国際標準が定める主要な成果物</h3>
+    <p>
+      ソフトウェア要件の国際規格（<strong>ISO/IEC/IEEE 29148</strong>）では、開発の段階に応じて以下のような文書を作成することが推奨されていました。
+    </p>
+    <ul>
+      <li><strong>BRS（ビジネス要求仕様）</strong>: なぜこのプロジェクトをやるのか（ビジネス目的）</li>
+      <li><strong>StRS（ステークホルダー要求仕様）</strong>: ユーザーや関係者がシステムに何を求めているか</li>
+      <li><strong>SyRS（システム要求仕様）</strong>: システム全体として何ができなければならないか</li>
+      <li><strong>SRS（ソフトウェア要求仕様）</strong>: ソフトウェアが持つべき具体的な機能や振る舞い</li>
+    </ul>
+
+    <h3>🗂️ 要件の4分類（IIBA / BABOK）</h3>
+    <p>ビジネスアナリシスの知識体系であるBABOKでは、要件を4つに分類しています。</p>
+    <ol>
+      <li><strong>ビジネス要件</strong>: 組織としての目標や解決したい問題。</li>
+      <li><strong>ステークホルダー要件</strong>: ユーザーが特定の作業を行うためのニーズ。</li>
+      <li>
+        <strong>ソリューション要件</strong>:
+        システムが持つべき機能（機能要件）と、性能やセキュリティなどの品質（非機能要件）。
+      </li>
+      <li><strong>移行要件</strong>: 旧システムから新システムへ移行するための一時的な要件（データ移行など）。</li>
+    </ol>
+
+    <h3>📊 現場でよく作られていた成果物</h3>
+    <p>これらの規格をベースに、日本の開発現場では以下のような図や表が大量に作られていました。</p>
+    <ul>
+      <li><strong>ユースケース図</strong>: 誰がシステムで何をするのかを表す図</li>
+      <li><strong>ER図</strong>: データベースの構造と関係性を表す図</li>
+      <li><strong>画面遷移図</strong>: 画面から画面への繋がりを表す図</li>
+      <li><strong>機能一覧 / 非機能要件定義書</strong></li>
+      <li>
+        <strong>RTM（要件トレーサビリティマトリクス）</strong>:
+        要件が設計・実装・テストまで漏れなく紐づいているかを追跡する表
+      </li>
+    </ul>
+    <p>
+      <strong>従来の流れ</strong>は、「要件定義（書類作成） → 設計 → 実装（コーディング） →
+      テスト」という、後戻りが難しい<strong>ウォーターフォール型</strong>が主流でした。
+    </p>
+
+    <h2 id="sec2">⚡ Section 2: バイブコーディング時代の変化</h2>
+    <p>生成AIの登場により、要件定義から実装へのアプローチが根本から覆りました。</p>
+
+    <h3>🎸 「vibe coding（バイブコーディング）」の誕生</h3>
+    <p>
+      2025年、元OpenAI/TeslaのAndrej Karpathy氏が<strong>「vibe coding」</strong>という言葉を提唱しました。これは、「雰囲気に身を任せ、コードの存在すら忘れてAIに開発を委ねる」という新しいコーディングスタイルです。
+    </p>
+    <div class="card">
+      <strong>長所と短所</strong><br>
+      ✅ <strong>長所</strong>: アイデアからプロトタイプ（試作品）を作るスピードが圧倒的に速い。学習コストが低い。<br>
+      ❌ <strong>短所</strong>:
+      既存の複雑なコードベースや、バグが許されない本番開発（ミッションクリティカルなシステム）においては、AIが文脈を見失いやすく不安定になる。
+    </div>
+
+    <h3>⚙️ Spec-Driven Development（仕様駆動開発）への進化</h3>
+    <p>
+      バイブコーディングの「とりあえず動くものを作るが、後で破綻する」という弱点を克服するため、GitHubやMicrosoftは<strong>「Spec-Driven Development（仕様駆動開発）」</strong>を提唱しています。
+    </p>
+    <p>
+      これは、AIにコードを書かせる前に、<strong>しっかりとした「仕様（Spec）」を共有コンテキストとして与える</strong>アプローチです。GitHub
+      Spec Kitでは、以下の3ステップを踏みます。
+    </p>
+    <ul>
+      <li><code>/specify</code> : 「何を・なぜ作るのか」をAIと定義する</li>
+      <li><code>/plan</code> : 「どうやって作るか（技術スタックやアーキテクチャ）」を計画する</li>
+      <li><code>/tasks</code> : 「具体的な実装タスク」に分解する</li>
+    </ul>
+    <p>
+      💡 <strong>重要な転換</strong>: 仕様書は「人間が読むための静的な文書」から、<strong>「AIが読んで理解し、実行するための生きた成果物（living artifact）」</strong>へと役割を変えました。また、「ドキュメントを完璧にしてからコードを書く」のではなく、「コードや対話からドキュメントを育てる」という順序の逆転が起きています。
+    </p>
+
+    <h2 id="sec3">⚖️ Section 3: 何が変わり、何が変わらないのか</h2>
+    <p>
+      AI時代においても、<strong>「要件定義そのもの」が不要になったわけではありません。</strong>情報としての価値は残ったまま、「成果物の形」や「作るタイミング」が変わったのです。
+    </p>
+
+    <div class="card card-red">
+      <strong>🔴 不要になった（または後ろ倒しになった）もの</strong>
+      <p>手作業で時間をかけて先回りして作るドキュメントは不要になりました。</p>
+      <ul>
+        <li>開発前に人間が手書きで綺麗に整える図面（ER図、ユースケース図、画面遷移図など）</li>
+        <li>開発を開始する前に「完璧に仕上げる」大部な要求仕様書</li>
+      </ul>
+    </div>
+
+    <div class="card card-yellow">
+      <strong>🟡 タイミングが変わったもの（リバースエンジニアリング）</strong>
+      <p>設計図を「先に書く」のではなく、AIが書いたコードから「後で逆生成」します。</p>
+      <ul>
+        <li><strong>ER図</strong>: データベース定義のコード（スキーマ）から自動生成する</li>
+        <li><strong>ユースケース図</strong>: AIとの対話や実装結果から、Mermaid形式などで出力させる</li>
+        <li><strong>詳細仕様書</strong>: プロトタイプが動いた後に、現状の仕様をAIに整理させる</li>
+      </ul>
+    </div>
+
+    <div class="card card-green">
+      <strong>🟢 むしろ重要になったもの（AIへのガードレール）</strong>
+      <p>AIが勝手な解釈で暴走しないよう、枠組みやルールを明示することが極めて重要です。</p>
+      <ul>
+        <li><strong>目的（WHY）と対象ユーザー（WHO）</strong>の言語化</li>
+        <li><strong>非機能要件・セキュリティ制約</strong>（AIは指示されないとセキュリティを疎かにしがち）</li>
+        <li><strong>スコープ外の明示</strong>（「今回は〇〇の機能は作らない」という制限）</li>
+        <li><strong>受入基準（Done条件）</strong>（何をもって完成とするか）</li>
+        <li><strong>AI向け指示ファイル</strong>（<code>CLAUDE.md</code> や Copilot custom instructions）</li>
+      </ul>
+    </div>
+
+    <h3>📊 比較表：成果物はどう変わったか？</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>成果物</th>
+          <th>従来の役割</th>
+          <th>AI時代の形</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>要求仕様書</strong></td>
+          <td>開発前の人間同士の合意文書</td>
+          <td>AIが読み込む軽量な Living Spec / PRD</td>
+        </tr>
+        <tr>
+          <td><strong>ER図・各種図面</strong></td>
+          <td>設計前に人間が手作業で作成</td>
+          <td>コードや対話からAIが逆生成（リバース）</td>
+        </tr>
+        <tr>
+          <td><strong>非機能要件</strong></td>
+          <td>仕様書の補足資料</td>
+          <td>AIへの必須の制約・ガードレール</td>
+        </tr>
+        <tr>
+          <td><strong>受入基準</strong></td>
+          <td>文書末尾に書かれる合格ライン</td>
+          <td>テストコードやCIとして実行可能化</td>
+        </tr>
+        <tr>
+          <td><strong>プロジェクトルール</strong></td>
+          <td>人間向けの開発標準書</td>
+          <td><code>CLAUDE.md</code> / Copilot instructions</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="sec4">🛤️ Section 4: AI時代の実践フロー</h2>
+    <p>AIを使った開発では、以下のようなサイクルで進めるのが効率的です。</p>
+
+    <div class="step-box">
+      <div class="step-number">1</div>
+      <div><strong>目的・ユーザー・制約を整理する</strong>（AIが迷わないためのGPS設定）</div>
+    </div>
+    <div class="step-box">
+      <div class="step-number">2</div>
+      <div><strong>AIと会話しながら試作する</strong>（vibe codingで素早く動くものを作る）</div>
+    </div>
+    <div class="step-box">
+      <div class="step-number">3</div>
+      <div><strong>動くものを確認・修正する</strong>（要件のズレをここで直す）</div>
+    </div>
+    <div class="step-box">
+      <div class="step-number">4</div>
+      <div><strong>コードからドキュメントを逆生成する</strong>（ER図や仕様書をAIに書かせる）</div>
+    </div>
+    <div class="step-box">
+      <div class="step-number">5</div>
+      <div><strong>必要に応じて仕様を整理・共有する</strong>（チームや引き継ぎのために保存）</div>
+    </div>
+
+    <h2 id="sec5">🛠️ Section 5: AIで効率的に成果物を作る方法（実践Tips）</h2>
+    <p>具体的にAIを使ってどのように成果物を作っていくのか、いくつかのテクニックを紹介します。</p>
+
+    <h3>1. 永続コンテキスト（プロジェクト憲法）を持たせる</h3>
+    <p>
+      AIエディタを利用する際、毎回同じ指示をするのは非効率です。プロジェクトのルートディレクトリに指示ファイルを置くことで、AIの行動を制御します。
+    </p>
+    <ul>
+      <li>
+        <strong>ファイル名</strong>: <code>CLAUDE.md</code> (Claude Code用) や、<code>.github/copilot-instructions.md</code>
+        (GitHub Copilot用)
+      </li>
+      <li>
+        <strong>書く内容</strong>:
+        プロジェクトの目的、ビルド・テストの実行コマンド、アーキテクチャの規約、命名規則、<strong>やってはいけない禁止事項</strong>。
+      </li>
+      <li>
+        <strong>効果</strong>: AIがプロジェクトの「文脈」を常に記憶し、ルールを守ってコードを生成するようになります。
+      </li>
+    </ul>
+
+    <h3>2. Mermaid記法で図面を「逆生成」する</h3>
+    <p>手書きで図形を配置するのではなく、AIにテキストデータ（Mermaid形式）で図を書かせます。</p>
+    <pre><code>プロンプト例：
+「現在の schema.prisma（データベース定義）の構造を読み取って、データベースのER図をMermaid形式で出力してください。テーブル間のリレーションシップも明記してください。」</code></pre>
+    <p>
+      ※出力されたコードは、<a href="https://mermaid.live/" target="_blank">Mermaid Live Editor</a>
+      に貼り付けるだけで、綺麗な図として表示されます。
+    </p>
+
+    <h3>3. GitHub Spec Kitで仕様を共同作成する</h3>
+    <p>
+      仕様をゼロから書くのではなく、ツール（CLI）を使ってAIと対話しながら作り上げます。<code>/specify</code>で要件を固め、<code>/plan</code>で技術選定を行い、<code>/tasks</code>で実装手順に落とし込むことで、強固な基盤を作ることができます。
+    </p>
+
+    <h3>4. 受入基準を「Gherkin形式」で自動生成する</h3>
+    <p>言葉の曖昧さをなくすため、テストしやすい形式（Given / When / Then）に変換させます。</p>
+    <pre><code>プロンプト例：
+「今回作成したログイン機能の受入基準（テストシナリオ）を、Gherkin形式（Given/When/Then）で網羅的に書き出してください。正常系だけでなく、パスワード間違いなどの異常系も含めてください。」</code></pre>
+
+    <h2 id="sec6">✅ Section 6: AI時代の要件整理チェックリスト</h2>
+    <p>
+      AIに開発を依頼する前に、以下の「5つの問い」に対する答えを用意しておきましょう。これが、AIへの最高のプロンプト（指示書）になります。
+    </p>
+
+    <div class="card">
+      <ul>
+        <li>
+          ✅ <strong>WHY（目的）</strong>:
+          なぜこれを作るのか？作ることで、誰のどんな悩みが解決するのか？（背景とゴール）
+        </li>
+        <li>
+          ✅ <strong>WHO（ユーザー）</strong>: 使う人は誰か？
+          管理者と一般ユーザーなど、複数の役割がある場合、それぞれ何ができるのか？
+        </li>
+        <li>
+          ✅ <strong>LIMIT（制約）</strong>: いつまでに作るか？ 必須で使う技術やツールはあるか？
+          セキュリティ上の制限は何か？
+        </li>
+        <li>
+          ✅ <strong>DONE（完了基準）</strong>: どのような状態になれば「完成」と言えるのか？
+          どのようにテストして確認するのか？
+        </li>
+        <li>
+          ✅ <strong>OUT（スコープ外）</strong>:
+          <strong>今回「やらないこと」は何か？</strong>（AIが気を利かせて勝手に余計な機能を作らないための防波堤）
+        </li>
+      </ul>
+    </div>
+
+    <h2 id="sec7">📚 Section 7: 参考資料・出典</h2>
+    <p>本ドキュメントは、以下の国際標準や公式ドキュメントに基づいて構成されています。</p>
+    <ul>
+      <li>
+        <a href="https://www.pmi.org/standards/requirements-management" target="_blank">PMI - Requirements Management: A Practice Guide</a>
+      </li>
+      <li>
+        <a href="https://www.pmi.org/standards/business-analysis" target="_blank">PMI - The PMI Guide to Business Analysis</a>
+      </li>
+      <li>
+        <a href="https://www.pmi.org/learning/library/requirement-traceability-tool-quality-results-8873" target="_blank">PMI - Requirement Traceability Matrix</a>
+      </li>
+      <li>
+        <a href="https://www.iso.org/obp/ui/en/#!iso:std:72089:en" target="_blank">ISO/IEC/IEEE 29148:2018 (Requirements engineering)</a>
+      </li>
+      <li>
+        <a href="https://www.iiba.org/knowledgehub/business-analysis-body-of-knowledge-babok-guide/2-business-analysis-key-concepts/2-3-requirements-classification-schema/" target="_blank">IIBA - BABOK Guide v3, Section 2.3</a>
+      </li>
+      <li>
+        <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank">Andrej Karpathy - vibe coding post (X)</a>
+      </li>
+      <li>
+        <a href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/" target="_blank">GitHub Blog - Spec-driven development with AI</a>
+      </li>
+      <li>
+        <a href="https://developer.microsoft.com/blog/spec-driven-development-spec-kit" target="_blank">Microsoft Developer Blog - GitHub Spec Kit</a>
+      </li>
+      <li>
+        <a href="https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot" target="_blank">GitHub Docs - Copilot custom instructions</a>
+      </li>
+      <li>
+        <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code Docs - Memory / CLAUDE.md</a>
+      </li>
+    </ul>
+  
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>
