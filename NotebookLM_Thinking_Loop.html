@@ -279,9 +279,44 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .workspace {
-                grid-template-columns: 1fr;
+        /* Auto-play Button */
+        .autoplay-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .autoplay-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .autoplay-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .autoplay-btn {
+                top: auto;
+                bottom: 2rem;
+                right: 50%;
+                transform: translateX(50%);
             }
         }
     </style>
@@ -293,6 +328,11 @@
         <h1>NotebookLM Thinking Loop</h1>
         <p class="subtitle">自己理解を資産化し、アウトプットを「育てる」プロトコル</p>
     </div>
+    <button id="autoplay-btn" class="autoplay-btn" onclick="toggleAutoplay()">
+        <svg id="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <svg id="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+        <span>オートプレイ</span>
+    </button>
 </header>
 
 <div class="container">
@@ -508,6 +548,55 @@
                 delay: delay,
                 easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
             }).onfinish = () => p.remove();
+        }
+    }
+
+    // Autoplay Logic
+    let isAutoplay = false;
+    let autoplayTimeout;
+
+    function toggleAutoplay() {
+        isAutoplay = !isAutoplay;
+        const btn = document.getElementById('autoplay-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        if (isAutoplay) {
+            btn.classList.add('active');
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            runAutoplay();
+        } else {
+            btn.classList.remove('active');
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            clearTimeout(autoplayTimeout);
+        }
+    }
+
+    async function runAutoplay() {
+        if (!isAutoplay) return;
+
+        // Current Step Logic
+        if (currentStepIdx < 2) {
+            // Wait to read current step
+            await new Promise(r => autoplayTimeout = setTimeout(r, 4000));
+            if (!isAutoplay) return;
+
+            // Trigger Loop (Wait for animation)
+            triggerLoop();
+            await new Promise(r => autoplayTimeout = setTimeout(r, 1500));
+            if (!isAutoplay) return;
+            
+            runAutoplay();
+        } else {
+            // At Final Step
+            await new Promise(r => autoplayTimeout = setTimeout(r, 5000));
+            if (!isAutoplay) return;
+
+            // Reset to Step 1
+            switchStep(1);
+            runAutoplay();
         }
     }
 
