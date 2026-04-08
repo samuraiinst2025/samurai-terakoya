@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotebookLM 自己分析プロトコル・ビジュアライザー</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;500;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text: #1e293b;
+            --text-light: #64748b;
+            --glass: rgba(255, 255, 255, 0.6);
+            --border: rgba(226, 232, 240, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0, transparent 50%);
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Main Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        .panel {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+
+        /* Cards and Elements */
+        .card {
+            background: white;
+            padding: 1rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        /* Center Animation */
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .crystal-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px var(--primary-light));
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* Loop Overlay */
+        .loop-connector {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), transparent);
+            z-index: -1;
+        }
+
+        .loop-path {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Particle flow for the loop */
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: 0;
+        }
+
+        /* Hidden/Visible Logic */
+        .fade-in {
+            animation: fadeIn 0.8s forwards ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .source-growth-indicator {
+            margin-top: auto;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.05);
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px dashed var(--primary-light);
+        }
+
+        /* Descriptions */
+        .stage-description {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        .stage-description strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="fade-in">
+        <h1>NotebookLM Thinking Loop</h1>
+        <p class="subtitle">自己理解を資産化し、アウトプットを「育てる」プロトコル</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="stepper">
+        <div class="step active" onclick="switchStep(1)">
+            <div class="step-num">1</div>
+            <span>現在の深掘り</span>
+        </div>
+        <div class="step" onclick="switchStep(2)">
+            <div class="step-num">2</div>
+            <span>未来の探究</span>
+        </div>
+        <div class="step" onclick="switchStep(3)">
+            <div class="step-num">3</div>
+            <span>実践とメタ認知</span>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <!-- LEFT: SOURCES -->
+        <div class="panel" id="source-panel">
+            <div class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h8v8H4V4z"/></svg>
+                ソース選択
+            </div>
+            
+            <div id="sources-container">
+                <!-- Sources will be injected here -->
+            </div>
+
+            <div class="source-growth-indicator" id="growth-msg">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                <span>資産が成長中...</span>
+            </div>
+        </div>
+
+        <!-- CENTER: CHAT -->
+        <div class="panel">
+            <div class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                思考の結晶化（チャット）
+            </div>
+            <div class="chat-area">
+                <div class="crystal-icon" id="ai-icon">✨</div>
+                <div id="prompt-summary" style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem;">深掘り開始...</div>
+                <div id="chat-bubble" class="card-desc" style="max-width: 80%; text-align: center;">ソースを掛け合わせ、多角的に分析中...</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: OUTPUT -->
+        <div class="panel">
+            <div class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                出力 (コンテキスト化)
+            </div>
+            <div id="output-container">
+                <!-- Output will be injected here -->
+            </div>
+            
+            <button onclick="triggerLoop()" id="loop-btn" style="margin-top: auto; padding: 0.8rem; background: var(--secondary); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                ソースとして追加 ↺
+            </button>
+        </div>
+    </div>
+
+    <div class="stage-description" id="stage-desc">
+        <strong>Phase 1: 現在の深掘り</strong>
+        既存の経歴書と「現在プロンプト」を掛け合わせます。自分一人では気づけなかった強みや、実績の裏側にある価値観をあぶり出し、言語化された「経歴コンテキスト」を生成します。
+    </div>
+</div>
+
+<script>
+    const steps = [
+        {
+            id: 1,
+            title: "現在の深掘り",
+            sources: [
+                { title: "職務経歴書.docx", desc: "実績・スキルの生データ" },
+                { title: "現在プロンプト", desc: "独自の強みを特定する問い" }
+            ],
+            prompt: "強みの結晶化...",
+            chat: "経歴から「ユニークスキル」を特定し、エピソードと紐付けています。",
+            output: { title: "経歴深掘りコンテキスト", desc: "言語化された自己理解の核" },
+            description: "<strong>Phase 1: 現在の深掘り</strong>既存の経歴書と「現在プロンプト」を掛け合わせます。自分一人では気づけなかった強みや、実績の裏側にある価値観をあぶり出し、言語化された「経歴コンテキスト」を生成します。"
+        },
+        {
+            id: 2,
+            title: "未来の探究",
+            sources: [
+                { title: "経歴深掘りコンテキスト", desc: "Phase 1で得た自己理解", highlight: true },
+                { title: "未来プロンプト", desc: "ありたい姿を描く問い" }
+            ],
+            prompt: "方向性の確立...",
+            chat: "強みに基づき、市場ニーズと『ワクワク』が重なる領域を探索しています。",
+            output: { title: "方向性コンテキスト", desc: "納得感のある未来の指針" },
+            description: "<strong>Phase 2: 未来の探究</strong>Phase 1で結晶化した強みと「未来プロンプト」を掛け合わせます。単なる理想ではなく、自分の実績に基づいた確かな『進みたい方向性』を見出します。"
+        },
+        {
+            id: 3,
+            title: "実践とメタ認知",
+            sources: [
+                { title: "方向性コンテキスト", desc: "Phase 2で得た指針", highlight: true },
+                { title: "案件募集文", desc: "外部からの課題" },
+                { title: "提案プロンプト", desc: "共感と選ばれる理由" }
+            ],
+            prompt: "最強のアウトプット...",
+            chat: "自分の軸とクライアントの課題を接合し、唯一無二の提案を作成しています。",
+            output: { title: "最強の提案文 / マインドマップ", desc: "血の通った実用的な成果物" },
+            description: "<strong>Phase 3: 実践とメタ認知</strong>方向性と案件募集文を掛け合わせ、具体的な成果物（提案文）や、自分の立ち位置をマインドマップで客観視します。これが新たなソースとなり、さらなる循環が始まります。"
+        }
+    ];
+
+    let currentStepIdx = 0;
+
+    function switchStep(num) {
+        currentStepIdx = num - 1;
+        updateUI();
+        
+        // Update active step UI
+        document.querySelectorAll('.step').forEach((s, idx) => {
+            if (idx === currentStepIdx) s.classList.add('active');
+            else s.classList.remove('active');
+        });
+    }
+
+    function updateUI() {
+        const step = steps[currentStepIdx];
+        
+        // Sources
+        const sContainer = document.getElementById('sources-container');
+        sContainer.innerHTML = '';
+        step.sources.forEach(src => {
+            const div = document.createElement('div');
+            div.className = 'card fade-in';
+            if (src.highlight) div.style.borderColor = 'var(--secondary)';
+            div.innerHTML = `
+                <div class="badge">${src.highlight ? 'New Source' : 'Asset'}</div>
+                <div class="card-title">${src.title}</div>
+                <div class="card-desc">${src.desc}</div>
+            `;
+            sContainer.appendChild(div);
+        });
+
+        // Chat
+        document.getElementById('prompt-summary').innerText = step.prompt;
+        document.getElementById('chat-bubble').innerText = step.chat;
+        
+        // AI Icon interaction
+        const aiIcon = document.getElementById('ai-icon');
+        aiIcon.style.animation = 'none';
+        void aiIcon.offsetWidth; // trigger reflow
+        aiIcon.style.animation = 'pulse 2s infinite ease-in-out';
+
+        // Output
+        const oContainer = document.getElementById('output-container');
+        oContainer.innerHTML = `
+            <div class="card fade-in" style="border-left-color: var(--accent);">
+                <div class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent);">Generated Output</div>
+                <div class="card-title">${step.output.title}</div>
+                <div class="card-desc">${step.output.desc}</div>
+            </div>
+        `;
+
+        // Description
+        document.getElementById('stage-desc').innerHTML = step.description;
+
+        // Loop Button Logic
+        const btn = document.getElementById('loop-btn');
+        if (currentStepIdx < 2) {
+            btn.innerText = "次のPhaseのソースへ ↺";
+            btn.style.opacity = "1";
+            btn.disabled = false;
+        } else {
+            btn.innerText = "ループ完了 🎉";
+            btn.style.opacity = "0.7";
+        }
+    }
+
+    function triggerLoop() {
+        if (currentStepIdx < 2) {
+            // Particle animation effect
+            createParticles();
+            
+            setTimeout(() => {
+                switchStep(currentStepIdx + 2);
+            }, 1000);
+        }
+    }
+
+    function createParticles() {
+        for (let i = 0; i < 15; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            document.body.appendChild(p);
+            
+            const startX = window.innerWidth * 0.75;
+            const startY = window.innerHeight * 0.5;
+            const endX = window.innerWidth * 0.25;
+            const endY = window.innerHeight * 0.5;
+            
+            p.style.left = startX + 'px';
+            p.style.top = startY + 'px';
+            p.style.opacity = '1';
+            
+            const duration = 800 + Math.random() * 400;
+            const delay = Math.random() * 300;
+            
+            p.animate([
+                { left: startX + 'px', top: startY + 'px', opacity: 1 },
+                { left: endX + 'px', top: endY + (Math.random() * 100 - 50) + 'px', opacity: 0 }
+            ], {
+                duration: duration,
+                delay: delay,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            }).onfinish = () => p.remove();
+        }
+    }
+
+    // Initialize
+    updateUI();
+</script>
+
+</body>
+</html>
