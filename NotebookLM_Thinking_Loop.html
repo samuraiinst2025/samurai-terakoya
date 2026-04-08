@@ -311,6 +311,56 @@
             height: 18px;
         }
 
+        /* Flow Lines */
+        .flow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .flow-line {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-dasharray: 8 12;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .flow-line.active {
+            opacity: 0.4;
+            animation: flowDash 20s linear infinite;
+        }
+
+        @keyframes flowDash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* Alchemy / Processing State */
+        .crystal-icon.processing {
+            animation: crystalAlchemy 1.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 25px var(--secondary));
+        }
+
+        @keyframes crystalAlchemy {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.4) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        .processing-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
         @media (max-width: 768px) {
             .autoplay-btn {
                 top: auto;
@@ -318,6 +368,7 @@
                 right: 50%;
                 transform: translateX(50%);
             }
+            .flow-container { display: none; } /* Hide on mobile for simplicity */
         }
     </style>
 </head>
@@ -335,7 +386,14 @@
     </button>
 </header>
 
-<div class="container">
+<div class="container" style="position: relative;">
+    <!-- Flow SVG Layer -->
+    <svg class="flow-container" id="flow-svg">
+        <path id="path-left-1" class="flow-line" d=""></path>
+        <path id="path-left-2" class="flow-line" d=""></path>
+        <path id="path-right" class="flow-line" d=""></path>
+    </svg>
+
     <div class="stepper">
         <div class="step active" onclick="switchStep(1)">
             <div class="step-num">1</div>
@@ -461,12 +519,16 @@
     function updateUI() {
         const step = steps[currentStepIdx];
         
-        // Sources
+        // --- 1. Reset State ---
+        stopWorkflowAnimations();
+        
+        // --- 2. Build Sources ---
         const sContainer = document.getElementById('sources-container');
         sContainer.innerHTML = '';
-        step.sources.forEach(src => {
+        step.sources.forEach((src, idx) => {
             const div = document.createElement('div');
             div.className = 'card fade-in';
+            div.id = `src-card-${idx}`;
             if (src.highlight) div.style.borderColor = 'var(--secondary)';
             div.innerHTML = `
                 <div class="badge">${src.highlight ? 'New Source' : 'Asset'}</div>
@@ -476,25 +538,14 @@
             sContainer.appendChild(div);
         });
 
-        // Chat
-        document.getElementById('prompt-summary').innerText = step.prompt;
-        document.getElementById('chat-bubble').innerText = step.chat;
-        
-        // AI Icon interaction
-        const aiIcon = document.getElementById('ai-icon');
-        aiIcon.style.animation = 'none';
-        void aiIcon.offsetWidth; // trigger reflow
-        aiIcon.style.animation = 'pulse 2s infinite ease-in-out';
-
-        // Output
+        // Hide output and prompt initially
         const oContainer = document.getElementById('output-container');
-        oContainer.innerHTML = `
-            <div class="card fade-in" style="border-left-color: var(--accent);">
-                <div class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent);">Generated Output</div>
-                <div class="card-title">${step.output.title}</div>
-                <div class="card-desc">${step.output.desc}</div>
-            </div>
-        `;
+        oContainer.innerHTML = '';
+        document.getElementById('prompt-summary').style.opacity = '0';
+        document.getElementById('chat-bubble').style.opacity = '0';
+        
+        // --- 3. Sequence Animation ---
+        runSequentialAnimation(step);
 
         // Description
         document.getElementById('stage-desc').innerHTML = step.description;
@@ -510,6 +561,117 @@
             btn.style.opacity = "0.7";
         }
     }
+
+    async function runSequentialAnimation(step) {
+        // Step A: Draw flow lines from sources to center
+        setTimeout(() => {
+            updateFlowPaths();
+            document.getElementById('path-left-1').classList.add('active');
+            document.getElementById('path-left-2').classList.add('active');
+        }, 500);
+
+        // Step B: Center Processing Starts
+        setTimeout(() => {
+            const aiIcon = document.getElementById('ai-icon');
+            aiIcon.classList.add('processing');
+            document.getElementById('prompt-summary').innerText = step.prompt;
+            document.getElementById('prompt-summary').style.opacity = '1';
+            document.getElementById('chat-bubble').innerText = step.chat;
+            document.getElementById('chat-bubble').style.opacity = '1';
+            startProcessingParticles();
+        }, 1200);
+
+        // Step C: Flow from Center to Right
+        setTimeout(() => {
+            document.getElementById('path-right').classList.add('active');
+        }, 2500);
+
+        // Step D: Show Output
+        setTimeout(() => {
+            const oContainer = document.getElementById('output-container');
+            oContainer.innerHTML = `
+                <div class="card fade-in" style="border-left-color: var(--accent);" id="output-card">
+                    <div class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent);">Generated Output</div>
+                    <div class="card-title">${step.output.title}</div>
+                    <div class="card-desc">${step.output.desc}</div>
+                </div>
+            `;
+            document.getElementById('ai-icon').classList.remove('processing');
+        }, 3200);
+    }
+
+    function stopWorkflowAnimations() {
+        document.querySelectorAll('.flow-line').forEach(l => l.classList.remove('active'));
+        document.getElementById('ai-icon').classList.remove('processing');
+        clearInterval(particleInterval);
+    }
+
+    let particleInterval;
+    function startProcessingParticles() {
+        clearInterval(particleInterval);
+        particleInterval = setInterval(() => {
+            if (!document.getElementById('ai-icon').classList.contains('processing')) return;
+            createProcessingParticle();
+        }, 200);
+    }
+
+    function createProcessingParticle() {
+        const area = document.querySelector('.chat-area');
+        const p = document.createElement('div');
+        p.className = 'processing-particle';
+        area.appendChild(p);
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 40 + Math.random() * 60;
+        const x = Math.cos(angle) * dist;
+        const y = Math.sin(angle) * dist;
+
+        p.style.left = '50%';
+        p.style.top = '50%';
+        
+        p.animate([
+            { transform: 'translate(-50%, -50%) scale(0)', opacity: 0 },
+            { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.5)`, opacity: 0.6 },
+            { transform: `translate(calc(-50% + ${x*1.2}px), calc(-50% + ${y*1.2}px)) scale(0)`, opacity: 0 }
+        ], {
+            duration: 1500,
+            easing: 'ease-out'
+        }).onfinish = () => p.remove();
+    }
+
+    function updateFlowPaths() {
+        const svg = document.getElementById('flow-svg');
+        const container = document.querySelector('.container');
+        const rect = container.getBoundingClientRect();
+        
+        const chatArea = document.querySelector('.chat-area').getBoundingClientRect();
+        const centerX = chatArea.left - rect.left + chatArea.width / 2;
+        const centerY = chatArea.top - rect.top + chatArea.height / 2;
+
+        // Path Left 1
+        const src1 = document.getElementById('src-card-0')?.getBoundingClientRect();
+        if (src1) {
+            const x1 = src1.right - rect.left;
+            const y1 = src1.top - rect.top + src1.height / 2;
+            document.getElementById('path-left-1').setAttribute('d', `M ${x1} ${y1} Q ${(x1+centerX)/2} ${y1} ${centerX} ${centerY}`);
+        }
+
+        // Path Left 2
+        const src2 = document.getElementById('src-card-1')?.getBoundingClientRect();
+        if (src2) {
+            const x2 = src2.right - rect.left;
+            const y2 = src2.top - rect.top + src2.height / 2;
+            document.getElementById('path-left-2').setAttribute('d', `M ${x2} ${y2} Q ${(x2+centerX)/2} ${y2} ${centerX} ${centerY}`);
+        }
+
+        // Path Right
+        const out = document.getElementById('output-container').getBoundingClientRect();
+        const x3 = out.left - rect.left;
+        const y3 = out.top - rect.top + out.height / 4; // approximate
+        document.getElementById('path-right').setAttribute('d', `M ${centerX} ${centerY} Q ${(centerX+x3)/2} ${y3} ${x3} ${y3}`);
+    }
+
+    window.addEventListener('resize', updateFlowPaths);
 
     function triggerLoop() {
         if (currentStepIdx < 2) {
