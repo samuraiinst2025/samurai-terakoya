@@ -125,12 +125,6 @@
             transition: var(--transition);
         }
 
-        .link-active {
-            stroke-width: 3;
-            stroke-dasharray: 0;
-            animation: pulse-line 1.5s infinite;
-        }
-
         /* Control Panel */
         .controls {
             position: absolute;
@@ -242,7 +236,7 @@
         <path id="gemini-to-claude" class="link" d="M 700,450 Q 550,450 450,350" />
         <path id="claude-to-codex" class="link" d="M 450,250 L 700,150" />
         <path id="codex-to-claude" class="link" d="M 700,150 Q 550,150 450,220" />
-        <path id="claude-to-output" class="link" d="M 450,300 L 900,300" />
+        <path id="claude-to-output" class="link" d="M 450,275 L 850,275" />
 
         <!-- Nodes -->
         <g class="node" id="node-user" transform="translate(100, 300)">
@@ -274,6 +268,13 @@
             <text y="5" style="font-size: 8px; fill: #fff; text-anchor: middle;">LOCAL FILE</text>
         </g>
 
+        <!-- Final Product Node -->
+        <g class="node" id="node-app" transform="translate(900, 275)">
+            <circle r="55" stroke="#facc15" stroke-dasharray="5,3" fill="rgba(250, 204, 21, 0.05)" />
+            <text class="icon" y="-5" style="font-size: 36px">🚀</text>
+            <text y="35" style="fill: #facc15; font-weight: bold; font-size: 16px;">完成アプリ</text>
+        </g>
+
         <g id="packets"></g>
     </svg>
 
@@ -299,7 +300,8 @@
         user: document.getElementById('node-user'),
         claude: document.getElementById('node-claude'),
         gemini: document.getElementById('node-gemini'),
-        codex: document.getElementById('node-codex')
+        codex: document.getElementById('node-codex'),
+        app: document.getElementById('node-app')
     };
 
     function addLog(msg, color="#fff") {
@@ -399,13 +401,30 @@
             name: "最終実装",
             action: async () => {
                 addLog("【操縦士】助言を反映し、最高のコードで実装！", "#d97706");
-                await new Promise(r => setTimeout(r, 1000));
-                await animatePacket('claude-to-output', '#fff', 1500);
-                addLog("🎉 完了！新しい機能が実装されました。", "#10b981");
+                await animatePacket('claude-to-output', '#facc15', 1500);
+                nodes.app.classList.add('active');
+                addLog("✨ おめでとうございます！新しいアプリが誕生しました。", "#facc15");
                 nodes.claude.classList.remove('active');
+                confetti();
             }
         }
     ];
+
+    function confetti() {
+        for(let i=0; i<30; i++) {
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            p.setAttribute("r", Math.random()*3 + 2);
+            p.setAttribute("fill", ["#facc15", "#f472b6", "#3b82f6", "#10b981"][Math.floor(Math.random()*4)]);
+            p.setAttribute("cx", 900);
+            p.setAttribute("cy", 275);
+            document.getElementById('packets').appendChild(p);
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 50 + Math.random() * 120;
+            const tx = Math.cos(angle) * dist;
+            const ty = Math.sin(angle) * dist;
+            p.animate([{ transform: 'translate(0,0)', opacity: 1 }, { transform: `translate(${tx}px, ${ty}px)`, opacity: 0 }], { duration: 1500, easing: 'ease-out' }).onfinish = () => p.remove();
+        }
+    }
 
     async function nextStep() {
         if (isRunning || currentStep >= steps.length) return;
