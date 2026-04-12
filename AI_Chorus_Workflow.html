@@ -131,18 +131,6 @@
             animation: pulse-line 1.5s infinite;
         }
 
-        @keyframes pulse-line {
-            0% { stroke-opacity: 0.3; stroke-width: 2; }
-            50% { stroke-opacity: 1; stroke-width: 4; }
-            100% { stroke-opacity: 0.3; stroke-width: 2; }
-        }
-
-        /* Packet Animation */
-        .packet {
-            fill: #fff;
-            filter: blur(2px) drop-shadow(0 0 5px #fff);
-        }
-
         /* Control Panel */
         .controls {
             position: absolute;
@@ -181,33 +169,41 @@
             border-color: transparent;
         }
 
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         /* Console/Info Panel */
         #console {
             position: absolute;
-            left: 2rem;
+            right: 2rem;
             top: 8rem;
-            width: 320px;
+            width: 340px;
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             backdrop-filter: blur(20px);
+            max-height: 65vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         #console h3 {
             color: var(--text-primary);
             margin-bottom: 0.75rem;
-            font-size: 0.9rem;
+            font-size: 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 0.5rem;
         }
 
         .log-entry {
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
             opacity: 0;
             transform: translateY(10px);
             animation: fadeIn 0.3s forwards;
@@ -222,16 +218,8 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
         }
-
-        /* Model Icons placeholders */
-        .icon {
-            font-size: 24px;
-            text-anchor: middle;
-            dominant-baseline: central;
-        }
-
     </style>
 </head>
 <body>
@@ -257,44 +245,35 @@
         <path id="claude-to-output" class="link" d="M 450,300 L 900,300" />
 
         <!-- Nodes -->
-        <!-- User -->
         <g class="node" id="node-user" transform="translate(100, 300)">
             <circle r="50" stroke="#f472b6" />
-            <text class="icon" y="-5">🧑‍💻</text>
-            <text y="25">Tommy</text>
+            <text class="icon" y="-5" style="font-size: 32px">🧑‍💻</text>
+            <text y="30" style="fill: white; font-weight: bold">トミーさん</text>
         </g>
 
-        <!-- Claude (Main) -->
         <g class="node" id="node-claude" transform="translate(450, 275)">
             <circle r="60" stroke="#d97706" />
-            <text class="icon" y="-5">🤖</text>
-            <text y="25">Claude Code</text>
-            <text y="40" style="font-size: 10px; font-weight: normal; opacity: 0.7;">ORCHESTRATOR</text>
+            <text class="icon" y="-5" style="font-size: 32px">🤖</text>
+            <text y="30" style="fill: white; font-weight: bold">操縦士: Claude</text>
         </g>
 
-        <!-- Gemini (Analysis) -->
         <g class="node" id="node-gemini" transform="translate(750, 480)">
             <circle r="50" stroke="#3b82f6" />
-            <text class="icon" y="-5">👁️</text>
-            <text y="25">Gemini 1.5</text>
-            <text y="38" style="font-size: 9px; opacity: 0.7;">1M CONTEXT</text>
+            <text class="icon" y="-5" style="font-size: 32px">👁️</text>
+            <text y="30" style="fill: white; font-weight: bold">偵察機: Gemini</text>
         </g>
 
-        <!-- Codex/GPT (Review) -->
         <g class="node" id="node-codex" transform="translate(750, 120)">
             <circle r="50" stroke="#10b981" />
-            <text class="icon" y="-5">⚖️</text>
-            <text y="25">Codex / GPT-4o</text>
-            <text y="38" style="font-size: 9px; opacity: 0.7;">ADVISOR</text>
+            <text class="icon" y="-5" style="font-size: 32px">⚖️</text>
+            <text y="30" style="fill: white; font-weight: bold">顧問: Codex</text>
         </g>
 
-         <!-- Local Storage Icon -->
-         <g id="node-local" transform="translate(750, 580)" opacity="0.5">
+        <g id="node-local" transform="translate(750, 580)" opacity="0.5">
             <rect x="-30" y="-10" width="60" height="20" rx="4" fill="#333" />
             <text y="5" style="font-size: 8px; fill: #fff; text-anchor: middle;">LOCAL FILE</text>
         </g>
 
-        <!-- Active Packets Group -->
         <g id="packets"></g>
     </svg>
 
@@ -302,14 +281,15 @@
         <h3>システムログ</h3>
         <div id="log-container">
             <div class="log-entry"><span class="status-dot" style="background:#fff"></span>準備完了</div>
-            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>トミーさんからの指示を待っています...</div>
+            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>指示を待機しています...</div>
         </div>
     </div>
 </main>
 
 <div class="controls">
-    <button onclick="startDemo()" class="primary">RUN FULL WORKFLOW</button>
-    <button onclick="reset()">RESET</button>
+    <button id="btn-auto" onclick="startAutoDemo()" class="primary">全プロセスを自動実行</button>
+    <button id="btn-next" onclick="nextStep()">次へ進む ></button>
+    <button onclick="reset()">リセット</button>
 </div>
 
 <script>
@@ -333,10 +313,9 @@
         return new Promise(resolve => {
             const path = document.getElementById(pathId);
             const packet = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            packet.setAttribute("r", "4");
-            packet.setAttribute("class", "packet");
+            packet.setAttribute("r", "5");
             packet.setAttribute("fill", color);
-            packet.style.filter = `drop-shadow(0 0 5px ${color})`;
+            packet.style.filter = `drop-shadow(0 0 8px ${color})`;
             document.getElementById('packets').appendChild(packet);
 
             const length = path.getTotalLength();
@@ -345,7 +324,6 @@
             function step(timestamp) {
                 if (!start) start = timestamp;
                 const progress = (timestamp - start) / duration;
-                
                 if (progress < 1) {
                     const point = path.getPointAtLength(progress * length);
                     packet.setAttribute("cx", point.x);
@@ -360,57 +338,105 @@
         });
     }
 
-    async function startDemo() {
+    let currentStep = 0;
+    let isRunning = false;
+
+    const steps = [
+        {
+            name: "指示の受信",
+            action: async () => {
+                addLog("トミーさんの指示を確認：『新機能を作って』", "#f472b6");
+                nodes.user.classList.add('active');
+                await animatePacket('user-to-claude', '#f472b6', 1500);
+                nodes.user.classList.remove('active');
+            }
+        },
+        {
+            name: "分析依頼",
+            action: async () => {
+                nodes.claude.classList.add('active');
+                addLog("【操縦士】偵察機Geminiに全体調査を依頼...", "#d97706");
+                await animatePacket('claude-to-gemini', '#d97706', 1000);
+            }
+        },
+        {
+            name: "巨大分析",
+            action: async () => {
+                nodes.gemini.classList.add('active');
+                addLog("【偵察機】100万トークンの広大な視界でスキャン中...", "#3b82f6");
+                await new Promise(r => setTimeout(r, 1000));
+                addLog("【偵察機】調査報告書をローカルに保存しました。", "#3b82f6");
+                await animatePacket('gemini-to-file', '#3b82f6', 800);
+            }
+        },
+        {
+            name: "要約報告",
+            action: async () => {
+                addLog("【偵察機】重要ポイントのみを操縦士へ報告します。", "#3b82f6");
+                await animatePacket('gemini-to-claude', '#3b82f6', 1200);
+                nodes.gemini.classList.remove('active');
+            }
+        },
+        {
+            name: "設計と相談",
+            action: async () => {
+                addLog("【操縦士】設計案を作成。顧問(Codex)に相談中...", "#d97706");
+                await animatePacket('claude-to-codex', '#d97706', 1000);
+            }
+        },
+        {
+            name: "外部レビュー",
+            action: async () => {
+                nodes.codex.classList.add('active');
+                addLog("【顧問】別のAIの視点から厳重チェック...", "#10b981");
+                await new Promise(r => setTimeout(r, 1200));
+                addLog("【顧問】改善案を見つけました。操縦士へ戻します。", "#10b981");
+                await animatePacket('codex-to-claude', '#10b981', 1200);
+                nodes.codex.classList.remove('active');
+            }
+        },
+        {
+            name: "最終実装",
+            action: async () => {
+                addLog("【操縦士】助言を反映し、最高のコードで実装！", "#d97706");
+                await new Promise(r => setTimeout(r, 1000));
+                await animatePacket('claude-to-output', '#fff', 1500);
+                addLog("🎉 完了！新しい機能が実装されました。", "#10b981");
+                nodes.claude.classList.remove('active');
+            }
+        }
+    ];
+
+    async function nextStep() {
+        if (isRunning || currentStep >= steps.length) return;
+        isRunning = true;
+        updateButtons(true);
+        await steps[currentStep].action();
+        currentStep++;
+        isRunning = false;
+        updateButtons(false);
+    }
+
+    async function startAutoDemo() {
         reset();
-        
-        // 1. User Input
-        addLog("トミーさんからの指示を確認：『新機能を作って』", "#f472b6");
-        nodes.user.classList.add('active');
-        await animatePacket('user-to-claude', '#f472b6', 1500);
-        nodes.user.classList.remove('active');
+        for (let i = 0; i < steps.length; i++) {
+            await nextStep();
+        }
+    }
 
-        // 2. Claude Analysis Request
-        nodes.claude.classList.add('active');
-        addLog("【操縦士】偵察機Geminiにコード全体の調査を依頼中...", "#d97706");
-        await animatePacket('claude-to-gemini', '#d97706', 1000);
-
-        // 3. Gemini Processing
-        nodes.gemini.classList.add('active');
-        addLog("【偵察機】100万トークンの広大な視界でコードを読み込み中...", "#3b82f6");
-        await new Promise(r => setTimeout(r, 1500));
-        addLog("【偵察機】隅々まで調査完了！詳細な報告書を作成しました。", "#3b82f6");
-        await animatePacket('gemini-to-file', '#3b82f6', 800);
-        
-        addLog("【偵察機】今の状況を簡潔にまとめ、操縦士へ報告します。", "#3b82f6");
-        await animatePacket('gemini-to-claude', '#3b82f6', 1200);
-        nodes.gemini.classList.remove('active');
-
-        // 4. Claude Design Review
-        addLog("【操縦士】設計案を作成。顧問(Codex)に内容を相談します。", "#d97706");
-        await animatePacket('claude-to-codex', '#d97706', 1000);
-        
-        // 5. Codex Review
-        nodes.codex.classList.add('active');
-        addLog("【顧問】別のAIの視点から、設計に落とし穴がないか厳重チェック...", "#10b981");
-        await new Promise(r => setTimeout(r, 1200));
-        addLog("【顧問】より良くするためのアドバイスを2つ見つけました。", "#10b981");
-        await animatePacket('codex-to-claude', '#10b981', 1200);
-        nodes.codex.classList.remove('active');
-
-        // 6. Final Implementation
-        addLog("【操縦士】助言を反映！最高のコードを書き上げ、実装します。", "#d97706");
-        await new Promise(r => setTimeout(r, 1000));
-        await animatePacket('claude-to-output', '#fff', 1500);
-        addLog("🎉 完了！トミーさんのアプリに新機能が実装されました。", "#10b981");
-        nodes.claude.classList.remove('active');
+    function updateButtons(running) {
+        document.getElementById('btn-next').disabled = running || currentStep >= steps.length;
+        document.getElementById('btn-auto').disabled = running;
     }
 
     function reset() {
+        currentStep = 0;
+        isRunning = false;
+        updateButtons(false);
         Object.values(nodes).forEach(n => n.classList.remove('active'));
         document.getElementById('packets').innerHTML = '';
-        logContainer.innerHTML = '<h3>システムログ</h3><div class="log-entry"><span class="status-dot" style="background:#fff"></span>トミーさんからの指示を待っています...</div>';
+        logContainer.innerHTML = '<h3>システムログ</h3><div class="log-entry"><span class="status-dot" style="background:#fff"></span>準備完了</div><div class="log-entry"><span class="status-dot" style="background:#fff"></span>指示を待機しています...</div>';
     }
-
 </script>
 
 </body>
