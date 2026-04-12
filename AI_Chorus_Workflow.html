@@ -184,9 +184,9 @@
         /* Console/Info Panel */
         #console {
             position: absolute;
-            right: 2rem;
-            top: 6rem;
-            width: 300px;
+            left: 2rem;
+            top: 8rem;
+            width: 320px;
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
@@ -299,10 +299,10 @@
     </svg>
 
     <div id="console">
-        <h3>SYSTEM LOGS</h3>
+        <h3>システムログ</h3>
         <div id="log-container">
-            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>System Ready.</div>
-            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>Waiting for input...</div>
+            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>準備完了</div>
+            <div class="log-entry"><span class="status-dot" style="background:#fff"></span>トミーさんからの指示を待っています...</div>
         </div>
     </div>
 </main>
@@ -364,51 +364,51 @@
         reset();
         
         // 1. User Input
-        addLog("Instruction received: 'Build a new feature'", "#f472b6");
+        addLog("トミーさんからの指示を確認：『新機能を作って』", "#f472b6");
         nodes.user.classList.add('active');
         await animatePacket('user-to-claude', '#f472b6', 1500);
         nodes.user.classList.remove('active');
 
         // 2. Claude Analysis Request
         nodes.claude.classList.add('active');
-        addLog("Claude: Dispatching Gemini for full codebase scan...", "#d97706");
+        addLog("【操縦士】偵察機Geminiにコード全体の調査を依頼中...", "#d97706");
         await animatePacket('claude-to-gemini', '#d97706', 1000);
 
         // 3. Gemini Processing
         nodes.gemini.classList.add('active');
-        addLog("Gemini: Scanning 1,000,000 tokens...", "#3b82f6");
+        addLog("【偵察機】100万トークンの広大な視界でコードを読み込み中...", "#3b82f6");
         await new Promise(r => setTimeout(r, 1500));
-        addLog("Gemini: Analysis complete. Writing detailed_report.md", "#3b82f6");
+        addLog("【偵察機】隅々まで調査完了！詳細な報告書を作成しました。", "#3b82f6");
         await animatePacket('gemini-to-file', '#3b82f6', 800);
         
-        addLog("Gemini: Returning 10-line summary to Claude.", "#3b82f6");
+        addLog("【偵察機】今の状況を簡潔にまとめ、操縦士へ報告します。", "#3b82f6");
         await animatePacket('gemini-to-claude', '#3b82f6', 1200);
         nodes.gemini.classList.remove('active');
 
         // 4. Claude Design Review
-        addLog("Claude: Draft design ready. Requesting Review from Codex...", "#d97706");
+        addLog("【操縦士】設計案を作成。顧問(Codex)に内容を相談します。", "#d97706");
         await animatePacket('claude-to-codex', '#d97706', 1000);
         
         // 5. Codex Review
         nodes.codex.classList.add('active');
-        addLog("Codex: Analyzing design patterns & bias...", "#10b981");
+        addLog("【顧問】別のAIの視点から、設計に落とし穴がないか厳重チェック...", "#10b981");
         await new Promise(r => setTimeout(r, 1200));
-        addLog("Codex: Review complete. 2 improvements found.", "#10b981");
+        addLog("【顧問】より良くするためのアドバイスを2つ見つけました。", "#10b981");
         await animatePacket('codex-to-claude', '#10b981', 1200);
         nodes.codex.classList.remove('active');
 
         // 6. Final Implementation
-        addLog("Claude: Applying feedback. Implementing code...", "#d97706");
+        addLog("【操縦士】助言を反映！最高のコードを書き上げ、実装します。", "#d97706");
         await new Promise(r => setTimeout(r, 1000));
         await animatePacket('claude-to-output', '#fff', 1500);
-        addLog("SUCCEEDED: Code pushed to local workspace.", "#10b981");
+        addLog("🎉 完了！トミーさんのアプリに新機能が実装されました。", "#10b981");
         nodes.claude.classList.remove('active');
     }
 
     function reset() {
         Object.values(nodes).forEach(n => n.classList.remove('active'));
         document.getElementById('packets').innerHTML = '';
-        logContainer.innerHTML = '<h3>SYSTEM LOGS</h3><div class="log-entry"><span class="status-dot" style="background:#fff"></span>Waiting for input...</div>';
+        logContainer.innerHTML = '<h3>システムログ</h3><div class="log-entry"><span class="status-dot" style="background:#fff"></span>トミーさんからの指示を待っています...</div>';
     }
 
 </script>
