@@ -85,6 +85,45 @@ a:hover {
 .alert-note { background-color: var(--note-bg); border-color: var(--note-border); color: var(--note-text); }
 .alert-important { background-color: var(--important-bg); border-color: var(--important-border); color: var(--important-text); }
 
+/* Placeholders for Junior Marketers */
+.placeholder {
+    background-color: #fffbeb;
+    border: 1px dashed #f59e0b;
+    padding: 12px;
+    border-radius: 8px;
+    color: #92400e;
+    font-size: 0.9rem;
+    margin: 12px 0;
+    display: block;
+}
+.placeholder::before {
+    content: "✍️ 編集者へのガイド: ";
+    font-weight: 700;
+}
+
+/* AI Wow Story Sidebar */
+.ai-wow {
+    background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 32px 0;
+    position: relative;
+}
+.ai-wow::before {
+    content: "WOW! AI INSIGHT";
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: #4f46e5;
+    color: white;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
 .mermaid {
     background: white;
     padding: 20px;
