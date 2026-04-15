@@ -5,63 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT 活用演習ラボ - Marketing Strategy</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .practice-item {
+            margin-bottom: 48px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .prompt-template {
+            background: #1e293b;
+            color: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 16px 0;
+            position: relative;
+        }
+        .prompt-template::before {
+            content: "コピーして利用可能なプロンプト";
+            display: block;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1>ChatGPT 活用演習ラボ</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">マーケティングの思考フレームワークを、AIを活用して実践的に習得するための演習集です。若手マーケターの研修用ドラフトとして活用してください。</p>
+            <h1>ChatGPT 活用演習ラボ（実戦版）</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">トミーさんの演習ドキュメントから抽出した、プロの「問い」と「AI実現フロー」を体験するためのラボです。</p>
 
             <!-- 演習1 -->
             <section class="practice-item">
-                <div class="badge" style="background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">演習 01：市場の「売れる仕組み」</div>
-                <h2>なぜその商品は売れているのか？</h2>
-                <div class="placeholder">具体的な「身近なヒット商品（例：スターバックスの新作）」を挙げ、AIにその理由を分析させてください。</div>
-                <div class="example-box" style="background: #f8fafc; padding: 16px; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>模範解答例（スターバックス）：</strong><br>
-                    AI出力：「限定性とSNS映えによる話題性」「徹頭徹尾管理されたブランド世界観」<br>
-                    まとめ：「商品・体験・世界観」を一体化させ、SNSで持続的に話題を作る仕組みがある。
+                <div class="badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv1：顧客理解の深化 (16章)</div>
+                <h2>ケース：SmartCook Air の「隠れた不満」を探せ</h2>
+                <p>市場レビュー群を AI に読み込ませ、ユーザーが言語化できていない「真の懸念（ドリルの穴）」を特定します。</p>
+                
+                <div class="prompt-template">
+以下の顧客レビュー群（URL or テキスト）を分析してください。
+1. 表面的な不満（操作性、デザインなど）を抽出
+2. その裏に隠れている「心理的障壁（例：安全性、見栄、罪悪感）」を推察
+3. その懸念を払拭し、競合他社と比較した際のUSP（独自の強み）へ変換するコピー案を提示せよ
                 </div>
             </section>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 32px 0;">
 
             <!-- 演習2 -->
             <section class="practice-item">
-                <div class="badge" style="background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">演習 02：3C分析</div>
-                <h2>顧客・競合・自社の視点をAIで整理する</h2>
-                <div class="placeholder">「ユニクロ」などを例に、3C分析（Customer, Competitor, Company）をAIに依頼し、各要素の重なりを見つけてください。</div>
-                <div class="example-box" style="background: #f8fafc; padding: 16px; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>AI出力要点：</strong><br>
-                    ・顧客：高品質・低価格な服を求める幅広い層<br>
-                    ・競合：ZARA, GUなどのファストファッション<br>
-                    ・自社：素材開発・サプライチェーンの圧倒的強み
+                <div class="badge" style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv2：戦略立案 (24-25章)</div>
+                <h2>PSM分析：科学的根拠に基づいた「値付け」</h2>
+                <p>競合他社の価格設定と、ターゲットのライフスタイルから、新製品の「納得感のある上限・下限価格」を AI に推論させます。</p>
+                <div class="prompt-template">
+あなたは戦略コンサルタントです。新製品「[名称]」の価格戦略を立案します。
+市場データとターゲット属性に基づき、以下の4つの価格指標（PSM分析）を具体的にシミュレートしてください。
+・「安すぎて不安になる価格」
+・「お得に感じる価格」
+・「高いと感じ始める価格」
+・「高すぎて絶対に買わない価格」
+その根拠となる顧客心理も言語化してください。
                 </div>
             </section>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 32px 0;">
 
             <!-- 演習3 -->
             <section class="practice-item">
-                <div class="badge" style="background: #ffedd5; color: #9a3412; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">演習 03：PEST分析</div>
-                <h2>マクロ環境が与える「外部の強制力」を知る</h2>
-                <div class="placeholder">「美容業界」や「建設業界」を選び、政治・経済・社会・技術の影響をAIに分析させてください。</div>
-                <div class="example-box" style="background: #f8fafc; padding: 16px; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>分析の視点：</strong><br>
-                    ・社会：男性の美容意識の高まり、Z世代の価値観変化<br>
-                    ・技術：AI肌診断、ARメイク試着の進化
+                <div class="badge" style="background: #ede9fe; color: #5b21b6; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv3：最新トレンド (25-26章)</div>
+                <h2>GEO 最適化：生成AI検索への対応</h2>
+                <p>Perplexity などの AI 回答エンジンが、自社製品を「最適解」として推奨してくれるための改善案を立案します。</p>
+                <div class="prompt-template">
+生成AI回答エンジン（GEO）が「[自社カテゴリ]のおすすめは？」と聞かれた際、我が社を1番に挙げるためには、公式サイトや記事にどのような「キーワード」や「構造化データ」を追加すべきか。最新トレンドを踏まえてアドバイスせよ。
                 </div>
             </section>
 
-            <div class="ai-wow">
-                <h3>Wow! AI ✕ 思考のトレーニング</h3>
-                <p>これらの演習を手動で行うと数時間かかりますが、AI を「壁打ち相手」にすることで、**5分でプロ並みの分析のたたき台**が完成します。</p>
-                <p>AI の回答を見て「なぜそうなるのか？」を問い続けることで、若手のマーケティング脳は通常の 10倍の速さで鍛えられます。</p>
+            <div class="ai-wow" style="background: rgba(var(--primary-rgb), 0.05); padding: 32px; border-radius: 20px; border: 1px dashed var(--primary);">
+                <h3>🚀 「プロへの近道」としての演習</h3>
+                <p>これらの演習の目的は「AIが出した正解を見ること」ではありません。AIの回答に対して<strong>「なぜそれが必要なのか？トミーさんの言う『三貫性』に矛盾はないか？」</strong>という視点で向き合い、自身の判断軸を磨くことにあります。</p>
+                <p>1つのプロンプトから得られる「厚みのある回答」を組織の共有財産に変えていきましょう。</p>
             </div>
         </div>
 
         <div class="nav-links">
             <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
+            <a href="master_knowledge.html" class="btn">詳細ナレッジベースを見る →</a>
         </div>
     </div>
 </body>

@@ -3,87 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マーケティング・マスター・ナレッジベース - Marketing Strategy</title>
+    <title>マーケティング実戦マニュアル V3 - Marketing Strategy</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .chapter-section {
+            margin-bottom: 64px;
+            padding-top: 32px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .step-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border-left: 4px solid var(--primary);
+        }
+        .checklist {
+            background: #f0fdf4;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #bbf7d0;
+            margin: 20px 0;
+        }
+        .checklist h4 { color: #166534; margin-top: 0; }
+        .checklist ul { list-style: none; padding: 0; }
+        .checklist li::before {
+            content: "✅";
+            margin-right: 8px;
+        }
+        .nav-anchor {
+            position: sticky;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 32px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            z-index: 100;
+        }
+        .nav-anchor a {
+            font-size: 0.8rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .nav-anchor a:hover { background: var(--primary); color: white; }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1>マーケティング詳細ナレッジ・ベース（完全版）</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">実績あるベストプラクティスから抽出した、マーケティング全工程の「実戦マニュアル」です。</p>
+            <h1>マーケティング実戦マニュアル V3（章別解体版）</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">トミーさんの全34リソースを統合した、現場で使うための「プロの思考手順書」です。</p>
 
-            <section>
-                <h2>🟢 PHASE 1：診断・リサーチ（事実の特定）</h2>
-                <ul>
-                    <li><strong>3C ✕ PEST 分析</strong>：マクロ（規制・技術）とミクロ（競合・自社・顧客）の強制力から「勝てる土俵」を特定する。</li>
-                    <li><strong>生成 AI ネットリサーチ</strong>：自社バイアスを排除し、AI を使ってネット上のインサイトを MECE に抽出する手法。</li>
-                    <li><strong>AISCEASモデル</strong>：Attention から Action、そして Share（共有）に至るまでのデジタル時代の購買心理。</li>
-                </ul>
-            </section>
+            <div class="nav-anchor">
+                <a href="#ch12">12-13章</a>
+                <a href="#ch14">14-17章</a>
+                <a href="#ch18">18-21章</a>
+                <a href="#ch22">22-24章</a>
+                <a href="#ch25">25-27章</a>
+            </div>
 
-            <section>
-                <h2>🔵 PHASE 2：戦略・構造（勝ち筋の設計）</h2>
-                <ul>
-                    <li><strong>OGSMフレームワーク</strong>：目的(O)・目標(G)・戦略(S)・指標(M)の一貫性。</li>
-                    <li><strong>カスケード（連鎖）</strong>：上位の戦略が下位の目的となる「滝」のような連鎖。</li>
-                    <li><strong>知見の棚卸し</strong>：既存データから仮説を立て、無駄なリサーチを省く。</li>
-                </ul>
-            </section>
+            <!-- 12-13章 -->
+            <section id="ch12" class="chapter-section">
+                <h2>🟢 PHASE 1：思考のOSと収益構造 (12-13章)</h2>
+                <h3>第12章：AI時代のマーケティング再定義</h3>
+                <p>AIは単なる時短ツールではなく、<strong>「思考の並行処理」</strong>を行うためのパートナーです。全ての戦略の起点はここから始まります。</p>
+                <div class="step-box">
+                    <strong>実戦 Step:</strong>
+                    <ol>
+                        <li>USP（独自の強み）を3つ特定する</li>
+                        <li>AIに「最強の批評家」を演じさせ、論理の穴を突かせる</li>
+                    </ol>
+                </div>
 
-            <section>
-                <h2>🟢 PHASE 3：実行・武器（顧客の獲得：App層）</h2>
-                <p>戦略を具現化し、顧客を動かすための「翻訳」と「パッケージング」の技術です。</p>
-                
-                <h3>1. 4P ✕ 4Cの調和（価値の翻訳）</h3>
-                <ul>
-                    <li><strong>Product → Customer Value</strong>：製品ではなく、それが提供する「価値・解決」を売る。</li>
-                    <li><strong>Price → Cost</strong>：単なる金額ではなく、顧客が払う「労力・心理的負担」も含める。</li>
-                    <li><strong>Place → Convenience</strong>：買いやすさ、導入のしやすさ。</li>
-                    <li><strong>Promotion → Communication</strong>：宣伝ではなく、顧客との対話。</li>
-                </ul>
-
-                <h3>2. バーター戦略とパッケージング</h3>
-                <ul>
-                    <li><strong>抱き合わせの論理</strong>：高需要の商品（資格講座）に、低需要だが有益な商品（DX講座）を載せることで、ハードルを劇的に下げる。</li>
-                    <li><strong>名前の衣替え</strong>：抽象的なタイトルを「具体的・即時的なベネフィット」に変える。
-                        <p style="font-style: italic; margin-left: 20px;">例：ITリテラシー講座（製作者視点） → <strong>「現場写真が10分で片付く魔法のExcel術」</strong>（顧客視点）</p>
-                    </li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>🔴 PHASE 4：納得・連鎖（組織を動かす）</h2>
-                <p>優れた戦略も、承認されなければ意味がありません。組織を動かす技術の整理です。</p>
-
-                <h3>1. 意思決定者を「当事者」にするリサーチの作法</h3>
-                <ul>
-                    <li><strong>事前アライメント</strong>：リサーチの「目的」を事前に決定者にレビューさせ、「後出しジャンケン」を防ぐ。</li>
-                    <li><strong>共通言語化</strong>：上位ビジネス目的（OGSMの最上位）に常に立ち返る。</li>
-                </ul>
-
-                <h3>2. 戦略仮説の事前提示（分岐ルートの合意）</h3>
-                <p>リサーチ結果が出る前に、以下の合意を決定者と取っておきます。</p>
-                <ul>
-                    <li><strong>パターンA（成功確度高）なら</strong>：このプランで全力投球する。</li>
-                    <li><strong>パターンB（成功確度低）なら</strong>：ピボット（方針転換）するか、勇気を持って撤退する。</li>
-                </ul>
-                <div class="alert alert-tip">
-                    <div class="alert-title">💡 「勇気ある撤退」の論理</div>
-                    <p>撤退は敗北ではなく、資源を次の「勝機ある戦い」に振り向けるための高度な経営判断であると再定義します。</p>
+                <h3>第13章：LTV収益シミュレーション</h3>
+                <div class="checklist">
+                    <h4>プロのチェックリスト：利益の源泉</h4>
+                    <ul>
+                        <li>LTV（顧客価値）は CAC（獲得コスト）の3倍以上を維持できているか？</li>
+                        <li>「2回目購入」に至るトリガーをデータで特定できているか？</li>
+                    </ul>
                 </div>
             </section>
 
-            <section>
-                <h2>🔴 最後に：戦略の三貫性</h2>
-                <div class="alert alert-important">
-                    <p>常に「誰に（Customer）」「何を（What/Value）」「どのように（How/Promotion）」にズレがないかを確認し続け、OGSMの滝を流しきること。これが、勝ち続けるマーケティングの唯一の道です。</p>
+            <!-- 14-17章 -->
+            <section id="ch14" class="chapter-section">
+                <h2>🟢 PHASE 2：インサイト抽出の極意 (14-17章)</h2>
+                <h3>第14-15章：AIネットリサーチ</h3>
+                <p>「ドリルが欲しいのではない、穴が欲しい」という未言語化のニーズをAIで可視化します。</p>
+                <div class="step-box">
+                    <strong>実戦 Step:</strong>
+                    <ol>
+                        <li>大量のSNSコメントやレビューをAIに投入</li>
+                        <li>「顧客が言語化できていない不満の内容」を抽出</li>
+                    </ol>
+                </div>
+
+                <h3>第16-17章：競合・市場とUSP再定義</h3>
+                <div class="alert alert-tip">
+                    <strong>SmartCook Air のケース：</strong><br>
+                    「安全性への心理的障壁（ドキュメントが読みづらい）」を特定し、それを「徹底した安全ガイド」という強みに変えた実例を思い出してください。
+                </div>
+            </section>
+
+            <!-- 18-21章 -->
+            <section id="ch18" class="chapter-section">
+                <h2>🔵 PHASE 3：構造設計と戦略三貫性 (18-21章)</h2>
+                <h3>第18-19章：マルチエージェント型・ジャーニー検証</h3>
+                <div class="step-box">
+                    <strong>実戦 Step:</strong>
+                    <ol>
+                        <li>AIに「厳しいターゲット客（高橋さん等）」を擬人化</li>
+                        <li>実際にLPを読ませ、「ここで買う気が失せた」箇所の指摘を受ける</li>
+                    </ol>
+                </div>
+
+                <h3>第20-21章：PSM価格分析シミュレーション</h3>
+                <div class="checklist">
+                    <h4>三貫性（誰に・何を・どう）の最終確認</h4>
+                    <ul>
+                        <li>ターゲットにとって、この価格は「自分への投資」だと思える納得感があるか？</li>
+                        <li>戦略の「三貫性」に、AIから見ても1ミリのズレもないか？</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 22-24章 -->
+            <section id="ch22" class="chapter-section">
+                <h2>🔴 PHASE 4：実行の自動化と解析 (22-24章)</h2>
+                <h3>第22-24章：Webマーケ ＆ データ分析レポート</h3>
+                <p>「0から作る」のをやめ、AIが作った「80点のドラフト」をプロが「120点」に仕上げる時代へ。</p>
+                <div class="step-box">
+                    <strong>実技：</strong>
+                    <ul>
+                        <li>Gammaによる資料自動生成のプロンプト構成</li>
+                        <li>GA4データからの「意外な成約経路」のAI特定</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 25-27章 -->
+            <section id="ch25" class="chapter-section">
+                <h2>🔴 PHASE 5：未来予測とAIキャリア (25-27章)</h2>
+                <h3>第25-27章：AIマネージャーとしての進化</h3>
+                <p>プロンプトの速さではなく、<strong>「戦略の審美眼」</strong>と<strong>「AI社員を指揮するマネジメント能力」</strong>がこれからの武器になります。</p>
+                <div class="checklist">
+                    <h4>プロの自問自答</h4>
+                    <ul>
+                        <li>私は今日、AIができない「顧客との感情的接点」に時間を使えたか？</li>
+                        <li>AIで月20時間の余白を創り、新しい市場を再定義できているか？</li>
+                    </ul>
                 </div>
             </section>
         </div>
 
         <div class="nav-links">
             <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
-            <a href="../methodology/process_comparison.html" class="btn">補足：プロセス比較 →</a>
+            <a href="ai_practice_lab.html" class="btn">実践ラボを起動する →</a>
         </div>
     </div>
 </body>
