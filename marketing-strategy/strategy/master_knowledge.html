@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIマーケティング実戦マニュアル【完全修復・極限統合版】</title>
+    <title>AIマーケティング実戦マニュアル【極限統合・特上級拡張版】</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         .os-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; border: 1px solid #334155; }
@@ -15,20 +15,25 @@
         .stacking-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 40px; margin-bottom: 48px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
         .logic-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 24px 0; }
         .logic-card { background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid #cbd5e1; height: 100%; }
-        .logic-card h4 { margin-top: 0; color: #1e293b; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 4px; }
+        .logic-card h4 { margin-top: 0; color: #1e293b; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 4px; border-bottom-width: 3px;}
         .lecture-badge { background: #f59e0b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; display: inline-block; }
         .matrix-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
         .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
         .matrix-table th { background: #f1f5f9; }
         .highlight-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 0.95rem;}
         .checklist { background: #f9fafb; padding: 24px; border-radius: 12px; margin-top: 24px; border: 1px solid #e5e7eb;}
+        
+        /* NEW: Special Expansion styles */
+        .special-module { background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-left: 6px solid #d946ef; padding: 24px; border-radius: 0 16px 16px 0; margin-top: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
+        .special-module h3 { color: #86198f; margin-top: 0; display: flex; align-items: center; gap: 8px;}
+        .special-module .badge { background: #d946ef; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card" style="text-align: center; border-bottom: 4px solid var(--primary);">
-            <h1 style="font-size: 2.2rem;">AIマーケティング戦略【完全修復・極限統合版】</h1>
-            <p>全章の詳細ロジックとAI制御OSを完全に積み上げた究極のマスターハブ。</p>
+            <h1 style="font-size: 2.2rem;">AIマーケティング戦略【極限統合・特上級拡張版】</h1>
+            <p>全章の詳細ロジック、AI制御OS、そして「5つの深層リソース」を完全搭載した究極のマスターハブ。</p>
         </div>
 
         <!-- CORE OS SECTION -->
@@ -41,6 +46,7 @@
                     <h4>アンカー (Anchor)</h4>
                     <p style="font-size: 0.85rem; color: #94a3b8;">軸を固定し、スコープ外を定義することで、AIの「ズレ」を最小化します。</p>
                 </div>
+                <!-- ... Techniques 02 to 06 preserved ... -->
                 <div class="os-card">
                     <span class="os-badge">Technique 02</span>
                     <h4>厳格モード (Strict)</h4>
@@ -110,6 +116,28 @@
                     <p style="font-size: 0.85rem;"><strong>LTV</strong> = (平均単価 × 購入頻度) × 継続期間</p>
                     <p style="font-size: 0.85rem;"><strong>ROI</strong> = (売上 - 原価 - 広告費) / 広告費 × 100</p>
                     <p style="font-size: 0.85rem;">※ AIを用いて解約率 (Churn Rate) 改善のインパクトを試算せよ。</p>
+                </div>
+            </div>
+
+            <!-- NEW EXPANSION: AARRR & SaaS KPI -->
+            <div class="special-module">
+                <h3><span class="badge">特上級</span> AARRR ＆ SaaS グロース指標（事業解像度の飛躍）</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 12px;">単なる新規獲得ではなく、SaaSに代表される「定着と収益の最大化」を測る高度なファネルと指標です。</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div>
+                        <strong style="font-size: 0.9rem; color: #1e293b;">AARRR 海賊指標モデル</strong>
+                        <ul style="font-size: 0.8rem; margin-top: 4px; padding-left: 16px;">
+                            <li><strong>Acquisition (獲得)</strong>: ユーザーがどこから来たか（CAC, CTR）</li>
+                            <li><strong>Activation (活性化)</strong>: 初回体験で価値を感じたか（CVR）</li>
+                            <li><strong>Retention (継続)</strong>: サービスを使い続けているか（Churn Rate, DAU/MAU）</li>
+                            <li><strong>Referral (紹介)</strong>: 他人に勧めているか（NPS）</li>
+                            <li><strong>Revenue (収益)</strong>: 利益を生み出しているか（ARPU, ROAS）</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="font-size: 0.9rem; color: #1e293b;">スタートアップ必須指標：LTV/CAC > 3</strong>
+                        <p style="font-size: 0.8rem; margin-top: 4px;">ユニットエコノミクス（顧客1人あたりの採算性）として、得られる生涯利益（LTV）が、獲得コスト（CAC / CPA）の 3 倍以上確保できているか、最重要KPIとして監視します。</p>
+                    </div>
                 </div>
             </div>
 
@@ -212,6 +240,21 @@
                 </div>
             </div>
 
+            <!-- NEW EXPANSION: S-E-A-S-O-N -->
+            <div class="special-module" style="border-left-color: #ef4444; background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);">
+                <h3 style="color: #b91c1c;"><span class="badge" style="background: #ef4444;">特上級</span> S-E-A-S-O-N（感情と拡散の設計図）</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 12px;">スターバックスなどの極上の顧客体験から導き出された、AISCEASのさらに奥、顧客の「感情」と「共感」を爆発させるための6つの仕掛け。</p>
+                <ul style="font-size: 0.85rem; padding-left: 16px;">
+                    <li><strong>Story (物語性)</strong>: 創業の背景や、製品に込められた想いを乗せる。</li>
+                    <li><strong>Emotion (感情喚起)</strong>: 単純な機能的便益ではなく、驚きや感動を引き出す。</li>
+                    <li><strong>Action (行動誘発)</strong>: 顧客自らが参加したくなる、体験へのハードルを下げる。</li>
+                    <li><strong>Share (共有性)</strong>: 「誰かに教えたい」「見せびらかしたい」と思わせるフックの設計。</li>
+                    <li><strong>Only-one (独自性)</strong>: 明確なUSP、他には絶対に真似できない唯一の価値。</li>
+                    <li><strong>NEXT (新しさ/次回期待)</strong>: 次なる展開やアップデートで飽きさせない。</li>
+                </ul>
+                <p style="font-size: 0.8rem; margin-top: 8px; color: #7f1d1d; font-weight: bold;">※ペルソナに向けた施策考案時に、この「SEASON」のパラメータをAIに適用して案を出させること。</p>
+            </div>
+
             <div class="highlight-box" style="background: #f0fdf4; border-color: #22c55e;">
                 <strong>🔥 レクチャー知見：自己批判ループ</strong><br>
                 AI に「この戦略案、プロの視点で 100 点中何点か？」と採点させ、不足分を補う修正案を 2 回以上出させること。（フェーズ合意の前段として必須）
@@ -221,7 +264,7 @@
         <!-- PHASE 4 -->
         <section class="stacking-card">
             <span class="lecture-badge">PHASE 4：自動化 ＆ 未来キャリア (Ch 22-27)</span>
-            <h2>第22-27章：AI マネージャーへの職能転換</h2>
+            <h2>第22-27章：AI マネージャーへの職能転換と最前線</h2>
             
             <div class="logic-group">
                 <div class="logic-card">
@@ -229,25 +272,45 @@
                     <p style="font-size: 0.85rem;">表紙 → 背景 → 課題 → 解決 → 未来 → アクション。AI にこのテンプレートを渡し、承認を得るための 80 点のドラフト（アウトライナー）を即座に自動生成する。</p>
                 </div>
                 <div class="logic-card">
-                    <h4>🧠 NotebookLM 外部脳の構築</h4>
-                    <p style="font-size: 0.85rem;">全リソース（過去の企画書、レクチャー資料）を同期し、「トミーさんならどう考えるか？」を 24 時間相談できるクローンを構築。戦略の「審美眼」を磨くことに集中する。</p>
+                    <h4>📈 KPIピラミッド構造</h4>
+                    <ul style="font-size: 0.85rem;">
+                        <li><strong>KGI (Key Goal Indicator)</strong>: 最終利益目標。</li>
+                        <li><strong>KSF (Key Success Factor)</strong>: ゴール達成の重要要因。</li>
+                        <li><strong>KPI (Key Performance Indicator)</strong>: 現場で追跡する具体的な先行指標。</li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="logic-card" style="margin-top: 24px;">
-                <h4>📈 KPIピラミッド構造</h4>
-                <ul style="font-size: 0.85rem;">
-                    <li><strong>KGI (Key Goal Indicator)</strong>: 最終利益目標。</li>
-                    <li><strong>KSF (Key Success Factor)</strong>: ゴール達成の重要要因。</li>
-                    <li><strong>KPI (Key Performance Indicator)</strong>: 現場で追跡する具体的な先行指標。</li>
+            <!-- NEW EXPANSION: Majin v4, Agent Sim, NotebookLM -->
+            <div class="special-module" style="border-left-color: #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); margin-bottom: 24px;">
+                <h3 style="color: #1e3a8a;"><span class="badge" style="background: #3b82f6;">特上級・次世代技術</span> 未来を創る AI 応用プロトコル</h3>
+                
+                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">1. 【まじん式v4】SVGと動画解析 ＆「自分の手垢」</h4>
+                <p style="font-size: 0.85rem; margin-top: 4px;">AI にスライド文章を「丸投げ」する時代は終わりました。v4 の本質は、SVGベクターを用いた動的グラフや、動画フレーム抽出を用いて視覚的パーツを高速生成しつつ、最後に<strong>「自分の思考の痕跡（手垢）」</strong>をスライドに乗せて、魂の宿る資料を完成させる美学にあります。</p>
+                
+                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">2. AIエージェントシミュレーション</h4>
+                <p style="font-size: 0.85rem; margin-top: 4px;">人間の代わりにAIにサービスを使わせてA/Bテストの事前スクリーニングを行う最前線技術。</p>
+                <ul style="font-size: 0.8rem; padding-left: 16px;">
+                    <li><strong>シリコンサンプル (Type A)</strong>: LLMに架空のペルソナと感情をプロンプトで付与し、反響を予測。</li>
+                    <li><strong>顧客デジタルツイン (Type B)</strong>: 実際のAmazon購買データや過去ログ（RAG活用）で個別のクローンを構築し、WTP（支払意思額）を推定する手法。</li>
+                    <li><strong>マルチエージェント (Type C)</strong>: 複数のAIペルソナ同士を対話・競合させ、市場全体の価格決定や普及ダイナミクスをシミュレートする。</li>
                 </ul>
+
+                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">3. NotebookLM 思考ループ (Thinking Loop)</h4>
+                <p style="font-size: 0.85rem; margin-top: 4px;">自己理解とナレッジを資産（ソース）化し、アウトプットを「育てる」独自の循環システム。</p>
+                <div style="font-size: 0.8rem; margin-top: 4px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 8px;">
+                    <strong>Phase 1 [現在の深掘り]</strong> : 履歴書等のソース ×「現在プロンプト」→ 強みの結晶化。<br>
+                    <strong>Phase 2 [未来の探究]</strong> : 上記の結晶 ×「未来プロンプト」→ 自分の方向性の指針。<br>
+                    <strong>Phase 3 [実践とメタ認知]</strong> : 方向性 × 募集要項 ×「提案プロンプト」→ 最強のマインドマップと提案文の生成。<br>
+                    ※出力物自体をNotebookLMの新たなソースとして追加し、知能ループを永続的に回し続ける。
+                </div>
             </div>
 
             <div class="checklist">
                 <h4>✅ 最後に必ず自問自答すること</h4>
                 <ul>
                     <li>O → G → S → M の「三貫性の滝」に論拠の崩壊はないか？</li>
-                    <li>AI に作業を全委任することで、自分は「顧客との感情的接点」や「市場の再定義」に時間を使えたか？</li>
+                    <li>AI に作業を全委任することで、自分は「顧客との感情的接点」や「市場の再定義」に時間を使えたか？（まじん式v4の思考）</li>
                     <li>GEO（生成AI検索最適化）を視野に入れた次の一手が打てているか？</li>
                 </ul>
             </div>
