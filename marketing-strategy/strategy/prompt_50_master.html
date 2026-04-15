@@ -3,125 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>実戦 AI マーケティング・プロンプト集 - Marketing Strategy</title>
+    <title>実戦 AI プロンプト集 最終版 - Marketing Strategy</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         .prompt-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
-            margin-top: 24px;
         }
         .prompt-card {
-            background: #ffffff;
+            background: white;
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s;
         }
-        .prompt-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            border-color: var(--primary);
-        }
-        .category-tag {
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 100px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 12px;
+        .prompt-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .lecture-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
             display: inline-block;
-        }
-        .tag-strategy { background: #fee2e2; color: #991b1b; }
-        .tag-research { background: #e0f2fe; color: #075985; }
-        .tag-efficiency { background: #dcfce7; color: #166534; }
-        
-        .prompt-text {
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
-            color: #334155;
-            border-left: 4px solid var(--primary);
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1>実戦 AI マーケティング・プロンプト集</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">トミーさんの「プロの呼吸」をプロンプト化した指示書集。現場でそのまま使える、高密度なアウトプットを保証します。</p>
+            <h1>実戦 AI プロンプト集<br><span style="font-size: 1.2rem; color: var(--primary);">【レクチャー知見統合版】</span></h1>
+            <p>トミーさんの全レクチャー資料から抽出した、アウトプットの質を極限まで高めるための「究極の指示書」です。</p>
 
             <div class="prompt-grid">
-                <!-- 1. デビルズ・アドボケイト -->
+                <!-- 1. 自己批判ループ -->
                 <div class="prompt-card">
-                    <span class="category-tag tag-strategy">16, 20章：戦略の脆弱性テスト</span>
-                    <h3>デビルズ・アドボケイト</h3>
-                    <p style="font-size: 0.9rem;">自社戦略の「穴」をAIに徹底批判させ、論理の完成度を高めます。</p>
-                    <div class="prompt-text">
-あなたは冷徹なライバル企業のCEOです。我が社の[戦略案]を読み、論理の脆弱性を3点指摘し、それを叩きつぶすための対抗案を立案してください。
+                    <span class="lecture-badge">レクチャー秘伝</span>
+                    <h3>パワハラ型・自己批判</h3>
+                    <p style="font-size: 0.85rem;">AIに100点になるまで自ら修正させる、最強の品質向上ルーチン。</p>
+                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
+今出したあなたの回答を、プロのマーケターの視点で「0-100点」で採点してください。不足している要素を具体的に5つ挙げ、それらを全て反映して「100点」の回答を再出力してください。
                     </div>
                 </div>
 
-                <!-- 2. 一人セグメント憑依 -->
+                <!-- 2. まじん式構成案 -->
                 <div class="prompt-card">
-                    <span class="category-tag tag-research">14, 17章：深層心理抽出</span>
-                    <h3>一人セグメント憑依</h3>
-                    <p style="font-size: 0.9rem;">AIを特定顧客に完全に擬人化させ、本音（インサイト）を引き出します。</p>
-                    <div class="prompt-text">
-あなたは[詳細属性]を持つ「高橋さん」です。今、製品情報を読み終えました。購入を躊躇する「あと一歩の不安」を、独り言として3つ言語化してください。
+                    <span class="lecture-badge">レクチャー秘伝</span>
+                    <h3>「まじん式」スライド構成</h3>
+                    <p style="font-size: 0.85rem;">上層部が一瞬で「Yes」と言うための黄金のスライド構成案。</p>
+                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
+以下のテーマについて、プレゼン資料の構成案を[まじん式]で作成して。
+構成案：1. 表紙、2. 背景と目的、3. 現状の課題（痛み）、4. 実行プラン（解決）、5. 実施後の未来、6. 次のアクション。
                     </div>
                 </div>
 
-                <!-- 3. PSM分析シミュレート -->
+                <!-- 3. スケルトン構成 -->
                 <div class="prompt-card">
-                    <span class="category-tag tag-strategy">24章：科学的値付け</span>
-                    <h3>PSM 心理的価格推認</h3>
-                    <p style="font-size: 0.9rem;">競合と比較し、顧客が「安すぎて不安」「高すぎて拒絶」する境界線を予測します。</p>
-                    <div class="prompt-text">
-市場価格データ[URL/PDF]に基づき、新製品[名称]のPSM分析（価格感度測定）を推論せよ。上限・下限・最適価格の根拠を提示せよ。
+                    <span class="lecture-badge">基本プロトコル</span>
+                    <h3>プロンプトのスケルトン</h3>
+                    <p style="font-size: 0.85rem;">あらゆる依頼で使用可能な、精度の高い指示の雛形。</p>
+                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
+# 役割：[Role]
+# 目的：[Objective]
+# 背景：[Context]
+# 成約：[Constraint]
+# 形式：[Format]
                     </div>
                 </div>
 
-                <!-- 4. LTVシミュレーター -->
+                <!-- 4. LTVシミュレーション -->
                 <div class="prompt-card">
-                    <span class="category-tag tag-strategy">13章：収益シミュレーション</span>
-                    <h3>LTV 増大トリガー予測</h3>
-                    <p style="font-size: 0.9rem;">どの変数を動かせば、最も効率的に生涯顧客価値（LTV）が向上するかを算出します。</p>
-                    <div class="prompt-text">
-現在の顧客データ[添付]を元に、「再購入率」を10%改善した際と「客単価」を10%上げた際のLTVへの影響を比較し、優先すべき施策を提案せよ。
-                    </div>
-                </div>
-
-                <!-- 5. GEO最適化指示 -->
-                <div class="prompt-card">
-                    <span class="category-tag tag-research">25-26章：最新検索最適化</span>
-                    <h3>GEO 最適化キーワード抽出</h3>
-                    <p style="font-size: 0.9rem;">Perplexity等のAI回答エンジンが自社を推奨しやすくするための構造改善。</p>
-                    <div class="prompt-text">
-PerplexityやChatGPTの回答エンジンが、[製品名]を「[カテゴリ]のNo.1」として推奨しやすくなるための、Webサイト修正案を示せ。
-                    </div>
-                </div>
-
-                <!-- 6. Gamma/資料自動化 -->
-                <div class="prompt-card">
-                    <span class="category-tag tag-efficiency">23, 27章：自動資料生成</span>
-                    <h3>Gamma ブランド浸透指示</h3>
-                    <p style="font-size: 0.9rem;">自社のロゴ、カラー、トンマナをAIに一瞬で理解させ、スライドを生成させます。</p>
-                    <div class="prompt-text">
-自社サイト[URL]を読み込み、このブランドアイデンティティーを守ったまま、[テーマ]に関するプレゼン構成案をGamma向けに作成せよ。
+                    <span class="category-tag tag-strategy">13章：収益構造</span>
+                    <h3>LTV / CAC 計算</h3>
+                    <p style="font-size: 0.85rem;">収益性を科学的に分析し、再投資の余力を算出。</p>
+                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
+製品データ[添付]の平均客単価と再購入率から現在のLTVを算出し、CACと比較して健全性を評価して。
                     </div>
                 </div>
             </div>
 
             <div class="alert alert-important" style="margin-top: 48px;">
-                <p>⚠️ <strong>注意：</strong> プロンプトは「魔法の呪文」ではありません。トミーさんの言う「三貫性（誰に・何を・どう）」が自分の中に確立されて初めて、AIから100点の回答を引き出すことができます。</p>
+                <p>💡 <strong>トミーさんの教え：</strong> プロンプトの質は、マーケター自身の「課題の定義力」に比例します。常に「なぜこのプロンプトが必要か？」という三貫性に立ち返って使用してください。</p>
             </div>
         </div>
 

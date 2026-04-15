@@ -3,168 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マーケティング実戦マニュアル V3 - Marketing Strategy</title>
+    <title>AIマーケティング実戦マニュアル 最終版 - Marketing Strategy</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .chapter-section {
-            margin-bottom: 64px;
-            padding-top: 32px;
-            border-top: 1px solid #e2e8f0;
+        .lecture-note {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            padding: 24px;
+            border-radius: 16px;
+            margin: 24px 0;
+            position: relative;
         }
-        .step-box {
-            background: #f1f5f9;
+        .lecture-note::before {
+            content: "🔥 レクチャー・インサイト";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #f59e0b;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .skeleton-box {
+            background: #1e293b;
+            color: #f1f5f9;
             padding: 20px;
             border-radius: 12px;
+            font-family: monospace;
             margin: 16px 0;
-            border-left: 4px solid var(--primary);
         }
-        .checklist {
-            background: #f0fdf4;
+        .pro-loop {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
             padding: 24px;
-            border-radius: 12px;
-            border: 1px solid #bbf7d0;
-            margin: 20px 0;
+            border-radius: 16px;
+            border: 1px solid #5eead4;
         }
-        .checklist h4 { color: #166534; margin-top: 0; }
-        .checklist ul { list-style: none; padding: 0; }
-        .checklist li::before {
-            content: "✅";
-            margin-right: 8px;
-        }
-        .nav-anchor {
-            position: sticky;
-            top: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            margin-bottom: 32px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            z-index: 100;
-        }
-        .nav-anchor a {
-            font-size: 0.8rem;
-            text-decoration: none;
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-        .nav-anchor a:hover { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1>マーケティング実戦マニュアル V3（章別解体版）</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 24px;">トミーさんの全34リソースを統合した、現場で使うための「プロの思考手順書」です。</p>
+            <h1>AIマーケティング実戦マニュアル<br><span style="font-size: 1.2rem; color: var(--primary);">【極限統合版：スライド×ドキュメント×レクチャー】</span></h1>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">全34リソース ＋ 6回の補足レクチャー（Notion）を統合した、究極の戦略バイブルです。</p>
 
             <div class="nav-anchor">
-                <a href="#ch12">12-13章</a>
-                <a href="#ch14">14-17章</a>
-                <a href="#ch18">18-21章</a>
-                <a href="#ch22">22-24章</a>
-                <a href="#ch25">25-27章</a>
+                <a href="#diagnostics">診断・OS</a>
+                <a href="#insights">リサーチ・嘘対策</a>
+                <a href="#strategy">戦略・自己批判</a>
+                <a href="#automation">実行・自動化</a>
+                <a href="#future">未来・外部脳</a>
             </div>
 
-            <!-- 12-13章 -->
-            <section id="ch12" class="chapter-section">
-                <h2>🟢 PHASE 1：思考のOSと収益構造 (12-13章)</h2>
-                <h3>第12章：AI時代のマーケティング再定義</h3>
-                <p>AIは単なる時短ツールではなく、<strong>「思考の並行処理」</strong>を行うためのパートナーです。全ての戦略の起点はここから始まります。</p>
-                <div class="step-box">
-                    <strong>実戦 Step:</strong>
-                    <ol>
-                        <li>USP（独自の強み）を3つ特定する</li>
-                        <li>AIに「最強の批評家」を演じさせ、論理の穴を突かせる</li>
-                    </ol>
+            <!-- PHASE 1 -->
+            <section id="diagnostics" class="chapter-section">
+                <h2>🟢 PHASE 1：思考のOSとセキュリティ (12-13章)</h2>
+                <div class="lecture-note">
+                    <h4>情報の命綱：セキュリティと RAG</h4>
+                    <p>AI活用において、自社の機密情報を不用意に流さないこと。RAG（検索拡張生成）などの安全な環境を構築し、プロトコルを守ることが最初の「プロの条件」です。</p>
                 </div>
+                <h3>プロンプトの「スケルトン（骨組み）」</h3>
+                <div class="skeleton-box">
+                    1. Role（役割）<br>
+                    2. Objective（目的）<br>
+                    3. Context（背景）<br>
+                    4. Constraint（制約）<br>
+                    5. Format（形式）
+                </div>
+            </section>
 
-                <h3>第13章：LTV収益シミュレーション</h3>
-                <div class="checklist">
-                    <h4>プロのチェックリスト：利益の源泉</h4>
+            <!-- PHASE 2 -->
+            <section id="insights" class="chapter-section">
+                <h2>🟢 PHASE 2：リサーチと嘘（ハルシネーション）対策 (14-17章)</h2>
+                <p>AIの出す情報は常に「嘘」が含まれる可能性があるという前提。Notion レクチャーで触れられた「事実の多角形検証」を導入します。</p>
+                <div class="lecture-note">
+                    <h4>ハルシネーションを飼い慣らす</h4>
                     <ul>
-                        <li>LTV（顧客価値）は CAC（獲得コスト）の3倍以上を維持できているか？</li>
-                        <li>「2回目購入」に至るトリガーをデータで特定できているか？</li>
+                        <li>AIに「ソースを提示せよ」と命じ、URLや事実関係を人間が最終確認するフローを徹底。</li>
+                        <li>推論（推測）と事実（ファクト）を分けて出力させるテクニック。</li>
                     </ul>
                 </div>
             </section>
 
-            <!-- 14-17章 -->
-            <section id="ch14" class="chapter-section">
-                <h2>🟢 PHASE 2：インサイト抽出の極意 (14-17章)</h2>
-                <h3>第14-15章：AIネットリサーチ</h3>
-                <p>「ドリルが欲しいのではない、穴が欲しい」という未言語化のニーズをAIで可視化します。</p>
-                <div class="step-box">
-                    <strong>実戦 Step:</strong>
-                    <ol>
-                        <li>大量のSNSコメントやレビューをAIに投入</li>
-                        <li>「顧客が言語化できていない不満の内容」を抽出</li>
-                    </ol>
-                </div>
-
-                <h3>第16-17章：競合・市場とUSP再定義</h3>
-                <div class="alert alert-tip">
-                    <strong>SmartCook Air のケース：</strong><br>
-                    「安全性への心理的障壁（ドキュメントが読みづらい）」を特定し、それを「徹底した安全ガイド」という強みに変えた実例を思い出してください。
+            <!-- PHASE 3 -->
+            <section id="strategy" class="chapter-section">
+                <h2>🔵 PHASE 3：戦略の強度と「自己批判ループ」 (18-21章)</h2>
+                <div class="pro-loop">
+                    <h3>🔥 伝説の「パワハラ型・自己批判プロンプト」</h3>
+                    <p>一度の回答で満足せず、AIに自らを「0-100点」で採点させ、不足分を自ら埋めさせることで、アウトプットを120点にまで高めるルーチンです。</p>
+                    <div class="step-box">
+                        <strong>手順：</strong>
+                        <ol>
+                            <li>戦略案を作成（AI）</li>
+                            <li>「自社の論理の穴」を探し、セルフ採点させる（AI）</li>
+                            <li>修正案を統合して完成させる（AI+人間）</li>
+                        </ol>
+                    </div>
                 </div>
             </section>
 
-            <!-- 18-21章 -->
-            <section id="ch18" class="chapter-section">
-                <h2>🔵 PHASE 3：構造設計と戦略三貫性 (18-21章)</h2>
-                <h3>第18-19章：マルチエージェント型・ジャーニー検証</h3>
-                <div class="step-box">
-                    <strong>実戦 Step:</strong>
-                    <ol>
-                        <li>AIに「厳しいターゲット客（高橋さん等）」を擬人化</li>
-                        <li>実際にLPを読ませ、「ここで買う気が失せた」箇所の指摘を受ける</li>
-                    </ol>
+            <!-- PHASE 4 -->
+            <section id="automation" class="chapter-section">
+                <h2>🔴 PHASE 4：実行の自動化と「まじん式」スライド (22-24章)</h2>
+                <div class="lecture-note">
+                    <h4>まじん式：一瞬で上層部を動かす資料構成</h4>
+                    <p>「表紙・背景・課題・解決・未来・アクション」の黄金比。AIにこの構成をテンプレートとして叩き込みます。</p>
                 </div>
+                <h3>自動化の入り口（API連携）</h3>
+                <p>SerpAPI等を使ったリアルタイム情報取得により、静的な知識から「今、市場で起きていること」を分析するエージェント型へ進化。</p>
+            </section>
 
-                <h3>第20-21章：PSM価格分析シミュレーション</h3>
+            <!-- PHASE 5 -->
+            <section id="future" class="chapter-section">
+                <h2>🔴 PHASE 5：未来予測と「外部脳」NotebookLM (25-27章)</h2>
+                <div class="lecture-note">
+                    <h4>NotebookLM：自分の分身（AIトミーさん）を作る</h4>
+                    <p>これまでの全講義資料、メモ、音声ログを NotebookLM に読み込ませ、「トミーさんならこの課題にどう答える？」という問いが可能になります。これこそが最強のナレッジ管理です。</p>
+                </div>
                 <div class="checklist">
-                    <h4>三貫性（誰に・何を・どう）の最終確認</h4>
+                    <h4>最後に必ず自問自答すること</h4>
                     <ul>
-                        <li>ターゲットにとって、この価格は「自分への投資」だと思える納得感があるか？</li>
-                        <li>戦略の「三貫性」に、AIから見ても1ミリのズレもないか？</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- 22-24章 -->
-            <section id="ch22" class="chapter-section">
-                <h2>🔴 PHASE 4：実行の自動化と解析 (22-24章)</h2>
-                <h3>第22-24章：Webマーケ ＆ データ分析レポート</h3>
-                <p>「0から作る」のをやめ、AIが作った「80点のドラフト」をプロが「120点」に仕上げる時代へ。</p>
-                <div class="step-box">
-                    <strong>実技：</strong>
-                    <ul>
-                        <li>Gammaによる資料自動生成のプロンプト構成</li>
-                        <li>GA4データからの「意外な成約経路」のAI特定</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- 25-27章 -->
-            <section id="ch25" class="chapter-section">
-                <h2>🔴 PHASE 5：未来予測とAIキャリア (25-27章)</h2>
-                <h3>第25-27章：AIマネージャーとしての進化</h3>
-                <p>プロンプトの速さではなく、<strong>「戦略の審美眼」</strong>と<strong>「AI社員を指揮するマネジメント能力」</strong>がこれからの武器になります。</p>
-                <div class="checklist">
-                    <h4>プロの自問自答</h4>
-                    <ul>
-                        <li>私は今日、AIができない「顧客との感情的接点」に時間を使えたか？</li>
-                        <li>AIで月20時間の余白を創り、新しい市場を再定義できているか？</li>
+                        <li>AIを「道具」ではなく「自分の外部情報処理装置」にできているか？</li>
+                        <li>余った時間で、一人の「人間」の心の震えを捉えることができたか？</li>
                     </ul>
                 </div>
             </section>
         </div>
 
         <div class="nav-links">
-            <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
-            <a href="ai_practice_lab.html" class="btn">実践ラボを起動する →</a>
+            <a href="../index.html" class="btn">← ナビゲータに戻る</a>
+            <a href="ai_practice_lab.html" class="btn">実践ラボ V3 を見る →</a>
         </div>
     </div>
 </body>
