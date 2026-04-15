@@ -3,92 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT 活用演習ラボ - Marketing Strategy</title>
+    <title>AIマーケティング 実践ラボ - Case Study</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .practice-item {
-            margin-bottom: 48px;
-            padding: 24px;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            background: #fff;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-        .prompt-template {
-            background: #1e293b;
-            color: #f1f5f9;
-            padding: 20px;
-            border-radius: 12px;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 16px 0;
-            position: relative;
-        }
-        .prompt-template::before {
-            content: "コピーして利用可能なプロンプト";
-            display: block;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
+        .lab-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; text-align: center; border: 1px solid #334155; }
+        .lab-badge { background: #f59e0b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
+        
+        .step-container { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .step-title { color: #0f172a; margin-top: 0; font-size: 1.6rem; border-bottom: 3px solid var(--primary); padding-bottom: 12px; margin-bottom: 24px; display: inline-block;}
+        
+        .scenario-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+        .scenario-box h4 { margin-top: 0; color: #334155; display: flex; align-items: center; gap: 8px;}
+        
+        .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .insight-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); border-top: 4px solid #3b82f6;}
+        .insight-card h5 { margin-top: 0; color: #1e293b; font-size: 1.05rem;}
+        
+        .fact-box { background: #eff6ff; border-left: 5px solid #2563eb; padding: 24px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+        .fact-box h4 { margin-top: 0; color: #1d4ed8; }
+        
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1>ChatGPT 活用演習ラボ（実戦版）</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">トミーさんの演習ドキュメントから抽出した、プロの「問い」と「AI実現フロー」を体験するためのラボです。</p>
+        
+        <div class="lab-header">
+            <span class="lab-badge">実践ラボ (Practice Lab)</span>
+            <h1 style="font-size: 2.5rem; margin-top: 0;">不振ビデオコンテンツの戦略的再生</h1>
+            <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 800px; margin: 0 auto;">
+                本ドキュメントは、「最強の理論（Master Hub）」を現場でどのように運用するのかを示す実戦リファレンスです。実務で直面する「どこから手を付ければいいか分からない」壁を突破するため、泥臭いデータの収集観点から解説します。
+            </p>
+        </div>
 
-            <!-- 演習1 -->
-            <section class="practice-item">
-                <div class="badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv1：顧客理解の深化 (16章)</div>
-                <h2>ケース：SmartCook Air の「隠れた不満」を探せ</h2>
-                <p>市場レビュー群を AI に読み込ませ、ユーザーが言語化できていない「真の懸念（ドリルの穴）」を特定します。</p>
-                
-                <div class="prompt-template">
-以下の顧客レビュー群（URL or テキスト）を分析してください。
-1. 表面的な不満（操作性、デザインなど）を抽出
-2. その裏に隠れている「心理的障壁（例：安全性、見栄、罪悪感）」を推察
-3. その懸念を払拭し、競合他社と比較した際のUSP（独自の強み）へ変換するコピー案を提示せよ
-                </div>
-            </section>
+        <div class="step-container">
+            <h2 class="step-title">🏗️ Step 0: 前提設定とデータ収集の視点</h2>
+            <p>戦略（Diagnosis → Strategy → Future）のループを回す前に、**「戦うための材料（ファクト）」**を揃える必要があります。ここでは、架空のオンライン講座を例に、AIに与えるべき初期データをどうやって集めるかを解説します。</p>
 
-            <!-- 演習2 -->
-            <section class="practice-item">
-                <div class="badge" style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv2：戦略立案 (24-25章)</div>
-                <h2>PSM分析：科学的根拠に基づいた「値付け」</h2>
-                <p>競合他社の価格設定と、ターゲットのライフスタイルから、新製品の「納得感のある上限・下限価格」を AI に推論させます。</p>
-                <div class="prompt-template">
-あなたは戦略コンサルタントです。新製品「[名称]」の価格戦略を立案します。
-市場データとターゲット属性に基づき、以下の4つの価格指標（PSM分析）を具体的にシミュレートしてください。
-・「安すぎて不安になる価格」
-・「お得に感じる価格」
-・「高いと感じ始める価格」
-・「高すぎて絶対に買わない価格」
-その根拠となる顧客心理も言語化してください。
-                </div>
-            </section>
-
-            <!-- 演習3 -->
-            <section class="practice-item">
-                <div class="badge" style="background: #ede9fe; color: #5b21b6; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: inline-block;">Lv3：最新トレンド (25-26章)</div>
-                <h2>GEO 最適化：生成AI検索への対応</h2>
-                <p>Perplexity などの AI 回答エンジンが、自社製品を「最適解」として推奨してくれるための改善案を立案します。</p>
-                <div class="prompt-template">
-生成AI回答エンジン（GEO）が「[自社カテゴリ]のおすすめは？」と聞かれた際、我が社を1番に挙げるためには、公式サイトや記事にどのような「キーワード」や「構造化データ」を追加すべきか。最新トレンドを踏まえてアドバイスせよ。
-                </div>
-            </section>
-
-            <div class="ai-wow" style="background: rgba(var(--primary-rgb), 0.05); padding: 32px; border-radius: 20px; border: 1px dashed var(--primary);">
-                <h3>🚀 「プロへの近道」としての演習</h3>
-                <p>これらの演習の目的は「AIが出した正解を見ること」ではありません。AIの回答に対して<strong>「なぜそれが必要なのか？トミーさんの言う『三貫性』に矛盾はないか？」</strong>という視点で向き合い、自身の判断軸を磨くことにあります。</p>
-                <p>1つのプロンプトから得られる「厚みのある回答」を組織の共有財産に変えていきましょう。</p>
+            <div class="scenario-box">
+                <h4>📌 【架空の商材設定】</h4>
+                <ul style="font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>商材名</strong>: 「非エンジニア向け・AI業務効率化マスター動画講座（全20本）」</li>
+                    <li><strong>価格帯</strong>: 月額制サブスクリプション（3,000円/月）</li>
+                    <li><strong>現状の悩み</strong>: リリース半年経過。最初はよく売れたが、現在は **CPA（顧客獲得単価）が高騰** しており、同時に動画途中での **中途解約が増え、LTV（生涯価値）が伸び悩んでいる。**</li>
+                </ul>
             </div>
+
+            <h3 style="color: #0f172a; margin-bottom: 24px;">【実務指南】 仮説データを揃えるための「観点」</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 24px; color: #475569;">
+                「売上が落ちています、どうしましょう」とAIに抽象的なプロンプトを投げても一般論しか返ってきません。マーケターは、以下の観点で <strong>血の通った一次データ（ファクト）</strong> をかき集める必要があります。
+            </p>
+
+            <div class="insight-grid">
+                <!-- 定量データ -->
+                <div class="insight-card" style="border-top-color: #ef4444;">
+                    <h5>📊 1. 定量データ（血止めの位置の特定）</h5>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">AARRRファネルのどこから人が逃げているのかを数字で特定します。</p>
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                        <li><strong>Acquisition（獲得流量）</strong>: GA4や広告出稿データを見る。流入元別のLP離脱率は？競合出稿の影響で入札単価が高騰していないか。</li>
+                        <li><strong>Activation / Retention（活性・定着）</strong>: LMS（学習システム）の視聴ログを見る。全20回のうち、<strong>第何回で視聴が止まっているか</strong>（明確な挫折ポイント）。</li>
+                        <li><strong>Revenue（継続収益）</strong>: Stripeなどの決済ログを見る。平均何ヶ月で解約されているか（LTVの実数）。</li>
+                    </ul>
+                </div>
+
+                <!-- 定性データ -->
+                <div class="insight-card" style="border-top-color: #8b5cf6;">
+                    <h5>🗣️ 2. 定性データ（痛みの種類の特定）</h5>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">JTBD（ジョブ）を見誤っていないか、声の裏側を拾い上げます。</p>
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                        <li><strong>解約アンケートのローデータ</strong>: 「学ぶ時間がなかった」という声は建前で、「明日ラクになる即効性が欲しかった」という本音が隠れていないか。</li>
+                        <li><strong>現場（メンター・CS）の体感</strong>: 質問箱に届く一番多い質問は何か？（AIの使い方より、自社業務への適用アイデアではないか）。</li>
+                        <li><strong>時間の奪い合い（代替競合）</strong>: 自社が解約された後、彼らは他社のAI講座ではなく「スマホゲーム（娯楽）」に時間を使っているのではないか？</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #0f172a; margin-top: 40px; margin-bottom: 16px;">📥 収集された「架空のファクトデータ群」</h3>
+            <p style="font-size: 0.9rem; color: #475569;">
+                上記の「観点」に従い、現場担当者が社内データをかき集めてきたと仮定します。このデータ群が、次の <strong>Step 1（Diagnosis）でAIに「現状」として与える入力値</strong> になります。
+            </p>
+
+            <div class="fact-box">
+                <h4>📝 今回分析に用いるファクトデータ</h4>
+                <ul style="font-size: 0.95rem; line-height: 1.8;">
+                    <li><strong>ファクトA（LMS視聴率）</strong>: 全20回のうち、第4回「GASとGeminiの連携（専門用語多数）」でコース全体の <strong>78% の受講生が視聴を停止</strong> している。</li>
+                    <li><strong>ファクトB（解約理由トップ3）</strong>: <br>1位「時間が取れない (40%)」、2位「難しくてついていけない (30%)」、3位「自社業務への活かし方が不明 (20%)」。</li>
+                    <li><strong>ファクトC（外部環境）</strong>: 競合から「月額980円の安価な類似サブスク」が登場し、自社のCPAが約2倍に押し上げられている。</li>
+                </ul>
+            </div>
+            
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 24px; text-align: center;">
+                ※ 本データの収集が完了したことで、ようやく「戦う土俵」が整いました。<br>次回、これらの手垢のついた事実をマスターナレッジの論理（QSCV、競合3層）にかけて「Step 1: 診断 (Diagnosis)」を行います。
+            </p>
         </div>
 
         <div class="nav-links">
-            <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
-            <a href="master_knowledge.html" class="btn">詳細ナレッジベースを見る →</a>
+            <a href="master_knowledge.html" class="btn">← マスターナレッジに戻る</a>
         </div>
     </div>
 </body>
