@@ -3,138 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIマーケティング実戦マニュアル 最終版 - Marketing Strategy</title>
+    <title>AIマーケティング実戦マニュアル【極限統合・重厚版】</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .lecture-note {
-            background: #fffbeb;
-            border: 2px dashed #f59e0b;
-            padding: 24px;
-            border-radius: 16px;
-            margin: 24px 0;
-            position: relative;
-        }
-        .lecture-note::before {
-            content: "🔥 レクチャー・インサイト";
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #f59e0b;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        .skeleton-box {
-            background: #1e293b;
-            color: #f1f5f9;
-            padding: 20px;
-            border-radius: 12px;
-            font-family: monospace;
-            margin: 16px 0;
-        }
-        .pro-loop {
-            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid #5eead4;
-        }
+        .stacking-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 40px; margin-bottom: 48px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        .logic-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 24px 0; }
+        .logic-card { background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid #cbd5e1; height: 100%; }
+        .logic-card h4 { margin-top: 0; color: #1e293b; border-bottom: 2px solid var(--primary); display: inline-block; }
+        .lecture-badge { background: #f59e0b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; display: inline-block; }
+        .matrix-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
+        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+        .matrix-table th { background: #f1f5f9; }
+        .highlight-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1>AIマーケティング実戦マニュアル<br><span style="font-size: 1.2rem; color: var(--primary);">【極限統合版：スライド×ドキュメント×レクチャー】</span></h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">全34リソース ＋ 6回の補足レクチャー（Notion）を統合した、究極の戦略バイブルです。</p>
+        <div class="card" style="text-align: center; padding: 60px 20px;">
+            <h1 style="font-size: 2.5rem; line-height: 1.2;">AIマーケティング実戦マニュアル<br><span style="color: var(--primary);">【極限統合・重厚版】</span></h1>
+            <p style="font-size: 1.1rem; color: var(--text-secondary);">34リソース ＋ 6レクチャーの全変数を「積み上げた」真のマスタードラフト</p>
+        </div>
 
-            <div class="nav-anchor">
-                <a href="#diagnostics">診断・OS</a>
-                <a href="#insights">リサーチ・嘘対策</a>
-                <a href="#strategy">戦略・自己批判</a>
-                <a href="#automation">実行・自動化</a>
-                <a href="#future">未来・外部脳</a>
+        <!-- PHASE 1 -->
+        <section class="stacking-card">
+            <span class="lecture-badge">PHASE 1：思考のOS ＆ 収益構造 (Ch 12-13)</span>
+            <h2>第12-13章：マーケティング再定義と LTV 経営</h2>
+            
+            <div class="logic-group">
+                <div class="logic-card">
+                    <h4>QSCV の定義</h4>
+                    <ul style="font-size: 0.85rem;">
+                        <li><strong>Quality</strong>: 顧客の期待を超える製品品質</li>
+                        <li><strong>Service</strong>: 全タッチポイントの摩擦ゼロ化</li>
+                        <li><strong>Cleanliness</strong>: ブランドの誠実さと透明性</li>
+                        <li><strong>Value</strong>: 費やすコスト以上の圧倒的満足</li>
+                    </ul>
+                </div>
+                <div class="logic-card">
+                    <h4>4P vs 4C 対比軸</h4>
+                    <table class="matrix-table">
+                        <tr><th>4P (企業視点)</th><th>4C (顧客視点)</th></tr>
+                        <tr><td>Product</td><td>Customer Value</td></tr>
+                        <tr><td>Price</td><td>Cost</td></tr>
+                        <tr><td>Place</td><td>Convenience</td></tr>
+                        <tr><td>Promotion</td><td>Communication</td></tr>
+                    </table>
+                </div>
             </div>
 
-            <!-- PHASE 1 -->
-            <section id="diagnostics" class="chapter-section">
-                <h2>🟢 PHASE 1：思考のOSとセキュリティ (12-13章)</h2>
-                <div class="lecture-note">
-                    <h4>情報の命綱：セキュリティと RAG</h4>
-                    <p>AI活用において、自社の機密情報を不用意に流さないこと。RAG（検索拡張生成）などの安全な環境を構築し、プロトコルを守ることが最初の「プロの条件」です。</p>
-                </div>
-                <h3>プロンプトの「スケルトン（骨組み）」</h3>
-                <div class="skeleton-box">
-                    1. Role（役割）<br>
-                    2. Objective（目的）<br>
-                    3. Context（背景）<br>
-                    4. Constraint（制約）<br>
-                    5. Format（形式）
-                </div>
-            </section>
+            <div class="highlight-box">
+                <strong>📈 収益の健全性（LTV/ROI）:</strong><br>
+                LTV = (単価 × 頻度) × 継続期間。解約率（Churn Rate）を 1% 下げるインパクトと、獲得コスト（CAC）の回収期間（Payback Period）を AI で精密に算出せよ。
+            </div>
+        </section>
 
-            <!-- PHASE 2 -->
-            <section id="insights" class="chapter-section">
-                <h2>🟢 PHASE 2：リサーチと嘘（ハルシネーション）対策 (14-17章)</h2>
-                <p>AIの出す情報は常に「嘘」が含まれる可能性があるという前提。Notion レクチャーで触れられた「事実の多角形検証」を導入します。</p>
-                <div class="lecture-note">
-                    <h4>ハルシネーションを飼い慣らす</h4>
-                    <ul>
-                        <li>AIに「ソースを提示せよ」と命じ、URLや事実関係を人間が最終確認するフローを徹底。</li>
-                        <li>推論（推測）と事実（ファクト）を分けて出力させるテクニック。</li>
+        <!-- PHASE 2 -->
+        <section class="stacking-card">
+            <span class="lecture-badge">PHASE 2：インサイト ＆ 競合分析 (Ch 14-17)</span>
+            <h2>第14-17章：ジョブ理論と AI ネットリサーチ</h2>
+            
+            <div class="logic-card" style="margin-bottom: 24px;">
+                <h4>ジョブ理論（ドリルの穴）</h4>
+                <p style="font-size: 0.9rem;">「ドリル」ではなく「穴」、その先の「家族との思い出」を顧客は雇用している。AI を使い、レビューの深層からこの「雇用の目的」を特定する。</p>
+            </div>
+
+            <h4>AI ネットリサーチ 5W1H 報告書項目</h4>
+            <div class="logic-group" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="logic-item"><strong>Who</strong>: 属性 × 悩み</div>
+                <div class="logic-item"><strong>When</strong>: 課題発生の瞬間</div>
+                <div class="logic-item"><strong>Where</strong>: 接触・比較場所</div>
+                <div class="logic-item"><strong>What</strong>: 期待便益 × 妥協点</div>
+                <div class="logic-item"><strong>Why</strong>: 既存策への不満</div>
+                <div class="logic-item"><strong>How</strong>: 購買の決定打</div>
+            </div>
+
+            <div class="highlight-box" style="background: #fffbeb; border-color: #f59e0b;">
+                <strong>🔥 レクチャー知見：ハルシネーション対策</strong><br>
+                AI の回答には必ず「根拠 URL」を求め、人間が多角形検証を行うプロトコルを標準化すること。
+            </div>
+        </section>
+
+        <!-- PHASE 3 -->
+        <section class="stacking-card">
+            <span class="lecture-badge">PHASE 3：戦略の三貫性 ＆ STP (Ch 18-21)</span>
+            <h2>第18-21章：カスタマージャーニーと三貫性の滝</h2>
+
+            <div class="logic-group">
+                <div class="logic-card">
+                    <h4>AISCEAS 購買決定モデル</h4>
+                    <p style="font-size: 0.8rem; color: #64748b;">Attention → Interest → Search → Comparison → Examination → Action → Share</p>
+                    <p style="font-size: 0.85rem;">各フェーズで AI に「ターゲット客の心の揺れ」をシミュレートさせ、離脱要因を特定する。</p>
+                </div>
+                <div class="logic-card">
+                    <h4>Targeting の 6R 指標</h4>
+                    <ul style="font-size: 0.8rem; columns: 2;">
+                        <li>Realistic Size</li>
+                        <li>Rank</li>
+                        <li>Rate of Growth</li>
+                        <li>Rival</li>
+                        <li>Reach</li>
+                        <li>Response</li>
                     </ul>
                 </div>
-            </section>
+            </div>
 
-            <!-- PHASE 3 -->
-            <section id="strategy" class="chapter-section">
-                <h2>🔵 PHASE 3：戦略の強度と「自己批判ループ」 (18-21章)</h2>
-                <div class="pro-loop">
-                    <h3>🔥 伝説の「パワハラ型・自己批判プロンプト」</h3>
-                    <p>一度の回答で満足せず、AIに自らを「0-100点」で採点させ、不足分を自ら埋めさせることで、アウトプットを120点にまで高めるルーチンです。</p>
-                    <div class="step-box">
-                        <strong>手順：</strong>
-                        <ol>
-                            <li>戦略案を作成（AI）</li>
-                            <li>「自社の論理の穴」を探し、セルフ採点させる（AI）</li>
-                            <li>修正案を統合して完成させる（AI+人間）</li>
-                        </ol>
-                    </div>
-                </div>
-            </section>
+            <h4>Segmentation 4 変数</h4>
+            <div class="logic-group">
+                <div class="logic-item"><strong>地理</strong>: 地域・気候</div>
+                <div class="logic-item"><strong>人口</strong>: 年齢・年収</div>
+                <div class="logic-item"><strong>心理</strong>: 価値観・ライフスタイル</div>
+                <div class="logic-item"><strong>行動</strong>: 頻度・ロイヤリティ</div>
+            </div>
 
-            <!-- PHASE 4 -->
-            <section id="automation" class="chapter-section">
-                <h2>🔴 PHASE 4：実行の自動化と「まじん式」スライド (22-24章)</h2>
-                <div class="lecture-note">
-                    <h4>まじん式：一瞬で上層部を動かす資料構成</h4>
-                    <p>「表紙・背景・課題・解決・未来・アクション」の黄金比。AIにこの構成をテンプレートとして叩き込みます。</p>
-                </div>
-                <h3>自動化の入り口（API連携）</h3>
-                <p>SerpAPI等を使ったリアルタイム情報取得により、静的な知識から「今、市場で起きていること」を分析するエージェント型へ進化。</p>
-            </section>
+            <div class="highlight-box" style="background: #f0fdf4; border-color: #22c55e;">
+                <strong>🔥 レクチャー知見：自己批判ループ</strong><br>
+                AI に「この戦略案、プロの視点で 100 点中何点か？」と採点させ、不足分を補う修正案を 2 回以上出させること。
+            </div>
+        </section>
 
-            <!-- PHASE 5 -->
-            <section id="future" class="chapter-section">
-                <h2>🔴 PHASE 5：未来予測と「外部脳」NotebookLM (25-27章)</h2>
-                <div class="lecture-note">
-                    <h4>NotebookLM：自分の分身（AIトミーさん）を作る</h4>
-                    <p>これまでの全講義資料、メモ、音声ログを NotebookLM に読み込ませ、「トミーさんならこの課題にどう答える？」という問いが可能になります。これこそが最強のナレッジ管理です。</p>
+        <!-- PHASE 4 -->
+        <section class="stacking-card">
+            <span class="lecture-badge">PHASE 4：自動化 ＆ 未来キャリア (Ch 22-27)</span>
+            <h2>第22-27章：AI マネージャーへの職能転換</h2>
+            
+            <div class="logic-group">
+                <div class="logic-card">
+                    <h4>「まじん式」構成案</h4>
+                    <p style="font-size: 0.85rem;">表紙 → 背景 → 課題 → 解決 → 未来 → アクション。AI にこのテンプレートを渡し、承認を得るための 80 点のドラフトを即座に生成する。</p>
                 </div>
-                <div class="checklist">
-                    <h4>最後に必ず自問自答すること</h4>
-                    <ul>
-                        <li>AIを「道具」ではなく「自分の外部情報処理装置」にできているか？</li>
-                        <li>余った時間で、一人の「人間」の心の震えを捉えることができたか？</li>
-                    </ul>
+                <div class="logic-card">
+                    <h4>NotebookLM 外部脳</h4>
+                    <p style="font-size: 0.85rem;">全リソースを同期し、「トミーさんならどう考えるか」を 24 時間相談できる体制を構築。戦略の「審美眼」を磨くことに集中する。</p>
                 </div>
-            </section>
-        </div>
+            </div>
+
+            <div class="checklist">
+                <h4>✅ 最後に必ず自問自答すること</h4>
+                <ul>
+                    <li>O → G → S → M の「三貫性の滝」に論拠の崩壊はないか？</li>
+                    <li>AI に任せることで、自分は「顧客との感情的接点」に時間を使えたか？</li>
+                    <li>GEO（生成AI検索最適化）を視野に入れた次の一手が打てているか？</li>
+                </ul>
+            </div>
+        </section>
 
         <div class="nav-links">
-            <a href="../index.html" class="btn">← ナビゲータに戻る</a>
-            <a href="ai_practice_lab.html" class="btn">実践ラボ V3 を見る →</a>
+            <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
         </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 AI Marketing Strategy Master Draft | 究極の統合版
     </div>
 </body>
 </html>
