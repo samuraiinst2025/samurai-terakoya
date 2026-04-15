@@ -3,48 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>実戦 AI プロンプト集 最終版 - Marketing Strategy</title>
+    <title>AIマーケティング・プロンプト 最終版 - Marketing Strategy</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .prompt-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-        }
-        .prompt-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.3s;
-        }
-        .prompt-card:hover { transform: translateY(-8px); border-color: var(--primary); }
-        .lecture-badge {
-            background: #f59e0b;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1>実戦 AI プロンプト集<br><span style="font-size: 1.2rem; color: var(--primary);">【レクチャー知見統合版】</span></h1>
-            <p>トミーさんの全レクチャー資料から抽出した、アウトプットの質を極限まで高めるための「究極の指示書」です。</p>
-
+            <h1>実戦 AI プロンプト集<br><span style="font-size: 1.2rem; color: var(--primary);">【究極・完全統合版】</span></h1>
+            
             <div class="prompt-grid">
+                <!-- NEW: STATUS REPORT PROTOCOL -->
+                <div class="prompt-card" style="border: 2px solid #38bdf8; background: #f0f9ff;">
+                    <span class="lecture-badge" style="background: #38bdf8;">特別資料：AI制御</span>
+                    <h3>ステータス報告プロトコル</h3>
+                    <p style="font-size: 0.85rem;">対話の迷走を防ぐため、AIに「現在地」を常に可視化させる制御命令。</p>
+                    <div class="prompt-text" style="font-family: monospace; background: #e0f2fe; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
+今後は、5〜10往復ごとに以下の【ステータス報告】を文末に添えてください。
+---
+【進捗状況】: [●●●●●○○○○○] 50%
+【当初のゴール】: [目標]
+【現在地】: [今やっていること]
+【残りのタスク】: [次にやること]
+【リスク・懸念】: [想定されるズレ]
+                    </div>
+                </div>
+
                 <!-- 1. 自己批判ループ -->
                 <div class="prompt-card">
                     <span class="lecture-badge">レクチャー秘伝</span>
                     <h3>パワハラ型・自己批判</h3>
-                    <p style="font-size: 0.85rem;">AIに100点になるまで自ら修正させる、最強の品質向上ルーチン。</p>
-                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
-今出したあなたの回答を、プロのマーケターの視点で「0-100点」で採点してください。不足している要素を具体的に5つ挙げ、それらを全て反映して「100点」の回答を再出力してください。
+                    <div class="prompt-text">
+今出した回答を「0-100点」で採点し、不足要素を5つ挙げ、100点になるまで修正せよ。
                     </div>
                 </div>
 
@@ -52,40 +41,19 @@
                 <div class="prompt-card">
                     <span class="lecture-badge">レクチャー秘伝</span>
                     <h3>「まじん式」スライド構成</h3>
-                    <p style="font-size: 0.85rem;">上層部が一瞬で「Yes」と言うための黄金のスライド構成案。</p>
-                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
-以下のテーマについて、プレゼン資料の構成案を[まじん式]で作成して。
-構成案：1. 表紙、2. 背景と目的、3. 現状の課題（痛み）、4. 実行プラン（解決）、5. 実施後の未来、6. 次のアクション。
+                    <div class="prompt-text">
+[表紙・背景・課題・解決・未来・アクション]の黄金比でスライド構成案を作成して。
                     </div>
                 </div>
 
-                <!-- 3. スケルトン構成 -->
+                <!-- 3. アンカー固定 -->
                 <div class="prompt-card">
-                    <span class="lecture-badge">基本プロトコル</span>
-                    <h3>プロンプトのスケルトン</h3>
-                    <p style="font-size: 0.85rem;">あらゆる依頼で使用可能な、精度の高い指示の雛形。</p>
-                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
-# 役割：[Role]
-# 目的：[Objective]
-# 背景：[Context]
-# 成約：[Constraint]
-# 形式：[Format]
+                    <span class="lecture-badge">AI制御プロトコル</span>
+                    <h3>アンカー（軸の固定）</h3>
+                    <div class="prompt-text">
+このプロジェクトで絶対にブレたくない「軸」は[内容]です。これに矛盾する提案は却下し、常にこの軸に立ち返って回答してください。
                     </div>
                 </div>
-
-                <!-- 4. LTVシミュレーション -->
-                <div class="prompt-card">
-                    <span class="category-tag tag-strategy">13章：収益構造</span>
-                    <h3>LTV / CAC 計算</h3>
-                    <p style="font-size: 0.85rem;">収益性を科学的に分析し、再投資の余力を算出。</p>
-                    <div class="prompt-text" style="font-family: monospace; background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 12px;">
-製品データ[添付]の平均客単価と再購入率から現在のLTVを算出し、CACと比較して健全性を評価して。
-                    </div>
-                </div>
-            </div>
-
-            <div class="alert alert-important" style="margin-top: 48px;">
-                <p>💡 <strong>トミーさんの教え：</strong> プロンプトの質は、マーケター自身の「課題の定義力」に比例します。常に「なぜこのプロンプトが必要か？」という三貫性に立ち返って使用してください。</p>
             </div>
         </div>
 
