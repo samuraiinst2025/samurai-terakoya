@@ -6,23 +6,23 @@
     <title>【初期提案 V1】現場の痛みと診断 - Diagnosis</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .v1-header { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; text-align: center; border: 1px solid #7f1d1d; }
-        .v1-badge { background: #ef4444; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
-        .diagnosis-card { background: white; border: 1px solid #fca5a5; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border-left: 8px solid #ef4444;}
-        .diagnosis-title { color: #7f1d1d; margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid #fecaca; padding-bottom: 12px; margin-bottom: 24px;}
+        .v1-header { background: #f8fafc; color: #0f172a; padding: 40px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #e2e8f0; }
+        .v1-badge { border: 1px solid #cbd5e1; color: #475569; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
+        .diagnosis-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px; margin-bottom: 32px; }
+        .diagnosis-title { color: #0f172a; margin-top: 0; font-size: 1.4rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; }
         .logic-breakdown { display: flex; flex-direction: column; gap: 16px; }
-        .logic-item { background: #fef2f2; padding: 16px; border-radius: 8px; border: 1px solid #fee2e2; }
-        .logic-item h5 { color: #b91c1c; margin-top: 0; font-size: 1.05rem; margin-bottom: 8px; }
-        .conclusion-box { background: #1e293b; color: white; padding: 32px; border-radius: 16px; text-align: center; margin-top: 40px; }
-        .conclusion-box h3 { color: #38bdf8; margin-top: 0; font-size: 1.5rem; }
+        .logic-item { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .logic-item h5 { color: #0f172a; margin-top: 0; font-size: 1.05rem; margin-bottom: 8px; }
+        .conclusion-box { background: white; border: 1px solid #e2e8f0; padding: 32px; border-radius: 12px; text-align: center; margin-top: 40px; }
+        .conclusion-box h3 { color: #0f172a; margin-top: 0; font-size: 1.5rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="v1-header">
             <span class="v1-badge">Step 1: Diagnosis (初期提案 V1)</span>
-            <h1 style="font-size: 2.2rem; margin-top: 0;">事実と課題の特定（なぜ売れないのか）</h1>
-            <p style="font-size: 1.1rem; color: #fecaca; max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 2.2rem; margin-top: 0; color: #0f172a;">事実と課題の特定（なぜ売れないのか）</h1>
+            <p style="font-size: 1.1rem; color: #475569; max-width: 800px; margin: 0;">
                 Appendixで収集した「現場のファクトデータ」にマスターナレッジ（JTBD/競合分析）の理論をぶつけ、上司と組織の合意を勝ち取るための「残酷な診断結果」を提示します。
             </p>
         </div>
@@ -34,8 +34,8 @@
                     <h5>❌ 表面的な解釈（思い込み）</h5>
                     <p style="font-size: 0.9rem; margin-bottom: 0;">「時間が取れない」「内容が難しい」という解約理由から、『動画解説をもっと分かりやすく、短くしよう』と判断してしまう。</p>
                 </div>
-                <div class="logic-item" style="background: #eff6ff; border-color: #dbeafe;">
-                    <h5 style="color: #1d4ed8;">✅ JTBD を用いた真の診断</h5>
+                <div class="logic-item">
+                    <h5>✅ JTBD を用いた真の診断</h5>
                     <p style="font-size: 0.9rem; margin-bottom: 0;">第4回の「GASとGeminiの連携（専門領域）」で78%が離脱している事実がすべてを物語っています。<br>
                     受講生が当社を「雇用（Hire）」した本当の目的は『AIの技術を学びたい』ではなく、<strong>『明日から自分の日常業務をラクにしてくれる即効性』</strong>でした。<br>
                     我々は「非エンジニア」に対して、無理やり「エンジニア的知識（ドリルの仕組み）」を教えようとし、彼らが本当に求めていた「業務効率化（穴）」を提供できていませんでした。</p>
@@ -50,8 +50,8 @@
                     <h5>❌ 表面的な解釈（思い込み）</h5>
                     <p style="font-size: 0.9rem; margin-bottom: 0;">「月額980円の安いAI講座（直接競合）に負けたから、我々も値下げキャンペーンを打とう」と判断してしまう。</p>
                 </div>
-                <div class="logic-item" style="background: #eff6ff; border-color: #dbeafe;">
-                    <h5 style="color: #1d4ed8;">✅ 3層分析を用いた真の診断</h5>
+                <div class="logic-item">
+                    <h5>✅ 3層分析を用いた真の診断</h5>
                     <p style="font-size: 0.9rem; margin-bottom: 0;">40%の人が「時間が取れない」と解約しています。彼らの可処分時間は、他社のAI講座ではなく、<strong>YouTubeやNetflixなどの「手軽な娯楽（代替競合）」に奪われています。</strong><br>
                     全20本もの重厚な学習動画は、疲れて帰宅したビジネスパーソンにとって「娯楽」に勝てる体験（QSCVのV的欠如）ではありませんでした。価格勝負の泥沼に足を踏み入れるべきではありません。</p>
                 </div>
@@ -60,7 +60,7 @@
 
         <div class="conclusion-box">
             <h3>【診断の結論】 現場の痛み</h3>
-            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 0;">
+            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 0; color: #334155;">
                 現在の不振は、ビデオコンテンツ自体の「質（プロダクト）」の低下ではありません。<br><br>
                 <strong>「即効性を求める非エンジニア」に対し、「重厚な学習時間と専門性」を要求しているという『ターゲットと提供価値の致命的なズレ』</strong>こそが、LTV低下とCPA高騰の根本原因です。
             </p>
@@ -72,7 +72,7 @@
         </p>
 
         <div class="nav-links">
-            <a href="appendix_diagnosis.html" class="btn" style="background: #64748b; color: white; border: none;">← Appendix（前提データ）に戻る</a>
+            <a href="appendix_diagnosis.html" class="btn" style="background: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1;">← Appendix（前提データ）に戻る</a>
             <a href="../index.html" class="btn">プロジェクトナビゲーターに戻る</a>
         </div>
     </div>

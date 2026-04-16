@@ -6,21 +6,21 @@
     <title>【Appendix】診断プロセスの論理的背景 - Case Study Step 0</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .appendix-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; text-align: center; border: 1px solid #334155; }
-        .appendix-badge { background: #64748b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
-        .step-container { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-        .step-title { color: #0f172a; margin-top: 0; font-size: 1.6rem; border-bottom: 3px solid #64748b; padding-bottom: 12px; margin-bottom: 24px; display: inline-block;}
+        .appendix-header { background: #f8fafc; color: #0f172a; padding: 40px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #e2e8f0; }
+        .appendix-badge { border: 1px solid #cbd5e1; color: #475569; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
+        .step-container { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px; margin-bottom: 40px; }
+        .step-title { color: #0f172a; margin-top: 0; font-size: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; }
         .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px; }
-        .insight-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); border-top: 4px solid #64748b;}
-        .fact-box { background: #f8fafc; border-left: 5px solid #475569; padding: 24px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+        .insight-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; }
+        .fact-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 24px; border-radius: 8px; margin-top: 16px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="appendix-header">
             <span class="appendix-badge">Appendix (Step 0)</span>
-            <h1 style="font-size: 2.2rem; margin-top: 0;">診断プロセスの論理的背景とデータ収集</h1>
-            <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 2.2rem; margin-top: 0; color: #0f172a;">診断プロセスの論理的背景とデータ収集</h1>
+            <p style="font-size: 1.1rem; color: #475569; max-width: 800px; margin: 0;">
                 本ドキュメントは、初期提案 V1 を作成するにあたり「どのようなロジックと観点で不振の事実（ファクト）を特定したか」という裏側のプロセスを解説する実務リファレンスです。
             </p>
         </div>
@@ -32,20 +32,20 @@
             </p>
 
             <div class="insight-grid">
-                <div class="insight-card" style="border-top-color: #ef4444;">
-                    <h5 style="margin-top: 0; font-size: 1.05rem;">📊 定量観点（血止めの位置特定）</h5>
+                <div class="insight-card">
+                    <h5 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">📊 定量観点（血止めの位置特定）</h5>
                     <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">AARRRファネルのどこから人が逃げているのかを数字で特定します。</p>
-                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6; color: #334155;">
                         <li><strong>Acquisition</strong>: 類似商材との比較による獲得単価（CPA）の推移。</li>
                         <li><strong>Activation</strong>: LMS（学習システム）における動画ごとの再生完了率と離脱ポイント。</li>
                         <li><strong>Revenue</strong>: 実際の平均継続月数（LTV）。</li>
                     </ul>
                 </div>
 
-                <div class="insight-card" style="border-top-color: #8b5cf6;">
-                    <h5 style="margin-top: 0; font-size: 1.05rem;">🗣️ 定性観点（痛みの種類の特定）</h5>
+                <div class="insight-card">
+                    <h5 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">🗣️ 定性観点（痛みの種類の特定）</h5>
                     <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">JTBD（ジョブ）を見誤っていないか、声の裏側を探ります。</p>
-                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6; color: #334155;">
                         <li><strong>JTBDのズレ</strong>: アンケートの「時間がない」という言葉は、「学ぶ時間」がないのか「早くラクになる即効性がない」ことへの不満か。</li>
                         <li><strong>代替競合の特定</strong>: 辞めたユーザーの時間は他社の講座ではなく、娯楽（Netflix等）に流れていないか。</li>
                     </ul>
