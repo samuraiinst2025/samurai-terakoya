@@ -3,84 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>診断プロセスの論理解説 (Appendix) - Marketing Strategy</title>
+    <title>【Appendix】診断プロセスの論理的背景 - Case Study Step 0</title>
     <link rel="stylesheet" href="../css/style.css">
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
-    </script>
+    <style>
+        .appendix-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; text-align: center; border: 1px solid #334155; }
+        .appendix-badge { background: #64748b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-bottom: 16px; display: inline-block; }
+        .step-container { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .step-title { color: #0f172a; margin-top: 0; font-size: 1.6rem; border-bottom: 3px solid #64748b; padding-bottom: 12px; margin-bottom: 24px; display: inline-block;}
+        .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .insight-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); border-top: 4px solid #64748b;}
+        .fact-box { background: #f8fafc; border-left: 5px solid #475569; padding: 24px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1>【Appendix】診断プロセスの論理的背景</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">「1. 診断」において、なぜあの結論に至ったのか。その推論プロセスをプロレベルのマーケティング・フレームワークで解説します。</p>
+        <div class="appendix-header">
+            <span class="appendix-badge">Appendix (Step 0)</span>
+            <h1 style="font-size: 2.2rem; margin-top: 0;">診断プロセスの論理的背景とデータ収集</h1>
+            <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 800px; margin: 0 auto;">
+                本ドキュメントは、初期提案 V1 を作成するにあたり「どのようなロジックと観点で不振の事実（ファクト）を特定したか」という裏側のプロセスを解説する実務リファレンスです。
+            </p>
+        </div>
 
-            <section>
-                <h2>1. 外部環境の強制力 (PEST分析)</h2>
-                <p>「なぜ今やるのか？」に対する答えを明確にします。AIを活用し、10,000件以上の業界トレンドをスキャンした結果です。</p>
-                <div class="mermaid">
-                mindmap
-                  root((PEST分析))
-                    P(政治: 労働規制)
-                      ::icon(fa fa-gavel)
-                      2024年問題
-                      残業規制の厳格化
-                    E(経済: コスト)
-                      人件費の高騰
-                      IT投資への助成金拡充
-                    S(社会: 構造変化)
-                      少子高齢化・若手不足
-                      「時短」への切実な需要
-                    T(技術: AI革新)
-                      生成AIの現場浸透
-                      誰でもITを武器にできる時代
-                </div>
-            </section>
+        <div class="step-container">
+            <h2 class="step-title">🏗️ 前提：データの収集と仮説構築プロセス</h2>
+            <p style="margin-bottom: 24px; color: #475569;">
+                現場のマーケターが直面するのは「売上が落ちている」という結果だけです。この結果を V1（課題の特定）へと持ち上げるために、以下の観点で「血の通ったデータ」をかき集めました。
+            </p>
 
-            <section>
-                <h2>2. 戦略ドメインの特定 (3C分析)</h2>
-                <p>「どこで勝てるのか？」を、自社・競合・顧客の重なりから抽出した、プロの意思決定プロセスです。</p>
-                
-                <div class="placeholder">
-                    ここは対象となる具体的なプロダクトにあわせて、3Cの各要素（競合の具体的な名前や自社の具体的強み）を書き換えてください。
+            <div class="insight-grid">
+                <div class="insight-card" style="border-top-color: #ef4444;">
+                    <h5 style="margin-top: 0; font-size: 1.05rem;">📊 定量観点（血止めの位置特定）</h5>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">AARRRファネルのどこから人が逃げているのかを数字で特定します。</p>
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                        <li><strong>Acquisition</strong>: 類似商材との比較による獲得単価（CPA）の推移。</li>
+                        <li><strong>Activation</strong>: LMS（学習システム）における動画ごとの再生完了率と離脱ポイント。</li>
+                        <li><strong>Revenue</strong>: 実際の平均継続月数（LTV）。</li>
+                    </ul>
                 </div>
 
-                <ul>
-                    <li><strong>Customer (顧客)</strong>：
-                        <ul>
-                            <li>個人の技術者は「資格」を欲しがるが、法人の経営層は「現場の生産性向上（時短）」を欲しがっている。</li>
-                        </ul>
-                    </li>
-                    <li><strong>Competitor (競合)</strong>：
-                        <ul>
-                            <li>大手資格試験予備校は「試験対策」に特化しており、実務に特化した IT 教育への展開が遅れている。</li>
-                        </ul>
-                    </li>
-                    <li><strong>Company (自社)</strong>：
-                        <ul>
-                            <li>SATは高品質な動画制作力と、既に法人顧客リストを持っている。</li>
-                        </ul>
-                    </li>
-                </ul>
-                <p><strong>★結論</strong>：競合が手を出せていない「実務時短 ✕ 資格試験」の掛け合わせ領域こそが、自社の独壇場であると特定。</p>
-            </section>
-
-            <div class="ai-wow">
-                <h3>Wow! AI ✕ 診断プロセスの高速化</h3>
-                <p>従来のマーケティング調査では、PEST/3Cの情報を集め、インサイトを導き出すまでに約1ヶ月の時間を要していました。</p>
-                <p>本プロジェクトでは、<strong>市場トレンド分析に特化したカスタムAI（GPTs）</strong>を活用。ネット上の膨大な定性情報から「現場監督の本音」を0.1秒でMECEに抽出し、わずか1日でプロ品質の診断を完了させました。</p>
+                <div class="insight-card" style="border-top-color: #8b5cf6;">
+                    <h5 style="margin-top: 0; font-size: 1.05rem;">🗣️ 定性観点（痛みの種類の特定）</h5>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">JTBD（ジョブ）を見誤っていないか、声の裏側を探ります。</p>
+                    <ul style="font-size: 0.85rem; padding-left: 16px; line-height: 1.6;">
+                        <li><strong>JTBDのズレ</strong>: アンケートの「時間がない」という言葉は、「学ぶ時間」がないのか「早くラクになる即効性がない」ことへの不満か。</li>
+                        <li><strong>代替競合の特定</strong>: 辞めたユーザーの時間は他社の講座ではなく、娯楽（Netflix等）に流れていないか。</li>
+                    </ul>
+                </div>
             </div>
 
-            <section>
-                <h2>3. 結論出しのアルゴリズム</h2>
-                <p>若手マーケターが自走するためのチェックリストです。</p>
-                <ol>
-                    <li><strong>事実の収集</strong>：AIを使い、自分の思い込みを排除したデータを集めたか？</li>
-                    <li><strong>価値の翻訳</strong>：自社の「機能」を、顧客の「ベネフィット（時短など）」に変換したか？</li>
-                    <li><strong>勝機の一致</strong>：PESTの追い風（規制強化）と自社の強みが合致しているか？</li>
-                </ol>
-            </section>
+            <h3 style="color: #0f172a; margin-top: 40px; margin-bottom: 16px;">📥 本ケースで収集されたファクト（前提データ）</h3>
+            
+            <div class="fact-box">
+                <h4 style="margin-top:0; color: #334155;">対象商材：非エンジニア向け・AI業務効率化マスター動画講座（全20本/月額制）</h4>
+                <ul style="font-size: 0.95rem; line-height: 1.8; margin-top: 12px;">
+                    <li><strong>ファクトA（定量/LMS）</strong>: 全20回のうち、第4回「GASとGeminiの連携（専門知識）」で <strong>78% の受講生が視聴を停止</strong> している。</li>
+                    <li><strong>ファクトB（定性/CS）</strong>: 解約理由の1位「時間が取れない (40%)」、2位「難しくてついていけない (30%)」、3位「自社業務への活かし方が不明 (20%)」。</li>
+                    <li><strong>ファクトC（外部環境）</strong>: 月額980円の「安価で類似のAI学習サブスク」が乱立し、CPAが2倍に高騰している。</li>
+                </ul>
+            </div>
+            
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 24px; text-align: center;">
+                ※ この「手垢のついた事実」を論理にかけ、組織の合意を得る「初期提案 V1（現場の痛み）」へと昇華させます。<br>
+                👉 <a href="v1_pain_points.html" style="color: #2563eb; font-weight: bold;">【次のステップ】初期提案 V1 (Diagnosis) を見る</a>
+            </p>
         </div>
 
         <div class="nav-links">
