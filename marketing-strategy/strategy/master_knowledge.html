@@ -3,327 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIマーケティング実戦マニュアル【極限統合・特上級拡張版】</title>
+    <title>AIマーケティング実戦マニュアル【設計図・フェーズ統合版】</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .os-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 48px; border-radius: 24px; margin-bottom: 48px; border: 1px solid #334155; }
-        .os-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 32px; }
-        .os-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 24px; border-radius: 16px; transition: all 0.3s; }
-        .os-card:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: translateY(-5px); }
-        .os-card h4 { color: #38bdf8; margin-top: 0; font-size: 1.1rem; }
-        .os-badge { background: #38bdf8; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 12px; display: inline-block; }
-        .stacking-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 40px; margin-bottom: 48px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
-        .logic-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 24px 0; }
-        .logic-card { background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid #cbd5e1; height: 100%; }
-        .logic-card h4 { margin-top: 0; color: #1e293b; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 4px; border-bottom-width: 3px;}
-        .lecture-badge { background: #f59e0b; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; display: inline-block; }
-        .matrix-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
-        .matrix-table th, .matrix-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
-        .matrix-table th { background: #f1f5f9; }
-        .highlight-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 0.95rem;}
-        .checklist { background: #f9fafb; padding: 24px; border-radius: 12px; margin-top: 24px; border: 1px solid #e5e7eb;}
+        .phase-section { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin-bottom: 48px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border-top: 8px solid #cbd5e1; }
+        .phase-1 { border-top-color: #10b981; } /* Green */
+        .phase-2 { border-top-color: #3b82f6; } /* Blue */
+        .phase-3 { border-top-color: #f59e0b; } /* Yellow */
+        .phase-4 { border-top-color: #ef4444; } /* Red */
         
-        /* NEW: Special Expansion styles */
-        .special-module { background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-left: 6px solid #d946ef; padding: 24px; border-radius: 0 16px 16px 0; margin-top: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
-        .special-module h3 { color: #86198f; margin-top: 0; display: flex; align-items: center; gap: 8px;}
-        .special-module .badge { background: #d946ef; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+        .phase-title { display: flex; align-items: center; gap: 16px; margin-top: 0; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; margin-bottom: 32px; }
+        .phase-title h2 { margin: 0; font-size: 1.8rem; color: #0f172a; }
+        .phase-badge { color: white; padding: 6px 16px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; }
+        .bg-1 { background: #10b981; }
+        .bg-2 { background: #3b82f6; }
+        .bg-3 { background: #f59e0b; }
+        .bg-4 { background: #ef4444; }
+
+        .core-blueprint { background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #cbd5e1; margin-bottom: 32px; }
+        .core-blueprint h3 { margin-top: 0; color: #1e293b; font-size: 1.2rem; border-bottom: 2px solid #94a3b8; display: inline-block; padding-bottom: 4px; margin-bottom: 16px;}
+        
+        .tools-header { font-size: 1.1rem; color: #475569; margin-bottom: 16px; font-weight: bold; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        
+        .tool-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; background: white; }
+        .tool-card h4 { margin-top: 0; color: #0f172a; font-size: 1.05rem; }
+        
+        .special-module { background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-left: 6px solid #d946ef; padding: 24px; border-radius: 0 12px 12px 0; margin-top: 24px; }
+        .special-module h4 { color: #86198f; margin-top: 0; display: flex; align-items: center; gap: 8px;}
+        .special-module .s-badge { background: #d946ef; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+        
+        .matrix-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+        .matrix-table th, .matrix-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        .matrix-table th { background: #f1f5f9; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card" style="text-align: center; border-bottom: 4px solid var(--primary);">
-            <h1 style="font-size: 2.2rem;">AIマーケティング戦略【極限統合・特上級拡張版】</h1>
-            <p>全章の詳細ロジック、AI制御OS、そして「5つの深層リソース」を完全搭載した究極のマスターハブ。</p>
+        <div class="card" style="text-align: center; border-bottom: 4px solid var(--primary); margin-bottom: 48px;">
+            <h1 style="font-size: 2.2rem; color: #0f172a; margin-top: 0;">マーケティング戦略 マスターナレッジ（完全統合版）</h1>
+            <p style="color: #475569;">本ドキュメントは「何をどうやるか（HOW・道具）」の前に、**「今どの段階の戦いをしているのか（設計図）」**を定義するマーケティング全工程の実戦マニュアルです。<br>大量のフレームワークは、以下の4つのフェーズを達成するための「補完メソッド（道具）」として再整備されています。</p>
         </div>
 
-        <!-- CORE OS SECTION -->
-        <section class="os-section">
-            <h2 style="color: #38bdf8; margin-top: 0;">🛠️ CORE OS：AI 制御プロトコル「6つの秘術」</h2>
-            <p>AIを意のままに操り、思考の迷走をゼロにするための「管理技法」です。</p>
-            <div class="os-grid">
-                <div class="os-card">
-                    <span class="os-badge">Technique 01</span>
-                    <h4>アンカー (Anchor)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">軸を固定し、スコープ外を定義することで、AIの「ズレ」を最小化します。</p>
-                </div>
-                <!-- ... Techniques 02 to 06 preserved ... -->
-                <div class="os-card">
-                    <span class="os-badge">Technique 02</span>
-                    <h4>厳格モード (Strict)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">AIにガードレール役を振り、論理の飛躍や重複があれば即座にブレーキをかけさせます。</p>
-                </div>
-                <div class="os-card">
-                    <span class="os-badge">Technique 03</span>
-                    <h4>フェーズ分割 (Phases)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">一気に進めず、ステップごとに人間の合意（コンセンサス）を得ながら進行します。</p>
-                </div>
-                <div class="os-card">
-                    <span class="os-badge">Technique 04</span>
-                    <h4>パーキングロット (Parking)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">魅力的な脱線案を「棚上げ」し、本筋の完了後に検討するための保管場所。</p>
-                </div>
-                <div class="os-card">
-                    <span class="os-badge">Technique 05</span>
-                    <h4>リスク抽出 (Risk)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">5往復ごとに現状の軌道のズレを自己点検させ、潜在的リスクを報告させます。</p>
-                </div>
-                <div class="os-card">
-                    <span class="os-badge">Technique 06</span>
-                    <h4>アウトライナー (Outliner)</h4>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">全体の地図（目次）を最初に作り、トップダウンで深掘りを行う構造的思考。</p>
-                </div>
-            </div>
-        </section>
-
         <!-- PHASE 1 -->
-        <section class="stacking-card">
-            <span class="lecture-badge">PHASE 1：思考のOS ＆ 収益構造 (Ch 12-13)</span>
-            <h2>第12-13章：マーケティング再定義と LTV 経営</h2>
+        <section class="phase-section phase-1">
+            <div class="phase-title">
+                <span class="phase-badge bg-1">PHASE 1</span>
+                <h2>診断・リサーチ（事実の特定）</h2>
+            </div>
             
-            <div class="logic-group">
-                <div class="logic-card">
-                    <h4>💎 QSCV の定義</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>Quality</strong>: 顧客の期待（Expectation）を超える製品品質</li>
-                        <li><strong>Service</strong>: 全タッチポイントの摩擦ゼロ化</li>
-                        <li><strong>Cleanliness</strong>: ブランドの誠実さと透明性、安全性</li>
-                        <li><strong>Value</strong>: 費やす「金銭・時間・労力」以上の圧倒的満足</li>
-                    </ul>
-                </div>
-                <div class="logic-card">
-                    <h4>📊 4P vs 4C 対比軸</h4>
-                    <table class="matrix-table">
-                        <tr><th>企業視点 (4P)</th><th>顧客視点 (4C)</th></tr>
-                        <tr><td>Product</td><td>Customer Value</td></tr>
-                        <tr><td>Price</td><td>Cost</td></tr>
-                        <tr><td>Place</td><td>Convenience</td></tr>
-                        <tr><td>Promotion</td><td>Communication</td></tr>
-                    </table>
-                </div>
+            <div class="core-blueprint">
+                <h3>🧭 基本の設計図（方針）</h3>
+                <p style="font-size: 0.95rem; margin-bottom: 12px;">「売上が落ちている」という曖昧な結果から、数字（何が）と声（なぜ）を往復し、問題の根本を特定します。</p>
+                <ul style="font-size: 0.9rem; padding-left: 20px;">
+                    <li><strong>顧客化の7段階</strong>：ボトルネックの特定（Level 0-2の不振か、Level 3-5の比較負けか）。</li>
+                    <li><strong>定性・定量の振り子</strong>：データ（アクセス数等の量）とインサイト（なぜ買わないのかの質）の往復検証。</li>
+                </ul>
             </div>
 
-            <div class="logic-group">
-                 <div class="logic-card">
-                    <h4>📈 市場規模の 3階層</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>TAM (Total Addressable Market)</strong>: 最大需要の総体</li>
-                        <li><strong>SAM (Serviceable Addressable Market)</strong>: 現実的にアプローチ可能な層</li>
-                        <li><strong>SOM (Serviceable Obtainable Market)</strong>: 当面の獲得目標シェア</li>
-                    </ul>
+            <div class="tools-header">▼ このフェーズで使う「補完メソッド（調査と分析の道具箱）」</div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h4>🔍 3C / PEST 分析</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">外部環境（政治・経済・社会・技術）のトレンドを捉え、自社と競合、そして顧客のギャップを洗い出します。</p>
                 </div>
-                <div class="logic-card">
-                    <h4>💰 収益の健全性（LTV / ROI）</h4>
-                    <p style="font-size: 0.85rem;"><strong>LTV</strong> = (平均単価 × 購入頻度) × 継続期間</p>
-                    <p style="font-size: 0.85rem;"><strong>ROI</strong> = (売上 - 原価 - 広告費) / 広告費 × 100</p>
-                    <p style="font-size: 0.85rem;">※ AIを用いて解約率 (Churn Rate) 改善のインパクトを試算せよ。</p>
+                <div class="tool-card">
+                    <h4>🛡️ 戦略的 SWOT</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">機会(O) × 強み(S) の積極攻勢ポイントを特定します。強み×機会が最大のレバレッジポイントです。</p>
                 </div>
-            </div>
-
-            <!-- NEW EXPANSION: AARRR & SaaS KPI -->
-            <div class="special-module">
-                <h3><span class="badge">特上級</span> AARRR ＆ SaaS グロース指標（事業解像度の飛躍）</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 12px;">単なる新規獲得ではなく、SaaSに代表される「定着と収益の最大化」を測る高度なファネルと指標です。</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                    <div>
-                        <strong style="font-size: 0.9rem; color: #1e293b;">AARRR 海賊指標モデル</strong>
-                        <ul style="font-size: 0.8rem; margin-top: 4px; padding-left: 16px;">
-                            <li><strong>Acquisition (獲得)</strong>: ユーザーがどこから来たか（CAC, CTR）</li>
-                            <li><strong>Activation (活性化)</strong>: 初回体験で価値を感じたか（CVR）</li>
-                            <li><strong>Retention (継続)</strong>: サービスを使い続けているか（Churn Rate, DAU/MAU）</li>
-                            <li><strong>Referral (紹介)</strong>: 他人に勧めているか（NPS）</li>
-                            <li><strong>Revenue (収益)</strong>: 利益を生み出しているか（ARPU, ROAS）</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong style="font-size: 0.9rem; color: #1e293b;">スタートアップ必須指標：LTV/CAC > 3</strong>
-                        <p style="font-size: 0.8rem; margin-top: 4px;">ユニットエコノミクス（顧客1人あたりの採算性）として、得られる生涯利益（LTV）が、獲得コスト（CAC / CPA）の 3 倍以上確保できているか、最重要KPIとして監視します。</p>
-                    </div>
+                <div class="tool-card">
+                    <h4>🧠 JTBD（ジョブ理論）</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">顧客はドリルではなく「穴」を雇う。「機能」ではなく、顧客が本来達成したい「用事（ジョブ）」を抽出します。</p>
                 </div>
-            </div>
-
-            <div class="highlight-box">
-                <strong>🔥 制御アンカーの適用:</strong><br>
-                「誰に（Customer）」「何を（Value）」「どう（How）」の三貫性を、AI制御の **アンカー** として最初に固定せよ。これにより、以降すべての出力ブレがなくなる。
+                <div class="tool-card">
+                    <h4>🚶 AISCEAS モデル</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">Attention → Interest → Search → Comparison → Examination → Action → Share のネット購買心理分析。</p>
+                </div>
+                <div class="tool-card">
+                    <h4>🗺️ カスタマージャーニーマップ</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">（Says & Does, Thinks & Feels）等を用い、認知からファン化に至る感情と行動の導線を描写します。</p>
+                </div>
+                <div class="tool-card">
+                    <h4>⚔️ 競合の 3 層構造</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">直接競合のみならず、間接競合（同便益）、代替競合（時間や財布の奪い合い：例/Netflix）への敗北を特定します。</p>
+                </div>
             </div>
         </section>
 
         <!-- PHASE 2 -->
-        <section class="stacking-card">
-            <span class="lecture-badge">PHASE 2：インサイト ＆ 競合分析 (Ch 14-17)</span>
-            <h2>第14-17章：ジョブ理論と AI ネットリサーチ</h2>
+        <section class="phase-section phase-2">
+            <div class="phase-title">
+                <span class="phase-badge bg-2">PHASE 2</span>
+                <h2>戦略・構造（勝ち筋の設計）</h2>
+            </div>
             
-            <div class="logic-card" style="margin-bottom: 24px;">
-                <h4>🧠 ジョブ理論（ドリルの穴）と JTBD</h4>
-                <p style="font-size: 0.9rem;">「ドリル」ではなく「穴」。さらにその先の「家族との思い出の空間」を顧客は雇用している。AI を使い、無機質なレビューの深層からこの「雇用の真の目的」を特定する。</p>
+            <div class="core-blueprint">
+                <h3>🧭 基本の設計図（方針）</h3>
+                <p style="font-size: 0.95rem; margin-bottom: 12px;">特定された「痛み」に対して、既存の戦場から離脱し、最も生存確率の高い新しい「必然の勝ち筋（ピボット）」を描きます。</p>
+                <ul style="font-size: 0.9rem; padding-left: 20px;">
+                    <li><strong>OGSMフレームワーク</strong>：目的(Objective)・目標(Goal)・戦略(Strategy)・指標(Measure)の一貫性。</li>
+                    <li><strong>カスケード（連鎖）</strong>：上位の戦略が下位の目的となる「滝」のような連鎖構造。</li>
+                    <li><strong>知見の棚卸し</strong>：既存のデータや経験から強い仮説を立て、無駄なリサーチを省き即座に検証へ移行する。</li>
+                </ul>
             </div>
 
-            <div class="logic-card" style="margin-bottom: 24px;">
-                <h4>🔍 AI ネットリサーチ 5W1H</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; font-size: 0.85rem;">
-                    <div><strong>Who</strong>: 属性 × 悩み</div>
-                    <div><strong>When</strong>: 課題発生の瞬間</div>
-                    <div><strong>Where</strong>: 接触・比較場所</div>
-                    <div><strong>What</strong>: 期待便益 × 妥協点</div>
-                    <div><strong>Why</strong>: 既存策への不満</div>
-                    <div><strong>How</strong>: 購買の決定打</div>
-                </div>
+            <div class="tools-header">▼ このフェーズで使う「補完メソッド（戦略構築の道具箱）」</div>
+            
+            <div class="special-module" style="margin-top: 0; margin-bottom: 24px; border-left-color: #ef4444; background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);">
+                <h4 style="color: #b91c1c;"><span class="s-badge" style="background: #ef4444;">特上級</span> S-E-A-S-O-N（感情と拡散の設計図）</h4>
+                <p style="font-size: 0.85rem; margin-bottom: 8px;">単なる機能を売るのではなく、顧客の「感情」と「共感」を爆発させるための6つの仕掛け。</p>
+                <ul style="font-size: 0.85rem; padding-left: 16px;">
+                    <li><strong>Story (物語)</strong> / <strong>Emotion (感情)</strong> / <strong>Action (行動)</strong> / <strong>Share (共有)</strong> / <strong>Only-one (独自性)</strong> / <strong>NEXT (次への期待)</strong></li>
+                </ul>
             </div>
 
-            <div class="logic-group">
-                <div class="logic-card">
-                    <h4>⚔️ 競合の 3 層構造</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>直接競合</strong>: 同カテゴリ (例: カフェ vs カフェ)</li>
-                        <li><strong>間接競合</strong>: 同便益 (例: カフェ vs コンビニ珈琲)</li>
-                        <li><strong>代替競合</strong>: 時間/財布泥棒 (例: カフェ vs スマホゲーム)</li>
-                    </ul>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h4>🎯 ポジショニングマップ</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">縦軸・横軸を自社に有利な指標（KBF）に設定し、競合が手を出せない「空白地帯・独占領域」を描写します。</p>
                 </div>
-                <div class="logic-card">
-                    <h4>🛡️ 戦略的 SWOT</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>Target</strong>: 機会(O) × 強み(S) の積極攻勢</li>
-                        <li><strong>USP</strong>: 市場の空白地帯 × 自社の強み。競合が真似できないオファー。</li>
-                    </ul>
+                <div class="tool-card">
+                    <h4>💎 USPの特定</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">独自の強み（Unique Selling Proposition）。「市場のニーズ」と「自社の強み」が交差し、「競合」が提供できない価値。</p>
                 </div>
-            </div>
-
-            <div class="highlight-box" style="background: #fffbeb; border-color: #f59e0b;">
-                <strong>🔥 レクチャー知見：ハルシネーション対策 (厳格モード)</strong><br>
-                AI の回答には必ず「根拠 URL」を求め、人間が多角形検証を行うプロトコルを標準化すること。「推測」と「事実」を厳格に切り分けさせる。
+                <div class="tool-card">
+                    <h4>💰 LTV / CAC (ユニットエコノミクス)</h4>
+                    <p style="font-size: 0.85rem; color: #475569;">顧客生涯価値（LTV）が獲得コスト（CAC）の3倍以上であるかをベースに、セグメンテーション（STP）の正しさを測ります。</p>
+                </div>
             </div>
         </section>
 
         <!-- PHASE 3 -->
-        <section class="stacking-card">
-            <span class="lecture-badge">PHASE 3：戦略の三貫性 ＆ STP (Ch 18-21)</span>
-            <h2>第18-21章：カスタマージャーニーと三貫性の滝</h2>
-
-            <div class="logic-group">
-                <div class="logic-card">
-                    <h4>🗺️ 共感マップ (Empathy Map)</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>Says & Does</strong>: 公的な行動や発言</li>
-                        <li><strong>Thinks & Feels</strong>: 私的な願望、不安、恐れ</li>
-                        <li><strong>Hears</strong>: 周囲（SNS、友人）からのノイズ</li>
-                        <li><strong>Sees</strong>: 日常的な視覚的インプット</li>
-                    </ul>
-                </div>
-                <div class="logic-card">
-                    <h4>🚶 AISCEAS 購買決定モデル</h4>
-                    <p style="font-size: 0.85rem;">
-                        <strong>A</strong>ttention(認知) → <strong>I</strong>nterest(興味) → <strong>S</strong>earch(検索) → <strong>C</strong>omparison(比較) → <strong>E</strong>xamination(検討) → <strong>A</strong>ction(行動) → <strong>S</strong>hare(共有)<br><br>
-                        各フェーズでAIに「顧客の心の揺れ」をシミュレートさせる。
-                    </p>
-                </div>
+        <section class="phase-section phase-3">
+            <div class="phase-title">
+                <span class="phase-badge bg-3">PHASE 3</span>
+                <h2>実行・武器（顧客の獲得：App層）</h2>
             </div>
-
-            <div class="logic-group">
-                <div class="logic-card">
-                    <h4>🎯 Segmentation 4 変数</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>地理的 (Geographic)</strong>: 地域・気候</li>
-                        <li><strong>人口動態 (Demographic)</strong>: 年齢・家族構成</li>
-                        <li><strong>心理的 (Psychographic)</strong>: 価値観・ライフスタイル</li>
-                        <li><strong>行動的 (Behavioral)</strong>: 購買頻度・ロイヤリティ</li>
-                    </ul>
-                </div>
-                <div class="logic-card">
-                    <h4>🎯 Targeting の 6R 指標</h4>
-                    <ul style="font-size: 0.85rem; columns: 2;">
-                        <li>Realistic Size</li>
-                        <li>Rank</li>
-                        <li>Rate of Growth</li>
-                        <li>Rival</li>
-                        <li>Reach</li>
-                        <li>Response</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- NEW EXPANSION: S-E-A-S-O-N -->
-            <div class="special-module" style="border-left-color: #ef4444; background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);">
-                <h3 style="color: #b91c1c;"><span class="badge" style="background: #ef4444;">特上級</span> S-E-A-S-O-N（感情と拡散の設計図）</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 12px;">スターバックスなどの極上の顧客体験から導き出された、AISCEASのさらに奥、顧客の「感情」と「共感」を爆発させるための6つの仕掛け。</p>
-                <ul style="font-size: 0.85rem; padding-left: 16px;">
-                    <li><strong>Story (物語性)</strong>: 創業の背景や、製品に込められた想いを乗せる。</li>
-                    <li><strong>Emotion (感情喚起)</strong>: 単純な機能的便益ではなく、驚きや感動を引き出す。</li>
-                    <li><strong>Action (行動誘発)</strong>: 顧客自らが参加したくなる、体験へのハードルを下げる。</li>
-                    <li><strong>Share (共有性)</strong>: 「誰かに教えたい」「見せびらかしたい」と思わせるフックの設計。</li>
-                    <li><strong>Only-one (独自性)</strong>: 明確なUSP、他には絶対に真似できない唯一の価値。</li>
-                    <li><strong>NEXT (新しさ/次回期待)</strong>: 次なる展開やアップデートで飽きさせない。</li>
+            
+            <div class="core-blueprint">
+                <h3>🧭 基本の設計図（方針）</h3>
+                <p style="font-size: 0.95rem; margin-bottom: 12px;">戦略を机上の空論で終わらせず、顧客を動かすための「施策・パッケージ」へと高速変換するフェーズです。</p>
+                <ul style="font-size: 0.9rem; padding-left: 20px;">
+                    <li><strong>4P ✕ 4Cの調和（価値の翻訳）</strong>：自社目線の4Pを、顧客目線の4Cへ変換。
+                        <table class="matrix-table" style="margin-top: 8px;">
+                            <tr><th>企業視点 (4P)</th><th>顧客視点 (4C)</th></tr>
+                            <tr><td>Product</td><td>Customer Value (製品ではなく価値)</td></tr>
+                            <tr><td>Price</td><td>Cost (金額だけでなく手間も)</td></tr>
+                            <tr><td>Place</td><td>Convenience (導入の手軽さ)</td></tr>
+                            <tr><td>Promotion</td><td>Communication (宣伝ではなく対話)</td></tr>
+                        </table>
+                    </li>
+                    <li><strong>バーター戦略</strong>：高需要商品に低需要商品を抱き合わせる手法や、抽象的名前の「具体的メリット」への衣替え。</li>
                 </ul>
-                <p style="font-size: 0.8rem; margin-top: 8px; color: #7f1d1d; font-weight: bold;">※ペルソナに向けた施策考案時に、この「SEASON」のパラメータをAIに適用して案を出させること。</p>
             </div>
 
-            <div class="highlight-box" style="background: #f0fdf4; border-color: #22c55e;">
-                <strong>🔥 レクチャー知見：自己批判ループ</strong><br>
-                AI に「この戦略案、プロの視点で 100 点中何点か？」と採点させ、不足分を補う修正案を 2 回以上出させること。（フェーズ合意の前段として必須）
+            <div class="tools-header">▼ このフェーズで使う「補完メソッド（最先端・自動化の武器庫）」</div>
+            <div class="tools-grid">
+                
+                <div class="special-module" style="margin-top: 0; padding: 20px;">
+                    <h4><span class="s-badge">特上級</span> まじん式v4（手垢の哲学）</h4>
+                    <p style="font-size: 0.85rem;">顧客に一から「勉強・構築」させるのではなく、最初から「完成品（テンプレート等）」を渡し、最終調整という「自分の手垢（思考）」だけを乗せさせる思想。</p>
+                </div>
+
+                <div class="special-module" style="margin-top: 0; border-left-color: #3b82f6; background: #eff6ff; padding: 20px;">
+                    <h4 style="color: #1d4ed8;"><span class="s-badge" style="background: #3b82f6;">特上級</span> AIエージェントシミュレーション</h4>
+                    <p style="font-size: 0.85rem;">リリース前にAI上で顧客のデジタルツイン（分身群）を生成し、施策への反応をテストするプレ・マーケット検証技術。</p>
+                </div>
+
+                <div class="special-module" style="margin-top: 0; border-left-color: #10b981; background: #f0fdf4; padding: 20px;">
+                    <h4 style="color: #047857;"><span class="s-badge" style="background: #10b981;">特上級</span> AARRR & SaaS KPI</h4>
+                    <p style="font-size: 0.85rem;">Acquisition(獲得)からRevenue(収益)までのファネルを最適化するデータ指標。解約率（Churn）防止と活性化（Activation）の鍵。</p>
+                </div>
+
+                <div class="special-module" style="margin-top: 0; border-left-color: #f59e0b; background: #fffbeb; padding: 20px;">
+                    <h4 style="color: #b45309;"><span class="s-badge" style="background: #f59e0b;">特上級</span> NotebookLM 思考ループ</h4>
+                    <p style="font-size: 0.85rem;">実行後の顧客ログをNotebookLMに放り込み、仮説抽出から次のツール生成までを完全自動で回し続ける永久機関。</p>
+                </div>
             </div>
         </section>
 
         <!-- PHASE 4 -->
-        <section class="stacking-card">
-            <span class="lecture-badge">PHASE 4：自動化 ＆ 未来キャリア (Ch 22-27)</span>
-            <h2>第22-27章：AI マネージャーへの職能転換と最前線</h2>
+        <section class="phase-section phase-4" style="margin-bottom: 24px;">
+            <div class="phase-title">
+                <span class="phase-badge bg-4">PHASE 4</span>
+                <h2>納得・連鎖（組織を動かす）</h2>
+            </div>
             
-            <div class="logic-group">
-                <div class="logic-card">
-                    <h4>🪄 「まじん式」黄金スライド構成</h4>
-                    <p style="font-size: 0.85rem;">表紙 → 背景 → 課題 → 解決 → 未来 → アクション。AI にこのテンプレートを渡し、承認を得るための 80 点のドラフト（アウトライナー）を即座に自動生成する。</p>
-                </div>
-                <div class="logic-card">
-                    <h4>📈 KPIピラミッド構造</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li><strong>KGI (Key Goal Indicator)</strong>: 最終利益目標。</li>
-                        <li><strong>KSF (Key Success Factor)</strong>: ゴール達成の重要要因。</li>
-                        <li><strong>KPI (Key Performance Indicator)</strong>: 現場で追跡する具体的な先行指標。</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- NEW EXPANSION: Majin v4, Agent Sim, NotebookLM -->
-            <div class="special-module" style="border-left-color: #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); margin-bottom: 24px;">
-                <h3 style="color: #1e3a8a;"><span class="badge" style="background: #3b82f6;">特上級・次世代技術</span> 未来を創る AI 応用プロトコル</h3>
+            <div class="core-blueprint" style="margin-bottom:0;">
+                <p style="font-size: 0.95rem; margin-bottom: 16px;">優れた戦略も、承認されなければ意味がありません。石橋を叩く組織を動かすための技術整理です。</p>
                 
-                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">1. 【まじん式v4】SVGと動画解析 ＆「自分の手垢」</h4>
-                <p style="font-size: 0.85rem; margin-top: 4px;">AI にスライド文章を「丸投げ」する時代は終わりました。v4 の本質は、SVGベクターを用いた動的グラフや、動画フレーム抽出を用いて視覚的パーツを高速生成しつつ、最後に<strong>「自分の思考の痕跡（手垢）」</strong>をスライドに乗せて、魂の宿る資料を完成させる美学にあります。</p>
-                
-                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">2. AIエージェントシミュレーション</h4>
-                <p style="font-size: 0.85rem; margin-top: 4px;">人間の代わりにAIにサービスを使わせてA/Bテストの事前スクリーニングを行う最前線技術。</p>
-                <ul style="font-size: 0.8rem; padding-left: 16px;">
-                    <li><strong>シリコンサンプル (Type A)</strong>: LLMに架空のペルソナと感情をプロンプトで付与し、反響を予測。</li>
-                    <li><strong>顧客デジタルツイン (Type B)</strong>: 実際のAmazon購買データや過去ログ（RAG活用）で個別のクローンを構築し、WTP（支払意思額）を推定する手法。</li>
-                    <li><strong>マルチエージェント (Type C)</strong>: 複数のAIペルソナ同士を対話・競合させ、市場全体の価格決定や普及ダイナミクスをシミュレートする。</li>
-                </ul>
+                <h4 style="color: #1e293b; margin-top: 0;">1. 意思決定者を「当事者」にするリサーチの作法</h4>
+                <p style="font-size: 0.85rem; color: #475569;">リサーチの「目的」と「調査項目」を事前に意思決定者にレビューさせ、「後出しジャンケン」を防ぐ。</p>
 
-                <h4 style="color: #1d4ed8; margin-top: 16px; border-bottom: 1px solid #93c5fd; padding-bottom: 4px;">3. NotebookLM 思考ループ (Thinking Loop)</h4>
-                <p style="font-size: 0.85rem; margin-top: 4px;">自己理解とナレッジを資産（ソース）化し、アウトプットを「育てる」独自の循環システム。</p>
-                <div style="font-size: 0.8rem; margin-top: 4px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 8px;">
-                    <strong>Phase 1 [現在の深掘り]</strong> : 履歴書等のソース ×「現在プロンプト」→ 強みの結晶化。<br>
-                    <strong>Phase 2 [未来の探究]</strong> : 上記の結晶 ×「未来プロンプト」→ 自分の方向性の指針。<br>
-                    <strong>Phase 3 [実践とメタ認知]</strong> : 方向性 × 募集要項 ×「提案プロンプト」→ 最強のマインドマップと提案文の生成。<br>
-                    ※出力物自体をNotebookLMの新たなソースとして追加し、知能ループを永続的に回し続ける。
-                </div>
-            </div>
+                <h4 style="color: #1e293b; margin-top: 16px;">2. 戦略仮説の事前提示（分岐ルートの合意）</h4>
+                <p style="font-size: 0.85rem; color: #475569;">結果が出る前に、「成功確度が高ければ全力投球」「低ければ早期撤退・ピボット」の合意を先にとる。撤退は敗北ではなく戦略的判断である。</p>
 
-            <div class="checklist">
-                <h4>✅ 最後に必ず自問自答すること</h4>
-                <ul>
-                    <li>O → G → S → M の「三貫性の滝」に論拠の崩壊はないか？</li>
-                    <li>AI に作業を全委任することで、自分は「顧客との感情的接点」や「市場の再定義」に時間を使えたか？（まじん式v4の思考）</li>
-                    <li>GEO（生成AI検索最適化）を視野に入れた次の一手が打てているか？</li>
-                </ul>
+                <h4 style="color: #1e293b; margin-top: 16px;">3. シンプルでパワフルなアウトプット（So What?）</h4>
+                <p style="font-size: 0.85rem; color: #475569;">情報の「量」ではなく「アクションへの直結度」で資料を構成する。事実から何が言えるのかを明確にする。</p>
             </div>
         </section>
 
-        <div class="nav-links">
-            <a href="../index.html" class="btn">← ナビゲーターに戻る</a>
-            <a href="ai_practice_lab.html" class="btn">実践ラボを見る</a>
+        <div style="background: #1e293b; color: white; padding: 24px; border-radius: 12px; margin-bottom: 40px;">
+            <h3 style="margin-top:0; color: #38bdf8;">【原理原則】 戦略の三貫性</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 0;">常に「誰に（Customer）」「何を（What/Value）」「どのように（How/Promotion）」にズレがないかを確認し続け、OGSMの滝を流しきること。手法（HOW）の羅列に迷い込んだら、必ずこの Phase 1〜4 の設計図に立ち返ってください。</p>
         </div>
-    </div>
 
-    <div class="footer">
-        &copy; 2026 AI Marketing Strategy Master Draft | 完全修復・究極の統合版
     </div>
 </body>
 </html>
