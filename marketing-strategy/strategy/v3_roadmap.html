@@ -11,67 +11,79 @@
         .impact-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px; margin-bottom: 32px; }
         .impact-title { color: #0f172a; margin-top: 0; font-size: 1.4rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; }
         
-        .sim-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 20px;}
-        .sim-box h5 { color: #0f172a; margin-top: 0; font-size: 1.1rem;}
+        .faq-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.95rem; }
+        .faq-table th, .faq-table td { border: 1px solid #cbd5e1; padding: 16px; text-align: left; }
+        .faq-table th { background: #f1f5f9; color: #1e293b; width: 35%; }
         
-        .aarrr-list { list-style: none; padding: 0; margin: 0;}
-        .aarrr-list li { margin-bottom: 12px; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; display: flex; align-items: flex-start; gap: 12px;}
-        .aarrr-label { font-weight: bold; color: #1e293b; min-width: 100px;}
+        .timeline { list-style: none; padding: 0; margin: 0; border-left: 3px solid #3b82f6; margin-left: 12px; }
+        .timeline li { padding-left: 24px; margin-bottom: 24px; position: relative; }
+        .timeline li::before { content: ""; position: absolute; left: -9px; top: 0; width: 15px; height: 15px; border-radius: 50%; background: #3b82f6; }
+        .timeline-date { font-weight: bold; color: #1e40af; font-size: 1.1rem; margin-bottom: 8px; }
         
-        .loop-diagram { background: #f8fafc; color: #0f172a; border: 1px solid #e2e8f0; padding: 24px; border-radius: 12px; font-family: monospace; line-height: 1.6;}
+        .closing-box { background: #1e293b; color: white; border-radius: 12px; padding: 32px; text-align: center; margin-top: 40px; }
+        .closing-box h3 { color: #38bdf8; margin-top: 0; font-size: 1.4rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="v3-header">
             <span class="v3-badge">Step 3: Future (実行ロードマップ V3)</span>
-            <h1 style="font-size: 2.2rem; margin-top: 0; color: #0f172a;">インパクト予測と超高速実行ループ</h1>
+            <h1 style="font-size: 2.2rem; margin-top: 0; color: #0f172a;">実行承認と90日間ロードマップ</h1>
             <p style="font-size: 1.1rem; color: #475569; max-width: 800px; margin: 0;">
-                V2のピボット戦略を「絵に描いた餅」に終わらせず、AIシミュレーションによる事前安全テストと、NotebookLMを用いた「自動改善サイクル」を通じて確実に収益化へ繋げます。
+                戦略（V2）を絵に描いた餅で終わらせず、意思決定会議で「論理の隙」を突かせずにスムーズな実行承認を得るための補足・実行資料です。
             </p>
         </div>
 
         <div class="impact-card">
-            <h2 class="impact-title">1. リスク排除：AIエージェントによる事前テスト</h2>
-            <div class="sim-box">
-                <h5>🤖 Type B (デジタルツイン) シミュレーションの実行</h5>
-                <p style="font-size: 0.95rem; margin-bottom: 0;">莫大な広告費を投下する前に、「退会したユーザーの過去ログやペルソナ情報」をRAG（検索拡張生成）で学習させた**AI顧客クローン**に対して、新パッケージ（武器庫モデル）のLPを読ませます。<br><br>
-                <em>「このパッケージなら即効性があるから月額3000円でも再登録する」</em>というAIからのポジティブな実証データ（仮説の壁打ち）を得ることにより、経営陣の承認リスクを極限まで引き下げます。</p>
-            </div>
+            <h2 class="impact-title">1. 重箱の隅を突く人への「想定問答集（FAQ）」</h2>
+            <p style="font-size: 0.95rem; color: #475569; margin-bottom: 16px;">組織の「現状維持バイアス」を打ち破るための、マスターナレッジに基づく模範回答です。</p>
+            <table class="faq-table">
+                <tbody>
+                    <tr>
+                        <th>「DX講座のおまけなんて、法人に本当に喜ばれるの？」</th>
+                        <td>「『DX教育』としてではなく、<strong>『現場の残業が明日から30分減るツール活用術』</strong>としてパッケージします。これは今の建設業界の最優先課題（働き方改革の痛み）に完璧に合致しています。」</td>
+                    </tr>
+                    <tr>
+                        <th>「法人営業の経験が少ないのに無理じゃないか？」</th>
+                        <td>「だからこそ、まずは<strong>既存の『資格講座』を利用している優良な法人顧客</strong>からアプローチします。ゼロからの新規開拓ではなく、既存の強みをレバレッジした『バーター戦略』であり、リスクは最小限です。」</td>
+                    </tr>
+                    <tr>
+                        <th>「競合（大手資格予備校）が真似してきたらどうする？」</th>
+                        <td>「他社は資格試験のノウハウに特化しており、SATのような『高品質なIT/現場実践動画』を素早く作る自社スタジオ・制作体制を持っていません。スピードと品質の合わせ技で、先行者利益を独占します。」</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="impact-card">
-            <h2 class="impact-title">2. AARRR 指標の劇的なリカバリー予測</h2>
-            <ul class="aarrr-list">
-                <li><span class="aarrr-label">Acquisition:</span> <span style="font-size: 0.95rem; color: #334155;">「学ぶ」ではなく「今すぐ終わる」という強烈な便益により、CPA（獲得単価）の高騰を抑え込む。</span></li>
-                <li><span class="aarrr-label">Activation:</span> <span style="font-size: 0.95rem; color: #334155;">「環境構築で挫折（78%の離脱）」を排除。初回ログイン後5分で成果物を出せるため活性化率が跳ね上がる。</span></li>
-                <li><span class="aarrr-label">Retention:</span> <span style="font-size: 0.95rem; color: #334155;">「毎週新しい武器（テンプレ）が追加される」期待感（NEXT）により解約率が激減。</span></li>
-                <li><span class="aarrr-label">Referral:</span> <span style="font-size: 0.95rem; color: #334155;">S-E-A-S-O-Nの「Share」ギルド設計により、社内でドヤ顔をしたユーザー経由の口コミ流入が発生。</span></li>
-                <li><strong style="color: #0f172a;" class="aarrr-label">Revenue:</strong> <span style="font-size: 0.95rem; color: #334155;">これらが連鎖し、目標としていた「LTV / CAC > 3 （ユニットエコノミクス）」の達成を実現する。</span></li>
+            <h2 class="impact-title">2. 実行ロードマップ：最初の90日間（Action Plan）</h2>
+            <p style="font-size: 0.95rem; color: #475569; margin-bottom: 24px;">承認後、ダラダラせずに「成果」を出すための確実なタイムラインです。</p>
+            
+            <ul class="timeline">
+                <li>
+                    <div class="timeline-date">DAY 1〜14： パイロット版の作成</div>
+                    <p style="font-size: 0.95rem; margin-bottom: 0;">既存のDX講座から「最も現場の時短に寄与する3本」だけをピックアップ。4P/4C変換に基づき、ターゲットが惹かれる強烈なタイトル（例：現場写真の整理が10分で終わるExcel術）へリネームし、パッケージングを完了する。</p>
+                </li>
+                <li>
+                    <div class="timeline-date">DAY 15〜45： クローズド・テスト販売</div>
+                    <p style="font-size: 0.95rem; margin-bottom: 0;">既存の優良法人顧客10社に対し、「資格 ✕ 効率化パック」をバーター案として先行提案。顧客の反応（定性データ・声）を収集し、訴求ポイントを実戦の中で短期間にブラッシュアップする。</p>
+                </li>
+                <li>
+                    <div class="timeline-date">DAY 46〜90： フル展開と助成金フックの整備</div>
+                    <p style="font-size: 0.95rem; margin-bottom: 0;">人材開発支援助成金などの申請サポート体制を整え、法人の「実質負担額」を劇的に下げた状態で一斉営業を開始。数値目標（法人受注率等）の初速を確認し、PDCAを回す。</p>
+                </li>
             </ul>
         </div>
 
-        <div class="impact-card">
-            <h2 class="impact-title">3. NotebookLM「思考ループ」による超高速自動改善</h2>
-            <p style="font-size: 0.95rem; margin-bottom: 20px;">新パッケージリリース後、立ち止まることなくサービスを成長させるための永久機関（思考ループ）を構築します。</p>
-            <div class="loop-diagram">
-                [ 循環する資産システム ]<br><br>
-                1. (現在): ユーザーギルド（掲示板）で「こんなテンプレが評価された」という生のログを NotebookLM に放り込む。<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-                2. (未来): NotebookLMはそこから「無自覚な強み（刺さるツールの傾向）」を抽出し、次に開発すべきツール案を提案する。<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-                3. (実践): プロンプトの原型が自動出力され、プロ（人間）が最後に「手垢」を乗せて公開する。<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-                => 結果を再び 1 に戻す。
-            </div>
+        <div class="closing-box">
+            <h3>上司への「最後の一押し」フレーズ</h3>
+            <p style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 0; color: #cbd5e1;">
+                「このプランは、単に在庫の動画を売るための浅い策ではありません。<br>
+                2024年問題に苦しむ建設業界において、SATが<strong>『資格のその先』まで責任を持つ、絶対的なリーダーになるための戦略</strong>です。<br>手元の資産を再パッケージ化し、少しの勇気で舵を切るだけで、このブルーオーシャンが手に入ります。挑戦しない手はありません。」
+            </p>
         </div>
 
-        <p style="font-size: 0.85rem; color: #64748b; margin-top: 24px; text-align: center;">
-            ※ 以上が、「最強のナレッジ理論」を駆使して現場の不振を覆し、AIで検証と改善を回し続ける【実務の全体像（Case Study）】です。<br>
-            これらは魔法ではなく、地道なファクトと理論の直列繋ぎから生まれます。
-        </p>
-
-        <div class="nav-links" style="display: flex; justify-content: flex-start;">
+        <div class="nav-links" style="display: flex; justify-content: flex-start; margin-top: 40px;">
             <a href="../index.html" class="btn">プロジェクトナビゲーターに戻る</a>
         </div>
     </div>
