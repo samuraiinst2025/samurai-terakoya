@@ -203,6 +203,60 @@
             </div>
         </section>
 
+        <!-- PHASE 5 / APPENDIX: PROMPTS -->
+        <section class="phase-section" style="border-top-color: #8b5cf6; margin-bottom: 48px;">
+            <div class="phase-title">
+                <span class="phase-badge" style="background: #8b5cf6;">APPENDIX</span>
+                <h2>実戦 AI プロンプト集（厳選抜粋）</h2>
+            </div>
+            
+            <p style="font-size: 0.95rem; margin-bottom: 24px;">各フェーズの実行を加速させるための具体的なAIプロンプト群です。</p>
+
+            <div class="tools-grid">
+                <!-- 制御系 -->
+                <div class="special-module" style="margin-top: 0; border-left-color: #38bdf8; background: #f0f9ff; padding: 20px;">
+                    <h4 style="color: #0369a1;"><span class="s-badge" style="background: #38bdf8;">制御</span> ステータス報告</h4>
+                    <p style="font-size: 0.8rem; margin: 8px 0;">対話迷走を防ぐため、AIに現在地を常に可視化させる命令。</p>
+                    <div style="font-family: monospace; background: white; padding: 8px; border-radius: 4px; font-size: 0.75rem; color: #333;">今後は、5〜10往復ごとに以下の【ステータス報告】を文末に添えてください。<br>【進捗状況】/【当初のゴール】/【現在地】/【残りのタスク】</div>
+                </div>
+
+                <!-- 品質 -->
+                <div class="special-module" style="margin-top: 0; border-left-color: #f43f5e; background: #fff1f2; padding: 20px;">
+                    <h4 style="color: #be123c;"><span class="s-badge" style="background: #f43f5e;">品質</span> パワハラ型・自己批判</h4>
+                    <p style="font-size: 0.8rem; margin: 8px 0;">AIのアウトプット品質を強制的に引き上げる。</p>
+                    <div style="font-family: monospace; background: white; padding: 8px; border-radius: 4px; font-size: 0.75rem; color: #333;">今出した回答を「0-100点」で採点し、不足要素を5つ挙げ、100点になるまで修正せよ。</div>
+                </div>
+                
+                <!-- アンカー -->
+                <div class="special-module" style="margin-top: 0; border-left-color: #64748b; background: #f8fafc; padding: 20px;">
+                    <h4 style="color: #334155;"><span class="s-badge" style="background: #64748b;">制御</span> アンカー（軸の固定）</h4>
+                    <p style="font-size: 0.8rem; margin: 8px 0;">プロジェクトのブレを防ぐ。</p>
+                    <div style="font-family: monospace; background: white; padding: 8px; border-radius: 4px; font-size: 0.75rem; color: #333;">絶対にブレたくない「軸」は[内容]です。これに矛盾する提案は却下し、常にこの軸に立ち返って回答してください。</div>
+                </div>
+            </div>
+
+            <!-- 10の思考法 -->
+            <div class="core-blueprint" style="margin-top: 24px; margin-bottom: 0;">
+                <h3>🧠 出力レベルを引き上げる「10の思考法」修飾子</h3>
+                <p style="font-size: 0.85rem; color: #475569;">プロンプトの末尾に、以下の「思考法の変数」を足すだけで、AIの出力の質と創造性が劇的に向上します。</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px; font-size: 0.75rem;">
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>創造的思考</strong>：既存の枠を超える革新</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>発散的思考</strong>：多様な可能性のブレスト</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>デザイン思考</strong>：ユーザー中心の解決</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1; border-left: 3px solid #8b5cf6;"><strong>水平思考</strong>：新しい視点からのアプローチ</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1; border-left: 3px solid #8b5cf6;"><strong>逆説的思考</strong>：常識に反する視点</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1; border-left: 3px solid #8b5cf6;"><strong>アナロジー思考</strong>：他業界からの比喩</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>クリティカルシンキング</strong>：客観的分析</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>戦略的思考</strong>：長期的目標の定義</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>構造的思考</strong>：情報の整理と体系化</div>
+                    <div style="background: white; padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1;"><strong>反省的思考</strong>：過去の分析と改善</div>
+                </div>
+                <div style="font-family: monospace; background: white; padding: 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 12px; border-left: 3px solid #8b5cf6;">
+                    【利用例】：上記の「ペルソナに向けた広告コピー」を、【水平思考】と【逆説的思考】の2つの観点をミックスして10個提案してください。
+                </div>
+            </div>
+        </section>
+
         <div style="background: #1e293b; color: white; padding: 24px; border-radius: 12px; margin-bottom: 40px;">
             <h3 style="margin-top:0; color: #38bdf8;">【原理原則】 戦略の三貫性</h3>
             <p style="font-size: 0.95rem; margin-bottom: 0;">常に「誰に（Customer）」「何を（What/Value）」「どのように（How/Promotion）」にズレがないかを確認し続け、OGSMの滝を流しきること。手法（HOW）の羅列に迷い込んだら、必ずこの Phase 1〜4 の設計図に立ち返ってください。</p>
