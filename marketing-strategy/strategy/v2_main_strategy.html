@@ -3,77 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【最終決定版】現場技術者向け動画コンテンツの「再生・高収益化」戦略提言（V2）</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>【実践テンプレート】V2: 戦略提言（ピボット案）</title>
     <style>
-        .container { max-width: 800px; margin: 40px auto; font-family: sans-serif; line-height: 1.6; color: #333; }
-        h1 { border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; font-size: 1.6rem; }
-        h2 { border-left: 5px solid #3b82f6; padding-left: 12px; margin-top: 40px; font-size: 1.4rem; }
-        ul { padding-left: 24px; }
-        li { margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; margin-bottom: 24px; }
+        :root { --primary: #2563eb; --bg-light: #f8fafc; --text-main: #1e293b; --text-secondary: #64748b; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: var(--text-main); background-color: var(--bg-light); margin: 0; padding: 40px 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        h1 { color: #0f172a; margin-bottom: 30px; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px;}
+        h2 { border-left: 5px solid #3b82f6; padding-left: 10px; margin-top: 30px; color: #1e293b; font-size: 1.25rem; }
+        h3 { color: #334155; margin-top: 25px; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;}
+        
+        .template-guide {
+            background-color: #fffbeb; 
+            border: 1px solid #fde68a;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 6px;
+        }
+        .template-guide h3 { margin-top: 0; color: #b45309; display: flex; align-items: center; font-size: 1.1rem; border-bottom: none; }
+        .template-guide ul { padding-left: 20px; margin-bottom: 0; color: #78350f; }
+        .template-guide li { margin-bottom: 8px; }
+        
+        .example-badge {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .content-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; background-color: white;}
         th, td { border: 1px solid #cbd5e1; padding: 12px; text-align: left; }
-        th { background: #f8fafc; width: 30%; font-weight: bold; }
-        .btn { display: inline-block; padding: 10px 20px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin-top: 40px; }
+        th { background-color: #f1f5f9; color: #334155; font-weight: bold; width: 25%;}
+        .nav-links {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>【最終決定版】現場技術者向け動画コンテンツの「再生・高収益化」戦略提言（V2）</h1>
-        <p>本資料は、マーケティングの全プロセス、および48の実証済みフレームワークを適用し、不振事業を「勝てる戦い」へとピボットさせるための、SAT社としての公式提言です。</p>
+        <h1>V2：戦略提言（ピボット案）</h1>
 
-        <h2>1. 診断：なぜ今、売上が「停滞」しているのか？</h2>
-        <p>分析フレームワーク（AISCEAS ✕ 顧客化レベル）に基づき、不振の真実を直視します。</p>
-        <ul>
-            <li><strong>事実</strong>：現在のIT/DX講座への流入はあるが、<strong>「Comparison（比較検討）」から「Action（購入）」へ至る壁が高い</strong>。</li>
-            <li><strong>原因</strong>：顧客（個人の技術者）にとって、DX学習は「あればいい」程度の優先度であり、自費（Cost）を払うほどの強い動機（Value）になっていない。</li>
-            <li><strong>結論</strong>：個人向け（B2C）モデルの限界を認め、企業（B2B）の「必然的課題」に接続する。</li>
-        </ul>
-
-        <h2>2. 戦略構造：ゴールオリエンテッドな「OGSM」の設計</h2>
-        <p>上位目的（経営方針）から現場施策までを一貫した「カスケード（滝）」で繋ぎます。</p>
-        <table>
-            <tbody>
-                <tr><th>Objective (目的)</th><td><strong>「資格のSAT」から「現場の生産性を底上げする解決策のSAT」への脱皮</strong></td></tr>
-                <tr><th>Goal (目標)</th><td><strong>6ヶ月以内に法人売上比率を80%以上へ。法人開拓数：毎月◯◯件</strong></td></tr>
-                <tr><th>Strategy (戦略)</th><td><strong>資格試験の「必須需要」をハブにした、実務効率化スキルのバーター（抱き合わせ）戦略</strong></td></tr>
-                <tr><th>Measurement (指標)</th><td><strong>法人パッケージ受注率 / 法人経由のIT講座視聴完了率 / 助成金活用申請数</strong></td></tr>
-            </tbody>
-        </table>
-
-        <h2>3. 具体案：4P ✕ 4Cの「価値翻訳」とパッケージング</h2>
-        <p>自社の動画（P）を、顧客にとっての魔法（C）に変換する「新人マーケーター案」の具体化です。</p>
-        
-        <h3>① 【資格 ✕ 時短】の強力なバーター</h3>
-        <p>「資格だけ取れる他社」ではなく、「資格も取れて、明日からの仕事が楽になるSAT」として再定義。</p>
-        <ul>
-            <li><strong>バーターの論理</strong>：高需要の「資格講座」に、ITスキルを「付帯機能」として載せることで、販売コストを最小化し、法人顧客のLTV（顧客生涯価値）を最大化する。</li>
-        </ul>
-
-        <h3>② 言葉の衣替え（タイトル・リブランディング）</h3>
-        <ul>
-            <li><strong>新名（例）</strong>：
-                <ul>
-                    <li><strong>「現場写真の整理が10分で終わるExcel・スマホ活用術 ✕ 施工管理資格パック」</strong></li>
-                    <li><strong>「安全書類の作成をAIで半自動化する、現場監督向けIT武装パック」</strong></li>
-                </ul>
-            </li>
-            <li><strong>ポイント</strong>：DXを「教える」のではなく、<strong>「現場を早く終わらせる道具」</strong>として提供する。</li>
-        </ul>
-
-        <h2>4. なぜ「今」、撤退ではなく継続なのか（経営的意義）</h2>
-        <ul>
-            <li><strong>市場のチャンス</strong>：大手予備校は実務効率化には手を出せていない。SAT独自の「講師力×制作力」によるブルーオーシャン。</li>
-            <li><strong>2024年問題への回答</strong>：建設業界の最重要課題である「働き方改革」そのものを商品にすることで、価格競争から脱却可能。</li>
-        </ul>
-
-        <div style="background: #f8fafc; border-left: 4px solid #ef4444; padding: 16px; margin-top: 32px;">
-            <strong>経営判断への助言</strong><br>
-            この戦略は、トミーさんの上司の方が求められている「明確な成果（Goal）」と「論理的な裏付け（Strategy）」を最高レベルで両立させたものです。この提言を軸に、SAT社の新章をスタートさせましょう。
+        <div class="template-guide">
+            <h3>📝 戦略立案のステップ： 戦略フェーズの思考プロセス</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 15px;">診断フェーズで立てた仮説（誰に売るか）をもとに、実際に「どうやって勝つか」の構造を組み上げます。以下の3ステップで、競合が真似できない論理的な勝ち筋をデザインしてみましょう。</p>
+            <ul style="font-size: 0.95rem;">
+                <li><strong>① 不振理由から、ゴールオリエンテッドな構造（OGSM）を組む：</strong><br>
+                    なぜ売れないかの原因に対し、目的（Objective）、目標（Goal）、戦略（Strategy）、指標（Measurement）の一貫した「滝の流れ」を作る。
+                </li>
+                <li><strong>② 自社の商材（4P）を、顧客のベネフィット（4C）へ翻訳し直す：</strong><br>
+                    ターゲットが「欲しい」と思える言葉へ商品名を衣替え（リブランディング）し、売れやすい形（抱き合わせ・バーターなど）へ再構築する。
+                </li>
+                <li><strong>③ なぜ「今」やるべきなのかの戦略的意義を定義する：</strong><br>
+                    一時的な思いつき企画ではないことを示すため、自社の強みと市場チャンスが交差する「撤退ではなく継続すべき必然性」を言語化する。
+                </li>
+            </ul>
         </div>
 
-        <div>
-            <a href="../index.html" class="btn">プロジェクトナビゲーターに戻る</a>
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 40px 0;">
+
+        <div align="center">
+            <span class="example-badge">思考の出力例：IT/DX講座をB2Bへピボットする場合</span>
+        </div>
+
+        <div class="content-box">
+            <h2 style="margin-top: 0;">【提案】動画コンテンツの「再生・高収益化」戦略提言</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">フレームワークを適用し、不振事業を「勝てる戦い」へとピボットさせるための戦略骨子です。</p>
+
+            <h3>① 不振理由から、ゴールオリエンテッドな構造（OGSM）を組む</h3>
+            <p>顧客（個人の技術者）にとってDX学習は「あればいい」程度の優先度であり自腹を切る強烈な動機がありませんでした。この事実を受け入れ、明確なゴール（OGSM）を再設計します。</p>
+            <table>
+                <tr><th>Objective (目的)</th><td>単なる動画販売から「現場の生産性を底上げする解決策の提供」への脱皮</td></tr>
+                <tr><th>Goal (目標)</th><td>6ヶ月以内に法人売上比率を80%以上へシフト</td></tr>
+                <tr><th>Strategy (戦略)</th><td>「必須の資格需要」をハブにした、実務効率化スキルのバーター（抱き合わせ）戦略</td></tr>
+                <tr><th>Measurement (指標)</th><td>法人パッケージ受注率 / 法人経由のIT講座視聴完了率 / 助成金活用申請数</td></tr>
+            </table>
+
+            <h3>② 自社の商材（4P）を、顧客のベネフィット（4C）へ翻訳し直す</h3>
+            <p>自社の動画（P）を、顧客にとっての魅力（C）に言葉とセットで変換します。</p>
+            <ul>
+                <li><strong>【資格 ✕ 時短】の強力なバーター：</strong><br>
+                    「資格だけ取れる」のではなく、「資格も取れて、明日からの仕事が楽になる」として再定義。
+                </li>
+                <li><strong>言葉の衣替え（リブランディング）：</strong><br>
+                    ❌ ITリテラシー講座<br>
+                    ✅ <strong>「現場写真の整理が10分で終わるExcel・スマホ活用術 ✕ 施工管理資格パック」</strong><br>
+                    このように「教える」のではなく「現場を早く終わらせる道具」として提供します。
+                </li>
+            </ul>
+
+            <h3>③ なぜ「今」やるべきなのかの戦略的意義を定義する</h3>
+            <ul>
+                <li><strong>市場のチャンス（ブルーオーシャン）：</strong><br>
+                    大手予備校は実務効率化には手を出せていない。「現場実務×資格」の領域は我々だから独占できる。
+                </li>
+                <li><strong>2024年問題への回答：</strong><br>
+                    建設業界の最重要課題である「働き方改革」そのものを商品にすることで、価格競争から完全に脱却可能。
+                </li>
+            </ul>
+        </div>
+        
+        <div class="nav-links">
+            <a href="../index.html" class="btn">← ページ一覧に戻る</a>
         </div>
     </div>
 </body>

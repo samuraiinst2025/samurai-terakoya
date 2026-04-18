@@ -4,11 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Navigator: Marketing Strategy Framework</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
-    </script>
+    <!-- インラインスタイルで既存サイトに近い形を再現 -->
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { color: var(--primary); margin-bottom: 8px; }
+        h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 40px; }
+        .alert { padding: 16px; border-radius: 6px; margin: 20px 0; border: 1px solid transparent; }
+        .alert-tip { background-color: #f8fafc; border-color: #cbd5e1; }
+        .alert-important { background-color: #fff1f2; border-color: #fecdd3; }
+        .alert-note { background-color: #eff6ff; border-color: #bfdbfe; }
+        
+        /* 羅針盤用クラス */
+        .alert-compass {
+            background-color: #f0fdf4; 
+            border-left: 4px solid #16a34a; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .alert-compass h4 {
+            margin: 0 0 8px 0;
+            color: #166534;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+        }
+        .alert-compass p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #14532d;
+        }
+        .compass-badge {
+            background-color: #dcfce7;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #166534;
+            margin-left: 10px;
+        }
+        ul { margin-top: 10px; }
+        li { margin-bottom: 6px; }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,112 +78,90 @@
             <p style="color: var(--text-secondary);">Marketing Strategy Framework</p>
         </div>
 
-        <div class="card">
-            <p>このドキュメントは、今回再構築を行った<strong>「マーケティング戦略の抜本的再構成」</strong>のプロジェクト全容を、第三者に効果的に伝えるための「司令塔」です。</p>
-            <p>各プロセス（1〜3）をクリックすることで、そのステップを実行・証明するための具体的な成果物（補足資料）へアクセスできます。</p>
-
-            <hr>
-
-            <h2>🧭 プロジェクトの全体像（ストーリー）</h2>
-            <div class="mermaid">
-                graph TD
-                    A["1. 診断 (Diagnosis)<br/>'なぜ不振なのか？事実の特定'"] --> B["2. 戦略 (Strategy)<br/>'勝ち筋の論理的設計'"]
-                    B --> E["3. 展望 (Future)<br/>'インパクトと90日ロードマップ'"]
-
-                    style A fill:#f9f,stroke:#333,stroke-width:2px
-                    style B fill:#bbf,stroke:#333,stroke-width:2px
-                    style E fill:#f96,stroke:#333,stroke-width:2px
-            </div>
-
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
-
-            <h2>📐 プロジェクト設計思想 (Methodology)</h2>
-            <p>本プロジェクトの根幹となる設計図（骨格）と、これまでのプロセスをいかに「3ステップのストーリー」に昇華・統合したかを示すレポート資料です。</p>
-            <div class="alert alert-note">
-                <div class="alert-title">📘 プロセス最適化レポート</div>
-                <ul>
-                    <li><a href="./methodology/process_comparison.html" style="font-weight: bold; color: #1e40af;">プロセス比較・最適化レポート</a>
-                        <ul><li style="color: #475569; font-size: 0.95rem;"><strong>内容</strong>: 以前の7段階プロセスから、今回の洗練された「診断(1)・戦略(2)・展望(3)」へと至る構造的マッピングと最適化の解説。</li></ul>
-                    </li>
-                </ul>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
-
-            <h2>1. 診断：事実と課題の特定 (Diagnosis)</h2>
-            <p><strong>「現在の不振はプロダクトの質ではなく、ターゲットと売り方のズレにある」</strong></p>
-            <p>戦略の出発点として、現状の「痛み」を定義し、なぜ今のままではいけないのかを明確にしています。</p>
-
-            <div class="alert alert-tip">
-                <div class="alert-title">💡 成果物 / So What?</div>
-                <ul>
-                    <li><a href="./strategy/v1_pain_points.html">初期提案 V1（現場の痛み）</a>
-                        <ul><li><strong>意味</strong>: 「専門用語」ではなく「現場の数字」で上司・組織の合意を勝ち取るためのドアオープナー。</li></ul>
-                    </li>
-                    <li><a href="./strategy/appendix_diagnosis.html">【重要】診断プロセスの論理的背景（Appendix）</a>
-                        <ul><li><strong>意味</strong>: この結論に至った PEST/3C の推論プロセス。若手が自社製品で「診断」を再現するためのガイド。</li></ul>
-                    </li>
-                </ul>
-            </div>
-
-            <hr>
-
-            <h2>2. 戦略：勝ち筋の論理的設計 (Strategy)</h2>
-            <p><strong>「競合が手を出せない『実務 ✕ 資格』の領域を AI で特定し、独占する」</strong></p>
-            <p>診断から導き出された「必然」の勝ち筋。AIを活用して多角的に検証された、生存確率の最も高いプランです。</p>
-
-            <div class="alert alert-important">
-                <div class="alert-title">🚀 成果物 / Action Plan</div>
-                <ul>
-                    <li><a href="./strategy/v2_main_strategy.html">戦略提言 V2（ピボット案）</a>
-                        <ul><li><strong>Wow!</strong>: 「AI による脆弱性テスト」を経た、一切の主観を排した鉄壁のロジック。</li></ul>
-                    </li>
-                </ul>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
-
-            <h2>3. 展望：インパクトと実行速度 (Future)</h2>
-            <p><strong>「承認の翌日には、AI クリエイティブが市場へ投入される」</strong></p>
-            <p>戦略の実行を阻む「コスト」と「時間」を、AIがどのように破壊し、爆速で成果へ繋げるか。未来の可視化です。</p>
-
-            <div class="alert alert-note">
-                <div class="alert-title">⚡️ 成果物 / Speed</div>
-                <ul>
-                    <li><a href="./strategy/v3_roadmap.html">実行ロードマップ V3</a>
-                        <ul><li><strong>Wow!</strong>: 「クリエイティブ制作 1/10 の極限時短」。AI画像・動画生成による即時投入。</li></ul>
-                    </li>
-                </ul>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
-
-            <h2>🎓 若手教育・自走支援 (Learning Center)</h2>
-            <p>本プロジェクトで見せた「プロの思考」と「AIの技」を、若手が自分のものにするためのトレーニング・マニュアルです。</p>
-
-            <div class="alert alert-tip">
-                <div class="alert-title">🏫 研修用リソース</div>
-                <ul>
-                    <li><a href="./strategy/ai_practice_lab.html">ChatGPT 活用演習ラボ</a>
-                        <ul><li><strong>内容</strong>: スタバ、ユニクロ等を題材としたフレームワーク習得ワーク。</li></ul>
-                    </li>
-                    <li><a href="./strategy/prompt_50_master.html">業務効率化プロンプト 50選</a>
-                        <ul><li><strong>内容</strong>: 議事録・メール作成から競合分析まで、明日から使える秘伝の指示書。</li></ul>
-                    </li>
-                    <li><a href="./strategy/master_knowledge.html">プロの知見：ナレッジベース</a>
-                        <ul><li><strong>内容</strong>: 3C, PEST, AISCEAS などの本質解説。</li></ul>
-                    </li>
-                </ul>
-            </div>
-
-        <div class="nav-links">
-            <a href="../index.html" class="btn">← ページ一覧に戻る</a>
+        <p>このドキュメントは、今回再構築を行った<strong>「マーケティング戦略の抜本的再構成」</strong>のプロジェクト全容を効果的に伝えるための「司令塔」です。</p>
+        <p>単なる結果の報告ではなく、マーケティングレッスンで学んだ手法がどのように実稼働するのかをトレース可能な形で整理してあります。</p>
+        
+        <div class="alert alert-note">
+            <div style="font-weight: bold; margin-bottom: 10px;">📘 プロセス最適化レポート</div>
+            <ul>
+                <li><a href="./methodology/process_comparison.html" style="font-weight: bold; color: #1e40af;">プロセス比較・最適化レポート</a></li>
+            </ul>
         </div>
 
-        <div class="footer">
-            &copy; 2026 Marketing Strategy Hub
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+
+        <h2>1. 診断：事実と課題の特定 (Diagnosis)</h2>
+        <p><strong>「現在の不振はプロダクトの質ではなく、ターゲットと売り方のズレにある」</strong></p>
+
+        <div class="alert-compass">
+            <h4>🧭 カリキュラム・マッピング <span class="compass-badge">【第1章】Research / 【第2章】STP</span></h4>
+            <p>
+                <strong>実践のポイント：</strong> 実際に行ったPEST分析や3C分析により事実を特定し、Pivotを行ったフェーズの成果物です。<br>
+            </p>
+        </div>
+        
+        <div class="alert alert-tip">
+            <div style="font-weight: bold; margin-bottom: 10px;">💡 成果物 / So What?</div>
+            <ul>
+                <li><a href="./strategy/v1_pain_points.html">【実践テンプレート】初期提案 V1（現場の痛みと診断）</a></li>
+                <li><a href="./strategy/appendix_diagnosis.html">【重要】診断プロセスの論理的背景（Appendix）</a></li>
+            </ul>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+
+        <h2>2. 戦略：勝ち筋の論理的設計 (Strategy)</h2>
+        <p><strong>「競合が手を出せない『実務 ✕ 資格』の領域を AI で特定し、独占する」</strong></p>
+        
+        <div class="alert-compass">
+            <h4>🧭 カリキュラム・マッピング <span class="compass-badge">【第3章】Marketing Mix (4P)</span></h4>
+            <p>
+                <strong>実践のポイント：</strong> 売り側の視点から顧客のベネフィットへ、4Pを4Cに翻訳し直したフェーズの成果物です。<br>
+            </p>
+        </div>
+
+        <div class="alert alert-important">
+            <div style="font-weight: bold; margin-bottom: 10px;">🚀 成果物 / Action Plan</div>
+            <ul>
+                <li><a href="./strategy/v2_main_strategy.html">【実践テンプレート】戦略提言 V2（ピボット案）</a></li>
+            </ul>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+        
+        <h2>3. 展望：インパクトと実行速度 (Future)</h2>
+        <p><strong>「承認の翌日には、AI クリエイティブが市場へ投入される」</strong></p>
+        
+        <div class="alert-compass">
+            <h4>🧭 カリキュラム・マッピング <span class="compass-badge">【第4章】Implementation / 【第5章】Control</span></h4>
+            <p>
+                <strong>実践のポイント：</strong> 未来のインパクトを可視化し、組織決裁を動かす提案書として構造化したフェーズの成果物です。<br>
+            </p>
+        </div>
+        
+        <div class="alert alert-note">
+            <div style="font-weight: bold; margin-bottom: 10px;">⚡️ 成果物 / Speed</div>
+            <ul>
+                <li><a href="./strategy/v3_roadmap.html">【実践テンプレート】実行ロードマップ V3</a></li>
+            </ul>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+
+        <h2>🎓 レッスン実践テンプレート (Learning Center)</h2>
+        <p>本プロジェクトで見せた思考ステップとAIの技を、自分自身のマーケティング業務で再現するためのトレーニング・マニュアルです。</p>
+
+        <div class="alert alert-tip">
+            <div style="font-weight: bold; margin-bottom: 10px;">🏫 研修用リソース</div>
+            <ul>
+                <li style="margin-bottom: 15px;">
+                    <a href="./strategy/compass_mapping.html" style="font-weight: bold; color: #166534; font-size: 1.1em;">🌟 【NEW】実践的AIマーケティングのマッピング資料（完全版）</a>
+                    <ul><li style="color: #475569; font-size: 0.95rem;"><strong>内容</strong>: レッスンで学んだメソッドがそれぞれのフェーズでどう使われたか、一般フローと事例で解説。</li></ul>
+                </li>
+                <li><a href="./strategy/ai_practice_lab.html">ChatGPT 活用演習ラボ</a></li>
+                <li><a href="./strategy/prompt_50_master.html">業務効率化プロンプト 50選</a></li>
+                <li><a href="./strategy/master_knowledge.html">プロの知見：ナレッジベース</a></li>
+            </ul>
         </div>
     </div>
 </body>

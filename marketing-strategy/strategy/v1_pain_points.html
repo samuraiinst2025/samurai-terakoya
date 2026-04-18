@@ -3,74 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【提案】現場技術者向けIT/DX講座の「再生・継続」プラン</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>【実践テンプレート】V1: 初期提案（現場の痛みと診断）</title>
     <style>
-        .container { max-width: 800px; margin: 40px auto; font-family: sans-serif; line-height: 1.6; color: #333; }
-        h1 { border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; font-size: 1.8rem; }
-        h2 { border-left: 5px solid #3b82f6; padding-left: 12px; margin-top: 40px; font-size: 1.4rem; }
-        ul { padding-left: 24px; }
-        li { margin-bottom: 8px; }
-        .highlight { font-weight: bold; }
-        .btn { display: inline-block; padding: 10px 20px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin-top: 40px; }
+        :root { --primary: #2563eb; --bg-light: #f8fafc; --text-main: #1e293b; --text-secondary: #64748b; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: var(--text-main); background-color: var(--bg-light); margin: 0; padding: 40px 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        h1 { color: #0f172a; margin-bottom: 30px; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px;}
+        h2 { border-left: 5px solid #3b82f6; padding-left: 10px; margin-top: 30px; color: #1e293b; font-size: 1.25rem; }
+        h3 { color: #334155; margin-top: 25px; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;}
+        
+        .template-guide {
+            background-color: #fffbeb; 
+            border: 1px solid #fde68a;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 6px;
+        }
+        .template-guide h3 { margin-top: 0; color: #b45309; display: flex; align-items: center; font-size: 1.1rem; border-bottom: none; }
+        .template-guide ul { padding-left: 20px; margin-bottom: 0; color: #78350f; }
+        .template-guide li { margin-bottom: 8px; }
+        
+        .example-badge {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .content-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        .nav-links {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>【提案】現場技術者向けIT/DX講座の「再生・継続」プラン</h1>
-        <p>トミーさんの上司の方への説明用に、専門用語を排し、シンプルかつ数字と事例に基づく「勝ち筋」をまとめた提案骨子です。</p>
+        <h1>V1：初期提案（現場の痛みと診断）</h1>
 
-        <h2>1. 現状の「不振」の正体</h2>
-        <p>現在のIT/DX講座（スターター講座100等）が苦戦している理由は、中身が悪いからではなく、<strong>「売る相手と、売り方」がズレているため</strong>です。</p>
-        <ul>
-            <li><strong>事実</strong>：現場の技術者は「資格（昇給に直結）」には個人で金を払うが、「DX（何に役立つか不明）」に自分のお金は出さない。</li>
-            <li><strong>結論</strong>：現在の<strong>「個人向け（B2C）販売」</strong>は抜本的な見直しが必要です。</li>
-        </ul>
-
-        <h2>2. ゴール（目指す数字と姿）</h2>
-        <p>「DXを教える」ことをやめ、<strong>「現場の働き方改革」を売るサービス</strong>へ転換します。</p>
-        <ul>
-            <li><strong>ゴール（仮説）</strong>：
-                <ul>
-                    <li>半年以内に、現在の個人向け販売から、<strong>「建設企業の法人研修（B2B）」へ売上の8割をシフト</strong>。</li>
-                    <li>建設業界の「2024年問題（残業規制）」を逆手に取り、導入企業の「現場書類作成時間の50%削減」をデリバリーゴールとする。</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>3. 継続・再生のための「3つの具体的アクション」</h2>
-        <p>もし「継続」するなら、以下の3点に絞ってリソースを投資します。</p>
-        <ol>
-            <li><strong>「DX」という言葉を捨て、現場の「痛み」をタイトルにする</strong>
-                <ul>
-                    <li>❌ ITリテラシー向上講座</li>
-                    <li>✅ <strong>「施工計画書がChatGPTで30分で終わる！現場監督のための時短術」</strong></li>
-                </ul>
-            </li>
-            <li><strong>売り先を「個人」から「建設会社の経営層・人事」に変える</strong>
-                <ul>
-                    <li>個人ではなく、採用や働き方改革に悩む社長・専務に、助成金活用とセットで提案する。</li>
-                </ul>
-            </li>
-            <li><strong>成功事例（他社）の徹底模倣</strong>
-                <ul>
-                    <li>BIM/CIM（義務化される3D図面）への対応研修など、「学ばざるを得ない強制力のある市場」へコンテンツを寄せる。</li>
-                </ul>
-            </li>
-        </ol>
-
-        <h2>4. なぜ「今」やめない方がいいのか？（戦略的意義）</h2>
-        <ul>
-            <li>建設業界での「IT/DX教育」の成功事例はまだ少なく、SATの高品質なスタジオ・映像制作力があれば、<strong>「現場事情がわかるIT教育」というブルーオーシャン</strong>でNo.1を獲れる可能性が極めて高いため。</li>
-        </ul>
-
-        <div style="background: #f8fafc; border-left: 4px solid #f59e0b; padding: 16px; margin-top: 32px;">
-            <strong>上司への一言メモ</strong><br>
-            「ITを教える」のではなく「現場を楽にする道具」として再定義すれば、他社（資格予備校）が手を出せていない法人市場を一気に刈り取れます。
+        <!-- 🚀 思考支援ブロック -->
+        <div class="template-guide">
+            <h3>📝 戦略立案のステップ： 診断フェーズの思考プロセス</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 15px;">不振コンテンツを立て直し、インプリメンテーションまで自走していくための第一歩です。直感に頼らず、まずは事実に基づいたロジックで戦略の骨格を組み立てるため、自身で以下の3ステップを深く思考してみましょう。</p>
+            <ul style="font-size: 0.95rem;">
+                <li><strong>① 現状の「不振」の正体を特定する：</strong><br>
+                    PEST分析や3C分析などのフレームワークで市場と顧客の事実を集め、「コンテンツが悪い」のではなく「ターゲットのペイン（痛み）や売り方がどうズレているのか」という構造的な真因を導き出す。
+                </li>
+                <li><strong>② ゴール（目指す数字と姿）を描く：</strong><br>
+                    コンテンツを撤退させるのではなくピボット（方針転換）させる場合、「誰の、どんな痛みを解決する商材へ変貌させるか」、そして経営層が納得する「結果（売上の何％シフト等）の目標」を仮説として置く。
+                </li>
+                <li><strong>③ 再生のための「具体的アクション」を提示する：</strong><br>
+                    現状とゴールのギャップを埋めるため、「商品の見せ方を変える」「売る相手（B2C→B2B）を変える」といった具体的なアクションの柱を抽出する。
+                </li>
+            </ul>
         </div>
 
-        <div>
-            <a href="../index.html" class="btn">プロジェクトナビゲーターに戻る</a>
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 40px 0;">
+
+        <!-- 🏢 サンプル事例ブロック -->
+        <div align="center">
+            <span class="example-badge">思考の出力例：IT/DX講座をB2Bへピボットする場合</span>
+        </div>
+
+        <div class="content-box">
+            <h2 style="margin-top: 0;">【提案】現場技術者向けIT/DX講座の「再生・継続」プラン</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">専門用語を排し、シンプルかつ数字と事例に基づく「勝ち筋」の提案骨子。</p>
+
+            <h3>① 現状の「不振」の正体を特定する</h3>
+            <p>現在のIT/DX講座（スターター講座100等）が苦戦している理由は、中身が悪いからではなく、<strong>「売る相手と、売り方」がズレているため</strong>です。</p>
+            <ul>
+                <li><strong>事実：</strong>現場の技術者は「資格（昇給に直結）」には個人で金を払うが、「DX（何に役立つか不明）」に自分のお金は出さない。</li>
+                <li><strong>結論：</strong>現在の<strong>「個人向け（B2C）販売」</strong>は抜本的な見直しが必要です。</li>
+            </ul>
+
+            <h3>② ゴール（目指す数字と姿）を描く</h3>
+            <p>「DXを教える」ことをやめ、<strong>「現場の働き方改革」を売るサービス</strong>へ転換します。</p>
+            <ul>
+                <li><strong>ゴール（仮説）：</strong>
+                    <ul>
+                        <li>半年以内に、現在の個人向け販売から、<strong>「建設企業の法人研修（B2B）」へ売上の8割をシフト</strong>。</li>
+                        <li>建設業界の「2024年問題（残業規制）」を逆手に取り、導入企業の「現場書類作成時間の50%削減」をデリバリーゴールとする。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>③ 再生のための「具体的アクション」を提示する</h3>
+            <p>もし「継続」するなら、以下の3点に絞ってリソースを投資します。</p>
+            <ol>
+                <li><strong>「DX」という言葉を捨て、現場の「痛み」をタイトルにする</strong><br>
+                    ❌ ITリテラシー向上講座<br>
+                    ✅ <strong>「施工計画書がChatGPTで30分で終わる！現場監督のための時短術」</strong>
+                </li>
+                <li><strong>売り先を「個人」から「建設会社の経営層・人事」に変える</strong><br>
+                    個人ではなく、採用や働き方改革に悩む社長・専務に、助成金活用とセットで提案する。
+                </li>
+            </ol>
+        </div>
+        
+        <div class="nav-links">
+            <a href="../index.html" class="btn">← ページ一覧に戻る</a>
         </div>
     </div>
 </body>
