@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Hooks 自動化実践ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --secondary: #475569;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alert strong { display: block; margin-bottom: 8px; font-size: 1.1em; }
+        
+        .alert-tip { background-color: #f0fdfa; border-left: 4px solid #0d9488; }
+        .alert-tip strong { color: #0d9488; }
+        
+        .alert-note { background-color: #eff6ff; border-left: 4px solid #3b82f6; }
+        .alert-note strong { color: #1e3a8a; }
+
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 24px 0;
+        }
+
+        code {
+            background-color: #f1f5f9;
+            color: #ef4444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Claude Code Hooks 自動化実践ガイド</h1>
+        <p>イベント駆動で開発ワークフローを完全自動化するための指南書</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 第1章: 導入 -->
+        <div class="card">
+            <h2>1. Hooks とは？</h2>
+            <p>Hooks（フック）は、Claude Code 内で特定のイベント（ファイルの編集、タスクの完了など）が発生した際に、任意のシェルコマンドを自動的に実行させる機能です。</p>
+            <p>手動で行っていた「コードの整形」「テストの実行」「通知」などを Claude に肩代わりさせることで、開発のテンポを一切崩さずに高品質なアウトプットを維持できます。</p>
+
+            <div class="alert alert-tip">
+                <strong>🤖 Hooks で実現できること</strong>
+                <ul>
+                    <li>ファイルを保存するたびに Prettier で自動整形する</li>
+                    <li>タスクが完了したら Slack や LINE に通知を送る</li>
+                    <li>外部のセキュリティスキャンツールを自動起動する</li>
+                    <li>重大なコマンドが提案された時に追加の検証を行う</li>
+                </ul>
+            </div>
+
+            <h3>自動化のサイクル</h3>
+            <div class="mermaid">
+            graph TD
+                Event["イベント発生<br>(ファイル編集など)"] --> Hook["Hook 発動<br>(自動実行)"]
+                Hook --> Command["シェルコマンド実行<br>(lint, test, curl...)"]
+                Command --> Result["結果の反映 / 通知"]
+                
+                style Event fill:#f0fdfa,stroke:#0d9488,stroke-width:2px
+                style Hook fill:#0d9488,stroke:#333,color:#fff
+                style Command fill:#1e293b,stroke:#000,color:#fff
+                style Result fill:#f8fafc,stroke:#e2e8f0
+            </div>
+        </div>
+
+        <!-- 第2章: イベントの種類 -->
+        <div class="card">
+            <h2>2. 主要なイベント（トリガー）</h2>
+            <p>現在サポートされている、4つの主要なフックイベントを紹介します。</p>
+
+            <table>
+                <tr>
+                    <th>イベント名</th>
+                    <th>発生タイミング</th>
+                    <th>活用例</th>
+                </tr>
+                <tr>
+                    <td><code>onFileEdited</code></td>
+                    <td>Claude がファイルを書き換えた直後</td>
+                    <td>自動フォーマット、シンタックスチェック</td>
+                </tr>
+                <tr>
+                    <td><code>onTaskCompleted</code></td>
+                    <td>会話のタスク（User Request）が完了した時</td>
+                    <td>ビルド、デプロイ準備、完了通知</td>
+                </tr>
+                <tr>
+                    <td><code>onInputRequired</code></td>
+                    <td>Claude がユーザーの入力を待機し始めた時</td>
+                    <td>デスクトップ通知、スマホへのプッシュ通知</td>
+                </tr>
+                <tr>
+                    <td><code>onCommandProposed</code></td>
+                    <td>Claude がシェルコマンドを実行しようとした時</td>
+                    <td>セキュリティスキャン、コマンドの自動レビュー</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 第3章: 設定方法 -->
+        <div class="card">
+            <h2>3. 設定の実践例</h2>
+            <p>設定は、プロジェクト内の <code>.claude/hooks.json</code> に記述するのが一般的です。また、<code>CLAUDE.md</code> で定義することも可能です。</p>
+
+            <h3>【実践例 1】 保存時の自動整形 (Prettier)</h3>
+            <p>ファイルが編集されるたびに、プロジェクトのルールに従って綺麗に整頓します。</p>
+<pre><code>{
+  "onFileEdited": [
+    "npx prettier --write ${changedFile}"
+  ]
+}</code></pre>
+
+            <h3>【実践例 2】 タスク完了時の Slack 通知</h3>
+            <p>長いタスクが終わった時に、席を外していても通知を受け取れるようにします。</p>
+<pre><code>{
+  "onTaskCompleted": [
+    "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"✅ タスクが完了しました！\"}' https://hooks.slack.com/services/..."
+  ]
+}</code></pre>
+
+            <div class="alert alert-note">
+                <strong>💡 環境変数の活用</strong>
+                <code>${changedFile}</code> のような特別な変数をフック内で使用でき、どのファイルが変更されたのかなどをコマンドに渡すことができます。
+            </div>
+        </div>
+
+        <!-- 第4章: まとめ -->
+        <div class="card">
+            <h2>4. まとめ: 「考えなくていい」開発環境へ</h2>
+            <p>フックを使いこなすことで、開発者は「ツールを動かす」という作業から解放され、「ロジックを考える」ことに集中できます。</p>
+            <p>「サブエージェント（担当者の配置）」「MCP（外部ツールの接続）」、そしてこの「Hooks（プロセスの自動化）」を組み合わせることが、Claude Code を使いこなす三種の神器となります。</p>
+        </div>
+
+    </div>
+</body>
+</html>
