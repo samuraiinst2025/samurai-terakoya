@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Code Hooks 自動化実践ガイド</title>
+    <title>Claude Code Hooks 自動化実践ガイド (決定版)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -175,25 +175,22 @@
 
         <!-- 第1章: 導入 -->
         <div class="card">
-            <h2>1. Hooks とは？</h2>
+            <h2>1. Hooks とは？ ― Webhook と同じ「センサー」機能</h2>
             <p>Hooks（フック）は、Claude Code 内で特定のイベント（ファイルの編集、タスクの完了など）が発生した際に、任意のシェルコマンドを自動的に実行させる機能です。</p>
-            <p>手動で行っていた「コードの整形」「テストの実行」「通知」などを Claude に肩代わりさせることで、開発のテンポを一切崩さずに高品質なアウトプットを維持できます。</p>
-
+            
             <div class="alert alert-tip">
-                <strong>🤖 Hooks で実現できること</strong>
-                <ul>
-                    <li>ファイルを保存するたびに Prettier で自動整形する</li>
-                    <li>タスクが完了したら Slack や LINE に通知を送る</li>
-                    <li>外部のセキュリティスキャンツールを自動起動する</li>
-                    <li>重大なコマンドが提案された時に追加の検証を行う</li>
-                </ul>
+                <strong>🔗 Web 開発者への直感的な例え</strong>
+                Hooks は Web 開発における **Webhook** と全く同じ概念です。<br>
+                「GitHub でプッシュされたらデプロイを走らせる」のと同様に、Claude Code で「ファイルが編集されたら整形を走らせる」という設定が可能です。
             </div>
+
+            <p>手動で行っていた定型作業を Claude に肩代わりさせることで、高品質なアウトプットを維持し続けることができます。</p>
 
             <h3>自動化のサイクル</h3>
             <div class="mermaid">
             graph TD
-                Event["イベント発生<br>(ファイル編集など)"] --> Hook["Hook 発動<br>(自動実行)"]
-                Hook --> Command["シェルコマンド実行<br>(lint, test, curl...)"]
+                Event["イベント検知<br>(Webhook と同じ発想)"] --> Hook["Hook 発動<br>(自動実行)"]
+                Hook --> Command["シェルコマンド実行<br>(起動スイッチ)"]
                 Command --> Result["結果の反映 / 通知"]
                 
                 style Event fill:#f0fdfa,stroke:#0d9488,stroke-width:2px
@@ -203,72 +200,79 @@
             </div>
         </div>
 
-        <!-- 第2章: イベントの種類 -->
+        <!-- 第2章: スキルとの違い -->
         <div class="card">
-            <h2>2. 主要なイベント（トリガー）</h2>
-            <p>現在サポートされている、4つの主要なフックイベントを紹介します。</p>
+            <h2>2. 🤔「スキル (Skills)」と何が違うのか？</h2>
+            <p>Claude Code には「スキル」という機能もありますが、最大の違いは **「きっかけ（誰がいつ動かすか）」** です。</p>
 
             <table>
                 <tr>
-                    <th>イベント名</th>
-                    <th>発生タイミング</th>
-                    <th>活用例</th>
+                    <th>比較項目</th>
+                    <th>スキル (Skills)</th>
+                    <th>フック (Hooks)</th>
                 </tr>
                 <tr>
-                    <td><code>onFileEdited</code></td>
-                    <td>Claude がファイルを書き換えた直後</td>
-                    <td>自動フォーマット、シンタックスチェック</td>
+                    <td><strong>イメージ</strong></td>
+                    <td><strong>「必殺技・マニュアル」</strong></td>
+                    <td><strong>「センサー・罠」</strong></td>
                 </tr>
                 <tr>
-                    <td><code>onTaskCompleted</code></td>
-                    <td>会話のタスク（User Request）が完了した時</td>
-                    <td>ビルド、デプロイ準備、完了通知</td>
+                    <td><strong>トリガー</strong></td>
+                    <td><strong>能動的（意思がある時）</strong><br>ユーザーや AI が「やるぞ」と決めた時</td>
+                    <td><strong>受動的（出来事ベース）</strong><br>特定のイベントが起きた瞬間に勝手に</td>
                 </tr>
                 <tr>
-                    <td><code>onInputRequired</code></td>
-                    <td>Claude がユーザーの入力を待機し始めた時</td>
-                    <td>デスクトップ通知、スマホへのプッシュ通知</td>
-                </tr>
-                <tr>
-                    <td><code>onCommandProposed</code></td>
-                    <td>Claude がシェルコマンドを実行しようとした時</td>
-                    <td>セキュリティスキャン、コマンドの自動レビュー</td>
+                    <td><strong>典型的活用</strong></td>
+                    <td>複雑なタスクの標準手順化<br>(例: <code>/deploy</code> コマンド)</td>
+                    <td>毎回必ず発生する定型処理<br>(例: 保存時の <code>Linter</code> 実行)</td>
                 </tr>
             </table>
         </div>
 
-        <!-- 第3章: 設定方法 -->
+        <!-- 第3章: シェルの自由度 -->
         <div class="card">
-            <h2>3. 設定の実践例</h2>
-            <p>設定は、プロジェクト内の <code>.claude/hooks.json</code> に記述するのが一般的です。また、<code>CLAUDE.md</code> で定義することも可能です。</p>
+            <h2>3. シェルの枠を超えた活用：スクリプトへの委譲</h2>
+            <p>Hooks の設定はシェルコマンド形式で記述しますが、これは単なる **「起動スイッチ」** です。Claude にファイル操作ツールがあるならシェルは不要に思えますが、実はシェル経由にすることで大きな自由度が手に入ります。</p>
 
-            <h3>【実践例 1】 保存時の自動整形 (Prettier)</h3>
-            <p>ファイルが編集されるたびに、プロジェクトのルールに従って綺麗に整頓します。</p>
+            <div class="alert alert-note">
+                <strong>🐍 シェルを「ランチャー」にする</strong>
+                Hooks で複雑なロジックを直接書く必要はありません。<br>
+                <code>"onTaskCompleted": ["python3 notify.py"]</code> <br>
+                のように、Python や Node.js、Mac の AppleScript などを呼び出すことで、OS 全体を巻き込んだ高度な自動化が可能です。
+            </div>
+
+            <ul>
+                <li><strong>OS レイヤーの操作:</strong> Mac の通知センターへの表示、デスクトップアプリの起動。</li>
+                <li><strong>バイナリ操作:</strong> Docker や Git、Terraform といった CLI ツールの確実な実行。</li>
+                <li><strong>外部サービス連携:</strong> <code>curl</code> 一発での Slack/LINE 通知送信。</li>
+            </ul>
+        </div>
+
+        <!-- 第4章: 実践例 -->
+        <div class="card">
+            <h2>4. 設定の実践例</h2>
+            <p>設定はプロジェクト内の <code>.claude/hooks.json</code> に記述します。</p>
+
+            <h3>【例 1】 保存時の自動整形 (Prettier)</h3>
 <pre><code>{
   "onFileEdited": [
     "npx prettier --write ${changedFile}"
   ]
 }</code></pre>
 
-            <h3>【実践例 2】 タスク完了時の Slack 通知</h3>
-            <p>長いタスクが終わった時に、席を外していても通知を受け取れるようにします。</p>
+            <h3>【例 2】 タスク完了時の Slack 通知 (curl 活用)</h3>
 <pre><code>{
   "onTaskCompleted": [
-    "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"✅ タスクが完了しました！\"}' https://hooks.slack.com/services/..."
+    "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"✅ タスク完了\"}' https://hooks.slack.com/services/..."
   ]
 }</code></pre>
-
-            <div class="alert alert-note">
-                <strong>💡 環境変数の活用</strong>
-                <code>${changedFile}</code> のような特別な変数をフック内で使用でき、どのファイルが変更されたのかなどをコマンドに渡すことができます。
-            </div>
         </div>
 
-        <!-- 第4章: まとめ -->
+        <!-- 第5章: まとめ -->
         <div class="card">
-            <h2>4. まとめ: 「考えなくていい」開発環境へ</h2>
-            <p>フックを使いこなすことで、開発者は「ツールを動かす」という作業から解放され、「ロジックを考える」ことに集中できます。</p>
-            <p>「サブエージェント（担当者の配置）」「MCP（外部ツールの接続）」、そしてこの「Hooks（プロセスの自動化）」を組み合わせることが、Claude Code を使いこなす三種の神器となります。</p>
+            <h2>5. まとめ: 「三種の神器」を使いこなす</h2>
+            <p>「担当者を配する **サブエージェント**」「道具を繋ぐ **MCP**」「自動検知の **Hooks**」こそが、Claude Code の三種の神器です。</p>
+            <p>これらを組み合わせ、「フックで検知」→「サブエージェントが思考」→「スキルで実行」という黄金のワークフローを構築しましょう。</p>
         </div>
 
     </div>
