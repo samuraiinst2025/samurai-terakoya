@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code サブエージェント 完全実践ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alert strong { display: block; margin-bottom: 8px; font-size: 1.1em; }
+        
+        .alert-tip { background-color: #f0fdf4; border-left: 4px solid #22c55e; }
+        .alert-tip strong { color: #166534; }
+        
+        .alert-note { background-color: #eff6ff; border-left: 4px solid #3b82f6; }
+        .alert-note strong { color: #1e3a8a; }
+
+        .alert-warning { background-color: #fefce8; border-left: 4px solid #eab308; }
+        .alert-warning strong { color: #854d0e; }
+
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 24px 0;
+        }
+
+        code {
+            background-color: #f1f5f9;
+            color: #ef4444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Claude Code サブエージェント 実践ガイド</h1>
+        <p>コンテキストを管理し、自律的な開発チームを構築するための完全マニュアル</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 第1章: 基礎編 -->
+        <div class="card">
+            <h2>1. サブエージェントとは？</h2>
+            <p>サブエージェントは、Claude Code内で特定のタスクに特化して機能するAIアシスタントです。メインの会話から独立したコンテキストや設定を持つことで、より効率的で安全な開発ワークフローを実現します。</p>
+
+            <div class="alert alert-tip">
+                <strong>💡 なぜサブエージェントを使うのか？</strong>
+                メインの会話にすべての情報を詰め込むと、コンテキストウィンドウを消費し、AIの焦点がぼやけ推論の質が落ちてしまいます。サブエージェントに専門タスクを委譲（Delegate）することで、プロジェクト全体の見通しを良くし、コストも最適化されます。
+            </div>
+
+            <h3>アーキテクチャ全体像</h3>
+            <div class="mermaid">
+            graph TD
+                User(["ユーザー"]) -- "チャット入力 / 指示" --> MainAgent("メインエージェント<br>Claude Code")
+                
+                subgraph "Claude Code 環境"
+                    MainAgent -- "タスク委譲<br>(@メンション / 自然言語)" --> SA1["組み込みエージェント<br>Explore / Planなど"]
+                    MainAgent -- "タスク委譲<br>(/agents)" --> SA2["カスタムエージェント<br>自作レビュアーなど"]
+                    MainAgent -- "非同期実行<br>(Ctrl+B)" --> SA3["バックグラウンド実行<br>待ち時間ゼロ"]
+                    
+                    SA1 -- "読み取り専用ツール" --> FS1[("ファイルシステム")]
+                    SA2 -- "全ツール / カスタムツール" --> FS1
+                    SA3 -- "裏タスク処理" --> MCP["MCP / システム機構"]
+                end
+                
+                SA1 -. "調査結果の報告" .-> MainAgent
+                SA2 -. "改善案の提示・修正" .-> MainAgent
+                SA3 -. "完了通知" .-> MainAgent
+                
+                style User fill:#f9f,stroke:#333,stroke-width:2px
+                style MainAgent fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+                style SA1 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+                style SA2 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+                style SA3 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+            </div>
+
+            <h3>どうやってサブエージェントを起動するのか？</h3>
+            <ul>
+                <li><strong>① @メンションでの明示的な呼び出し (おすすめ)</strong><br>
+                <code>@Explore src/componentsディレクトリの内容を調査して</code><br>
+                <code>@code-reviewer このプルリクエストの変更点をレビューして</code></li>
+                <li><strong>② 自然言語による指示</strong><br>
+                「サブエージェントに任せて」「テストをバックグラウンドで回して」などの言葉で委譲。</li>
+                <li><strong>③ オプションを使ったコマンド起動</strong><br>
+                <code>claude --agent code-reviewer</code></li>
+            </ul>
+
+            <h3>エージェントの種類と実行方式の違い</h3>
+            
+            <table>
+                <tr>
+                    <th>分類</th>
+                    <th>種類 / 方式</th>
+                    <th>特徴</th>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>誰が<br>作ったか？</strong></td>
+                    <td>組み込み<br>(Built-in)</td>
+                    <td>最初から用意されている。<code>@Explore</code> や <code>@Plan</code> など。読み取り専用で安全。</td>
+                </tr>
+                <tr>
+                    <td>カスタム<br>(Custom)</td>
+                    <td><code>/agents</code> で自作するドメイン特化型。（例：DBクエリ専門、コードレビュー専門）</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>どう<br>動くか？</strong></td>
+                    <td>通常実行<br>(フォアグラウンド)</td>
+                    <td>エージェントの処理が終わるまでメインチャットで待機する。途中で質問がある場合もある。</td>
+                </tr>
+                <tr>
+                    <td>バックグラウンド<br>(Background)</td>
+                    <td>エージェントを裏側で並行して動かしつつ、自分は作業を続けられる（<code>Ctrl+B</code>）。</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 第2章: 現場でのユースケース -->
+        <div class="card">
+            <h2>2. 現場での実践ユースケース</h2>
+            
+            <div class="alert alert-warning">
+                <strong>⚠️ よくある誤解：「機能」ではなく「役割」で分ける</strong>
+                「メイン機能はメインエージェントに、サブ機能はサブエージェントに」ではありません！<br>
+                同じソースコードを同時並行で書き換えると競合してしまいます。現場のベストプラクティスは、「実装担当」「テスト担当」「レビュアー」のように<strong>開発プロセスにおける役割（Role）</strong>で分担することです。
+            </div>
+
+            <h3>開発フローにおけるバトンパス（時系列）</h3>
+            <ul>
+                <li><strong>【開発前】 調査と設計（安全な下調べ）</strong><br>
+                メインがコードを書く前に、<code>@Explore</code> に「既存コードへの影響範囲を調べてきて」と偵察に出す（読み取り専用で安全）。</li>
+                <li><strong>【開発中】 並行作業と専門アドバイス</strong><br>
+                メイン画面でフロントエンドを実装している間、裏で <code>@db-expert</code> にSQLのチューニング案を<strong>バックグラウンドで考えさせておく</strong>（待ち時間ゼロ）。</li>
+                <li><strong>【開発後】 レビューとデバッグ（品質担保）</strong><br>
+                実装が終わったら <code>@code-reviewer</code> を呼んで批判的な目線でチェックさせる。エラーが出たら <code>@debugger</code> にスタックトレースを解析させる。</li>
+            </ul>
+
+            <div class="mermaid">
+            journey
+                title AI開発におけるサブエージェントのバトンパス
+                section 1. 開発前 (調査)
+                  既存コードの把握: 5: @Explore (読取専用・安全)
+                  影響範囲の特定: 4: @Explore
+                section 2. 開発中 (実装)
+                  機能のコーディング: 5: メインエージェント (主体)
+                  バックエンドSQL分析: 3: @db-expert (バックグラウンド)
+                section 3. 開発後 (検証)
+                  セキュリティ・規約チェック: 4: @code-reviewer (批判的目線)
+                  バグ根本原因の特定: 5: @debugger (ログ解析特化)
+            </div>
+        </div>
+
+        <!-- 第3章: サブエージェントとスキルの関係性 -->
+        <div class="card">
+            <h2>3. Appendix: サブエージェントと「スキル」の関係性</h2>
+            <p>サブエージェントはAG（別アーキテクチャ）で言うところの「特定のタスクをこなすための専用ワークフロー」を事前定義しておいたものです。</p>
+            <p>では、似た機能である<strong>「スキル（Skills）」</strong>とは何が違うのでしょうか？</p>
+
+            <table>
+                <tr>
+                    <th>比較項目</th>
+                    <th>サブエージェント (Sub-agents)</th>
+                    <th>スキル (Skills)</th>
+                </tr>
+                <tr>
+                    <td><strong>概念の比喩</strong></td>
+                    <td><strong>専門の担当者（職人）</strong></td>
+                    <td><strong>手引書・手順書・能力</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>何をするか</strong></td>
+                    <td>自律的に考え、ツールを選び、タスクを実行</td>
+                    <td>「この手順に従ってね」というプロジェクト固有の知識</td>
+                </tr>
+                <tr>
+                    <td><strong>設定の中身</strong></td>
+                    <td>使うモデル、ツールの利用制限、権限</td>
+                    <td>特定のプロンプトテキスト、自動化スクリプトなど</td>
+                </tr>
+            </table>
+
+            <h3>実社会の会社組織に例えると…</h3>
+            <p>サブエージェントは「担当者（ロール）」、スキルは「作業マニュアル・能力」と捉えると分かりやすいです。スキルは特定のエージェントに縛られず、<strong>独立して使い回せる</strong>のが最大の強みです。</p>
+
+            <ul>
+                <li>👩‍💼 <strong>経理エージェント (Sub-agent)</strong>
+                    <ul>
+                        <li>📖 仕訳入力スキル (Skill)</li>
+                        <li>📖 決算処理スキル (Skill)</li>
+                        <li>📖 <em>ビジネスマナースキル (共通Skill)</em></li>
+                    </ul>
+                </li>
+                <li>👨‍💼 <strong>営業エージェント (Sub-agent)</strong>
+                    <ul>
+                        <li>📖 商談・交渉スキル (Skill)</li>
+                        <li>📖 見積書作成スキル (Skill)</li>
+                        <li>📖 <em>ビジネスマナースキル (共通Skill)</em></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="alert alert-note">
+                <strong>💡 強力な連携：サブエージェントにスキルを持たせる</strong>
+                カスタムサブエージェントの Markdown フロントマター（<code>skills:</code> プロパティ）を使えば、そのエージェントにだけ特定のスキル（知識）をプリロードできます。無駄なコンテキストを消費せず、スマートな分業が可能です。
+            </div>
+
+            <div class="mermaid">
+            graph LR
+                User(["ユーザー"]) -- "@api-developer 実装して" --> SA["サブエージェント<br>(API Developer)"]
+                Skill1[("スキル<br>(API規約)")] -. "プリロード<br>(知識として吸収)" .-> SA
+                Skill2[("スキル<br>(エラー規約)")] -. "プリロード<br>(知識として吸収)" .-> SA
+                
+                SA -- "規約に従って実行" --> Code("コード生成")
+                
+                style SA fill:#fff3e0,stroke:#e65100,stroke-width:2px
+                style Skill1 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+                style Skill2 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 第4章: 自動ルーティング -->
+        <div class="card">
+            <h2>4. 実践編: CLAUDE.md を使った自動ルーティング</h2>
+            <p>毎回ユーザーが <code>@Explore</code> や <code>@code-reviewer</code> と手動で呼び出すのは手間です。<br>
+            プロジェクトのルートにある <strong><code>CLAUDE.md</code>（メインエージェントのシステムプロンプト）に委譲のルールを書いておくこと</strong>で、完全なオートメーション化が実現します。</p>
+
+            <h3>CLAUDE.md の設定例（自動委譲の設計）</h3>
+<pre><code># Agent Delegation Rules (サブエージェント委譲ルール)
+
+このプロジェクトでは役割分担を徹底しています。以下のタスクが発生した場合は、
+あなた（メインエージェント）が直接処理するのではなく、
+必ず適切なサブエージェントを呼び出して委譲（Delegate）してください：
+
+1. **実装前の調査・影響範囲の確認**
+   - コードを変更する前に、必ず `@Explore` にタスクを委譲すること。
+   - レポートを受け取った後、あなた自身で実装を行うこと。
+
+2. **コードのレビュー**
+   - 機能の実装が完了したら、必ず `@code-reviewer` を呼び出すこと。
+   - レビュアーの指摘事項を受け取り、修正が必要であればユーザーに提示すること。
+
+3. **テストの実行**
+   - コードを書き換えた後は、ユーザーの指示を待たずに `@test-runner` をバックグラウンドで起動し、並行してテストを回しておくこと。
+</code></pre>
+
+            <div class="alert alert-tip">
+                <strong>🚀 Vibe Coding の極致へ</strong>
+                この仕組みを作れば、ユーザーは「ログイン機能を追加して」と一行投げるだけでよくなります。
+                裏側では <code>[メインが@Exploreに調査依頼] -> [メインが実装] -> [メインが@code-reviewerに自己評価を依頼]</code> というタスクのバケツリレーが自動的かつ連鎖的に進行します。まるで自律した開発チームを指揮しているような体験が得られます。
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
