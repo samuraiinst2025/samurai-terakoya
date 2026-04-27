@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker版 - トラブルシューティング完全ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .breadcrumb a {
+            color: #0ea5e9;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            font-size: 1.8em;
+            color: #0ea5e9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0f7ff;
+        }
+        .section h3 {
+            font-size: 1.3em;
+            color: #0369a1;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .problem-block {
+            background: #fef2f2;
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        .problem-title {
+            color: #991b1b;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .solution-block {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .solution-title {
+            color: #15803d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+            line-height: 1.4;
+        }
+        .code-label {
+            color: #06b6d4;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9em;
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .note-title {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .note-content {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+        .tip {
+            background: #dbeafe;
+            border-left: 4px solid #0ea5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .tip-title {
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .tip-content {
+            color: #003d82;
+            font-size: 0.95em;
+        }
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f8fbfd;
+            border-radius: 6px;
+            border-left: 3px solid #0ea5e9;
+            padding-left: 15px;
+        }
+        .checklist li:before {
+            content: "▶ ";
+            margin-right: 8px;
+            color: #0ea5e9;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th {
+            background: #e0f7ff;
+            color: #0369a1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0f7ff;
+        }
+        table tr:hover {
+            background: #f8fbfd;
+        }
+        .performance-section {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #16a34a;
+        }
+        .faq-item {
+            background: #f8fbfd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0ea5e9;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .faq-answer {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .nav-button-secondary {
+            background: white;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
+        }
+        .nav-button-secondary:hover {
+            background: #e0f7ff;
+        }
+        .command-help {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 Docker版 トラブルシューティング完全ガイド</h1>
+            <p>セットアップから本番運用までの問題解決方法</p>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">📋 ガイドトップ</a>
+            > <a href="docker-overview.html">Docker版 全体像</a>
+            > <span style="color: #0ea5e9;">トラブルシューティング</span>
+        </div>
+
+        <!-- セットアップフェーズ -->
+        <div class="section">
+            <h2>🔨 セットアップ段階でのトラブル（Day 1-2）</h2>
+
+            <h3>Docker のインストール・起動</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "docker: command not found"</div>
+                <p>Docker がインストールされていないか、パスが設定されていません。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <ul class="checklist">
+                    <li>Docker Desktop のインストール確認（Mac/Windows）</li>
+                    <li>Linux の場合：apt install docker.io（Debian/Ubuntu）</li>
+                    <li>インストール後、ターミナルを再起動</li>
+                    <li>docker --version で確認</li>
+                </ul>
+                <div class="code-block">
+<span class="code-label">Docker バージョン確認</span>
+docker --version
+# 出力例：Docker version 20.10.12, build e91ed57</div>
+            </div>
+
+            <h3>Dockerfile ビルド時のエラー</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "docker build: error checking context: 'no such file or directory'"</div>
+                <p>Dockerfile が見つからないか、ビルドコンテキストが不正です。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <ul class="checklist">
+                    <li>カレントディレクトリを確認：pwd</li>
+                    <li>Dockerfile が存在するか確認：ls -la Dockerfile</li>
+                    <li>正しいパスから実行：docker build -t firebase-budget:latest .</li>
+                </ul>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ "npm: not found" または "npm ERR! code ENOENT"</div>
+                <p>Node.js モジュールのインストール時に失敗しています。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">Dockerfile の確認</span>
+FROM node:18-alpine  # ← Alpine なら npm は含まれる
+# または
+FROM node:18         # ← フルサイズなら確実に npm が含まれる</div>
+                <ul class="checklist">
+                    <li>package.json の確認：ファイルが存在するか、JSON 形式は正しいか</li>
+                    <li>COPY package*.json ./ が正しく指定されているか</li>
+                    <li>必要に応じて npm cache clean --force を実行</li>
+                </ul>
+            </div>
+
+            <h3>docker-compose 起動時のエラー</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "docker-compose: command not found"</div>
+                <p>Docker Compose がインストールされていません。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">Docker Compose インストール</span>
+# macOS (Homebrew)
+brew install docker-compose
+
+# Linux
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.12.0/docker-compose-$(uname -s)-$(uname -m)" \
+  -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# バージョン確認
+docker-compose --version</div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ "ERROR: .env file not found"</div>
+                <p>.env ファイルが見つかりません。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">.env ファイル作成</span>
+cp .env.example .env
+
+# エディタで開いて、値を入力
+nano .env
+# または
+vim .env</div>
+                <div class="note">
+                    <div class="note-title">重要：本番環境での .env</div>
+                    <div class="note-content">
+                        本番環境では .env ファイルを使わず、環境変数を直接設定してください：
+                        <div class="code-block" style="margin-top: 10px;">
+export FREEE_API_TOKEN="actual_token_here"
+export FIREBASE_KEY_PATH="/etc/secrets/firebase-key.json"
+docker-compose up</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ "port 5000 is already allocated"</div>
+                <p>別のプロセスがポート 5000 を使用しています。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">ポート確認と解放</span>
+# macOS / Linux
+lsof -i :5000
+# プロセスID を確認したら終了
+kill -9 &lt;PID&gt;
+
+# または docker-compose で別ポートを使用
+# docker-compose.yml の ports セクションを変更
+# ports:
+#   - "5001:5000"  ← ホストポート 5001 に変更</div>
+            </div>
+        </div>
+
+        <!-- 実行フェーズ -->
+        <div class="section">
+            <h2>🏃 実行・テスト段階でのトラブル（Day 3-4）</h2>
+
+            <h3>Firebase 接続エラー</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "GOOGLE_APPLICATION_CREDENTIALS points to invalid service account"</div>
+                <p>Firebase サービスアカウントキーが見つからないか、パスが不正です。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <ul class="checklist">
+                    <li>ファイル存在確認：ls -la /path/to/firebase-key.json</li>
+                    <li>docker-compose.yml の volumes セクションを確認</li>
+                    <li>パーミッション確認：chmod 400 firebase-key.json</li>
+                    <li>JSON 形式が正しいか確認：cat firebase-key.json | jq .</li>
+                </ul>
+                <div class="code-block">
+<span class="code-label">volumes セクションの例</span>
+volumes:
+  - /path/to/firebase-key.json:/app/secrets/firebase-key.json:ro
+  # ↑ ローカルパスから コンテナ内パスへ（読み取り専用）</div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ "Error: 3 INVALID_ARGUMENT: could not parse service account"</div>
+                <p>Firebase キーファイルが破損しているか、形式が不正です。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">キーファイル検証</span>
+# JSON 形式チェック
+node -e "console.log(JSON.stringify(require('./firebase-key.json'), null, 2))"
+
+# または
+cat firebase-key.json | jq .
+
+# エラーが出た場合、Google Cloud Console から再度ダウンロード</div>
+            </div>
+
+            <h3>Freee API 接続エラー</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "401 Unauthorized" または "Invalid API token"</div>
+                <p>Freee API トークンが不正です。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <ul class="checklist">
+                    <li>.env ファイルの FREEE_API_TOKEN が正しいか確認</li>
+                    <li>トークンにスペースが含まれていないか確認</li>
+                    <li>トークンの有効期限が切れていないか確認（Freee の管理画面）</li>
+                    <li>必要な権限（スコープ）が設定されているか確認</li>
+                </ul>
+                <div class="code-block">
+<span class="code-label">トークン確認</span>
+# コンテナ内で環境変数を確認
+docker-compose exec firebase-budget-app env | grep FREEE_API_TOKEN</div>
+            </div>
+
+            <h3>コンテナの起動失敗</h3>
+            <div class="problem-block">
+                <div class="problem-title">❌ "docker-compose up" でコンテナが起動しない</div>
+                <p>アプリケーション内部でエラーが発生しています。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">ログ確認</span>
+# コンテナのログを表示
+docker-compose logs -f firebase-budget-app
+
+# 特定のエラーを検索
+docker-compose logs | grep ERROR</div>
+                <ul class="checklist">
+                    <li>エラーメッセージをよく読んで原因を特定</li>
+                    <li>必要に応じて環境変数を修正</li>
+                    <li>docker-compose up で再度試行</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- パフォーマンス最適化 -->
+        <div class="section">
+            <h2>⚡ パフォーマンス問題と最適化</h2>
+
+            <div class="performance-section">
+                <h3>問題：コンテナのメモリ使用量が高い</h3>
+                <div class="tip">
+                    <div class="tip-title">💡 原因の特定方法</div>
+                    <div class="tip-content">
+                        <div class="code-block">
+<span class="code-label">メモリ使用量確認</span>
+docker stats firebase-budget-app</div>
+                    </div>
+                </div>
+
+                <h4>解決策</h4>
+                <ul class="checklist">
+                    <li>ヒープサイズの制限：NODE_OPTIONS="--max-old-space-size=512" を環境変数に設定</li>
+                    <li>ガベージコレクション設定の確認</li>
+                    <li>不要な依存パッケージの削除</li>
+                    <li>docker-compose.yml のメモリ制限を確認（deploy.resources.limits.memory）</li>
+                </ul>
+
+                <div class="code-block">
+<span class="code-label">docker-compose.yml でのメモリ制限設定</span>
+services:
+  firebase-budget-app:
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=512"
+    deploy:
+      resources:
+        limits:
+          memory: 1G</div>
+            </div>
+
+            <div class="performance-section">
+                <h3>問題：API レスポンス時間が遅い</h3>
+
+                <h4>Freee API のレート制限</h4>
+                <ul class="checklist">
+                    <li>Freee API は分単位でレート制限があります（通常 1000 リクエスト/分）</li>
+                    <li>ループ処理でレート制限に達する場合は、遅延を追加</li>
+                </ul>
+
+                <div class="code-block">
+<span class="code-label">レート制限対策（コード例）</span>
+// API 呼び出し間に遅延を追加
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+for (const company of companies) {
+  await fetchFreeeData(company);
+  await delay(100);  // 100ms の遅延
+}</div>
+
+                <h4>クエリの最適化</h4>
+                <ul class="checklist">
+                    <li>Firestore クエリに インデックス を作成</li>
+                    <li>必要なフィールドのみを取得（projection）</li>
+                    <li>キャッシング機構を導入（Redis など、将来的に）</li>
+                </ul>
+            </div>
+
+            <div class="performance-section">
+                <h3>問題：CPU 使用率が高い</h3>
+
+                <h4>デバッグ方法</h4>
+                <div class="code-block">
+<span class="code-label">CPU プロファイリング</span>
+# Node.js のビルトインプロファイラを使用
+node --prof app.js
+node --prof-process isolate-*.log > profile.txt</div>
+
+                <h4>対策</h4>
+                <ul class="checklist">
+                    <li>無限ループやスレッド化されていない処理がないか確認</li>
+                    <li>定期実行タスク（cron）の実行頻度を確認</li>
+                    <li>複雑な計算処理をワーカースレッドに移す</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 本番環境 -->
+        <div class="section">
+            <h2>🏢 本番環境での注意点と対応</h2>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ "container exits immediately"</div>
+                <p>本番環境でコンテナが起動直後に終了します。</p>
+            </div>
+            <div class="solution-block">
+                <div class="solution-title">✅ 解決方法</div>
+                <div class="code-block">
+<span class="code-label">詳細ログ確認</span>
+docker-compose logs --tail=50 firebase-budget-app
+# または
+docker logs &lt;container_id&gt;</div>
+                <ul class="checklist">
+                    <li>環境変数の設定を確認</li>
+                    <li>Firebase キーファイルのパーミッション確認（chmod 400）</li>
+                    <li>ディスク容量確認：df -h</li>
+                    <li>メモリ不足がないか確認：free -h</li>
+                </ul>
+            </div>
+
+            <h3>自動再起動の確認</h3>
+            <div class="code-block">
+<span class="code-label">再起動ポリシー設定確認</span>
+# docker-compose.yml が restart: always に設定されているか確認
+grep "restart:" docker-compose.prod.yml</div>
+
+            <h3>ヘルスチェック監視</h3>
+            <div class="code-block">
+<span class="code-label">ヘルスチェックステータス確認</span>
+docker inspect --format='{{json .State.Health}}' &lt;container_id&gt; | jq .
+
+# 結果例：
+# {
+#   "Status": "healthy",
+#   "FailingStreak": 0,
+#   "Log": [...]
+# }</div>
+
+            <ul class="checklist">
+                <li>Status が "healthy" であることを確認</li>
+                <li>"unhealthy" の場合、FailingStreak 回数を確認</li>
+                <li>ログから失敗理由を特定</li>
+            </ul>
+        </div>
+
+        <!-- FAQ -->
+        <div class="section">
+            <h2>❓ よくある質問（FAQ）</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. Docker イメージのサイズが大きい場合、どうすればいい？</div>
+                <div class="faq-answer">
+                    A. マルチステージビルド、Alpine ベースイメージ、不要なファイルの除外（.dockerignore）で削減できます。<br>
+                    <strong>目標：</strong> 300MB 以下に抑える
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 開発環境と本番環境で設定ファイルを分ける必要がある？</div>
+                <div class="faq-answer">
+                    A. はい、必須です。開発環境では hot-reload、ログ出力などが必要ですが、本番環境では異なります。<br>
+                    <strong>推奨：</strong> docker-compose.yml と docker-compose.prod.yml を分離
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. コンテナ内のログをどう管理する？</div>
+                <div class="faq-answer">
+                    A. コンテナは stdout/stderr へログを出力し、Docker が管理します。<br>
+                    <strong>確認方法：</strong> docker logs &lt;container_id&gt;<br>
+                    <strong>ローテーション設定：</strong> logging.options で max-size, max-file を指定
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. Docker イメージを更新したい場合、どうする？</div>
+                <div class="faq-answer">
+                    A. 新しいイメージをビルド、タグ付けして本番環境でプル・再起動します。<br>
+                    <div class="code-block" style="margin-top: 10px;">
+# ローカルビルド
+docker build -t firebase-budget:v1.0.1 .
+
+# 本番環境で更新
+docker-compose -f docker-compose.prod.yml pull
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. コンテナ内で対話的にコマンドを実行したい場合？</div>
+                <div class="faq-answer">
+                    A. docker-compose exec で実行できます。<br>
+                    <div class="code-block" style="margin-top: 10px;">
+# シェル開始
+docker-compose exec firebase-budget-app sh
+
+# 特定コマンド実行
+docker-compose exec firebase-budget-app npm list</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 本番環境でのバックアップはどうする？</div>
+                <div class="faq-answer">
+                    A. Firebase は自動バックアップを提供します。定期的にエクスポート操作を手動実行するか、<br>
+                    Cloud Firestore のバックアップ&リストア機能を使用してください。<br>
+                    <strong>参考：</strong> Google Cloud ドキュメント「Cloud Firestore のバックアップと復元」
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. Docker と Kubernetes の関係は？</div>
+                <div class="faq-answer">
+                    A. Docker はコンテナ化技術、Kubernetes は複数コンテナをまとめて管理するオーケストレーション・ツールです。<br>
+                    <strong>小〜中規模：</strong> docker-compose で十分<br>
+                    <strong>大規模・マイクロサービス：</strong> Kubernetes の検討
+                </div>
+            </div>
+        </div>
+
+        <!-- サポート情報 -->
+        <div class="section">
+            <h2>📞 サポート・追加リソース</h2>
+
+            <h3>公式ドキュメント</h3>
+            <ul class="checklist">
+                <li><strong>Docker 公式：</strong> https://docs.docker.com/</li>
+                <li><strong>Docker Compose：</strong> https://docs.docker.com/compose/</li>
+                <li><strong>Firebase:</strong> https://firebase.google.com/docs</li>
+                <li><strong>Freee API：</strong> https://developer.freee.co.jp/</li>
+            </ul>
+
+            <h3>有用なコマンド一覧</h3>
+            <table>
+                <tr>
+                    <th>用途</th>
+                    <th>コマンド</th>
+                </tr>
+                <tr>
+                    <td>イメージ一覧表示</td>
+                    <td><code>docker images</code></td>
+                </tr>
+                <tr>
+                    <td>実行中のコンテナ確認</td>
+                    <td><code>docker ps</code></td>
+                </tr>
+                <tr>
+                    <td>すべてのコンテナ確認</td>
+                    <td><code>docker ps -a</code></td>
+                </tr>
+                <tr>
+                    <td>コンテナのリソース使用状況</td>
+                    <td><code>docker stats</code></td>
+                </tr>
+                <tr>
+                    <td>イメージの詳細確認</td>
+                    <td><code>docker inspect &lt;image_id&gt;</code></td>
+                </tr>
+                <tr>
+                    <td>イメージサイズ確認</td>
+                    <td><code>docker images --format "table {{.Repository}}\t{{.Size}}"</code></td>
+                </tr>
+                <tr>
+                    <td>不要なイメージ・コンテナ削除</td>
+                    <td><code>docker system prune</code></td>
+                </tr>
+            </table>
+
+            <h3>問題報告テンプレート</h3>
+            <p>Slack や GitHub Issues で報告する際は、以下情報を含めてください：</p>
+            <ul class="checklist">
+                <li>エラーメッセージ全文</li>
+                <li>docker --version, docker-compose --version の出力</li>
+                <li>docker-compose logs の最後 50 行</li>
+                <li>docker stats の出力（パフォーマンス問題の場合）</li>
+                <li>実行環境（macOS / Linux / Windows）</li>
+                <li>再現手順（再現が可能な場合）</li>
+            </ul>
+        </div>
+
+        <!-- 次のステップ -->
+        <div class="section">
+            <h2>📚 次のステップ</h2>
+
+            <div class="nav-buttons">
+                <a href="docker-setup-steps.html" class="nav-button nav-button-secondary">📅 セットアップ詳細ガイド</a>
+                <a href="docker-dockerfile.html" class="nav-button nav-button-secondary">🐳 Dockerfile & docker-compose</a>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-button nav-button-secondary">📋 ガイドトップに戻る</a>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0f7ff; color: #666;">
+            <p>このガイドは Samurai Terakoya の教材です。</p>
+            <p style="font-size: 0.9em;">最終更新: 2026年4月 | Version: 1.0</p>
+        </div>
+    </div>
+</body>
+</html>

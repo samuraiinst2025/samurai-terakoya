@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker版 - セットアップ詳細ガイド (5日間の作業フロー)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .breadcrumb a {
+            color: #0ea5e9;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .day-block {
+            background: white;
+            border-left: 6px solid #06b6d4;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .day-block:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+        }
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f9ff;
+        }
+        .day-label {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+        }
+        .day-title {
+            flex-grow: 1;
+        }
+        .day-title h2 {
+            font-size: 1.5em;
+            color: #0ea5e9;
+            margin-bottom: 5px;
+        }
+        .day-title p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        .duration {
+            background: #e0f7ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #0369a1;
+            font-weight: 500;
+        }
+        .tasks {
+            margin-top: 20px;
+        }
+        .task {
+            background: #f8fbfd;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #06b6d4;
+            display: flex;
+            gap: 12px;
+        }
+        .task-icon {
+            width: 24px;
+            height: 24px;
+            background: #06b6d4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 0.8em;
+        }
+        .task-content {
+            flex-grow: 1;
+        }
+        .task-title {
+            font-weight: 600;
+            color: #0ea5e9;
+            margin-bottom: 5px;
+        }
+        .task-description {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .checkpoint {
+            background: #dcfce7;
+            border-left: 3px solid #16a34a;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+        .checkpoint-title {
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .checkpoint-content {
+            color: #555;
+            font-size: 0.95em;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            font-size: 1.8em;
+            color: #0ea5e9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0f7ff;
+        }
+        .section h3 {
+            font-size: 1.3em;
+            color: #0369a1;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .checklist {
+            list-style: none;
+        }
+        .checklist li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f8fbfd;
+            border-radius: 6px;
+            border-left: 3px solid #06b6d4;
+            padding-left: 15px;
+        }
+        .checklist li:before {
+            content: "☐ ";
+            margin-right: 8px;
+            color: #06b6d4;
+            font-weight: bold;
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .note-title {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .note-content {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+        .success {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .success-title {
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .success-content {
+            color: #15803d;
+            font-size: 0.95em;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .nav-button-secondary {
+            background: white;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
+        }
+        .nav-button-secondary:hover {
+            background: #e0f7ff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th {
+            background: #e0f7ff;
+            color: #0369a1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0f7ff;
+        }
+        table tr:hover {
+            background: #f8fbfd;
+        }
+        .effort-estimate {
+            background: #e0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0ea5e9;
+        }
+        .effort-estimate h3 {
+            color: #0369a1;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐳 Docker版 セットアップ詳細ガイド</h1>
+            <p>Day 1 〜 Day 5: 段階的な実装フロー</p>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">📋 ガイドトップ</a>
+            > <a href="docker-overview.html">Docker版 全体像</a>
+            > <span style="color: #0ea5e9;">セットアップ詳細</span>
+        </div>
+
+        <div class="effort-estimate">
+            <h3>📊 作業見積もり</h3>
+            <table>
+                <tr>
+                    <th>日程</th>
+                    <th>フェーズ</th>
+                    <th>工数</th>
+                    <th>主な作業</th>
+                </tr>
+                <tr>
+                    <td>Day 1-2</td>
+                    <td>Docker化</td>
+                    <td>12-16時間</td>
+                    <td>Dockerfile & docker-compose 作成</td>
+                </tr>
+                <tr>
+                    <td>Day 3-4</td>
+                    <td>設定・テスト</td>
+                    <td>12-16時間</td>
+                    <td>本番環境構築、統合テスト</td>
+                </tr>
+                <tr>
+                    <td>Day 5</td>
+                    <td>ドキュメント</td>
+                    <td>8時間</td>
+                    <td>セットアップガイド、FAQ作成</td>
+                </tr>
+                <tr style="background: #e0f7ff; font-weight: bold;">
+                    <td colspan="2">合計工数</td>
+                    <td>32-40時間</td>
+                    <td>5営業日（フルタイム）</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="timeline">
+            <!-- Day 1 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day<br>1</div>
+                    <div class="day-title">
+                        <h2>Dockerfile 作成 & ローカルテスト</h2>
+                        <p>Firebase プロジェクト構造の確認と Docker 環境の基礎構築</p>
+                    </div>
+                    <div class="duration">8-10時間</div>
+                </div>
+
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">既存 Firebase プロジェクトの構造確認</div>
+                            <div class="task-description">
+                                • package.json, firebase.json, .env ファイルの確認<br>
+                                • 依存関係（npm packages）の整理<br>
+                                • 環境変数（GOOGLE_APPLICATION_CREDENTIALS等）の抽出
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">Dockerfile 作成</div>
+                            <div class="task-description">
+                                • Node.js ベースイメージの選択（node:18-alpine 推奨）<br>
+                                • 依存パッケージのインストール<br>
+                                • ビルドプロセスの設定<br>
+                                • エントリーポイント（Cloud Functions エミュレータまたは本番実行）の定義
+                            </div>
+                            <div class="code-block">FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+CMD ["npm", "run", "dev"]</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">.dockerignore ファイル作成</div>
+                            <div class="task-description">
+                                • node_modules<br>
+                                • npm-debug.log<br>
+                                • .env（本番環境では Secret Manager を使用）<br>
+                                • .git, .gitignore
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">ローカル Docker ビルド & テスト</div>
+                            <div class="task-description">
+                                • docker build -t firebase-budget:latest .<br>
+                                • docker run で動作確認<br>
+                                • ログ出力の確認<br>
+                                • 初期エラーの修正
+                            </div>
+                            <div class="code-block">docker build -t firebase-budget:latest .
+docker run -e GOOGLE_APPLICATION_CREDENTIALS=/app/key.json \
+  -v /path/to/key.json:/app/key.json \
+  firebase-budget:latest</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <div class="checkpoint-title">✅ Day 1 チェックポイント</div>
+                        <div class="checkpoint-content">
+                            • Dockerfile が正常にビルドできている<br>
+                            • ローカルで docker run がエラーなく実行できている<br>
+                            • コンテナ内から Firebase への接続テストが成功している
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day<br>2</div>
+                    <div class="day-title">
+                        <h2>docker-compose 設定 & 本番構成</h2>
+                        <p>マルチコンテナ構成と環境変数管理</p>
+                    </div>
+                    <div class="duration">6-8時間</div>
+                </div>
+
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">docker-compose.yml 作成（開発環境）</div>
+                            <div class="task-description">
+                                • version: '3.8' 以上<br>
+                                • services セクション（メインアプリ定義）<br>
+                                • environment / env_file の設定<br>
+                                • volumes（永続化）の設定（オプション）
+                            </div>
+                            <div class="code-block">version: '3.8'
+services:
+  firebase-app:
+    build: .
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/key.json
+      NODE_ENV: development
+    volumes:
+      - /path/to/key.json:/app/key.json:ro
+    ports:
+      - "5000:5000"
+    restart: unless-stopped</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">本番用 docker-compose.yml 作成</div>
+                            <div class="task-description">
+                                • NODE_ENV=production 設定<br>
+                                • リソース制限（memory, cpus）<br>
+                                • ローリングアップデート設定<br>
+                                • ヘルスチェック（HEALTHCHECK）設定
+                            </div>
+                            <div class="code-block">services:
+  firebase-app:
+    build: .
+    environment:
+      NODE_ENV: production
+    resources:
+      limits:
+        memory: 1G
+        cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">.env.example 作成</div>
+                            <div class="task-description">
+                                • 本番環境で必要なすべての環境変数をリスト化<br>
+                                • デフォルト値や説明をコメントで記載<br>
+                                • ダミー値は記載しない（セキュリティのため）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">ローカル本番環境シミュレーション</div>
+                            <div class="task-description">
+                                • docker-compose -f docker-compose.prod.yml up<br>
+                                • 負荷テスト（Apache Bench, wrk）<br>
+                                • メモリ使用量、CPU 使用率の確認<br>
+                                • ログ出力の確認
+                            </div>
+                            <div class="code-block">docker-compose -f docker-compose.prod.yml up -d
+sleep 5
+curl http://localhost:5000/health</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <div class="checkpoint-title">✅ Day 2 チェックポイント</div>
+                        <div class="checkpoint-content">
+                            • docker-compose up で本番環境が起動する<br>
+                            • 環境変数が正しく設定されている<br>
+                            • ヘルスチェック機能が動作している<br>
+                            • リソース制限が適切に設定されている
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day<br>3</div>
+                    <div class="day-title">
+                        <h2>本番デプロイメント & 設定</h2>
+                        <p>顧客環境への展開とセキュリティ設定</p>
+                    </div>
+                    <div class="duration">8-10時間</div>
+                </div>
+
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">本番サーバーの環境準備</div>
+                            <div class="task-description">
+                                • Docker & Docker Compose のインストール確認<br>
+                                • Linux ファイアウォール設定（ポート 5000 の制限）<br>
+                                • SSH キーベースの認証設定<br>
+                                • ディスク容量確認（ログ、キャッシュ用に 20GB 以上推奨）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">シークレット・認証情報の配置</div>
+                            <div class="task-description">
+                                • Firebase サービスアカウントキー（JSON）を安全に配置<br>
+                                • Freee API トークンを環境変数として登録<br>
+                                • ファイルパーミッション設定（600 または 400）<br>
+                                • .env ファイルのバージョン管理除外設定
+                            </div>
+                            <div class="code-block"># 本番サーバーで
+mkdir -p /opt/firebase-budget/secrets
+chmod 700 /opt/firebase-budget/secrets
+cp firebase-key.json /opt/firebase-budget/secrets/
+chmod 400 /opt/firebase-budget/secrets/firebase-key.json</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">Docker イメージの本番サーバーへの展開</div>
+                            <div class="task-description">
+                                • GitHub / Docker Hub からのプル、またはローカルビルド<br>
+                                • イメージタグ付け（firebase-budget:v1.0.0 など）<br>
+                                • デジタル署名確認（セキュリティベストプラクティス）
+                            </div>
+                            <div class="code-block">docker pull your-registry/firebase-budget:v1.0.0
+# または
+docker build -t firebase-budget:v1.0.0 .</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">docker-compose up による本番実行</div>
+                            <div class="task-description">
+                                • docker-compose -f docker-compose.prod.yml up -d<br>
+                                • ログの確認（docker-compose logs -f）<br>
+                                • ヘルスチェック確認<br>
+                                • 初期データの同期テスト
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <div class="checkpoint-title">✅ Day 3 チェックポイント</div>
+                        <div class="checkpoint-content">
+                            • コンテナが本番サーバーで起動している<br>
+                            • Freee API との接続が確立されている<br>
+                            • Firebase からのデータ取得が正常に動作している<br>
+                            • ログが適切に出力されている
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day<br>4</div>
+                    <div class="day-title">
+                        <h2>統合テスト & パフォーマンス検証</h2>
+                        <p>本番環境での動作確認と最適化</p>
+                    </div>
+                    <div class="duration">8-10時間</div>
+                </div>
+
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">エンドツーエンドテスト</div>
+                            <div class="task-description">
+                                • Freee API からのデータ取得テスト<br>
+                                • Firebase Firestore への書き込みテスト<br>
+                                • データの整合性確認<br>
+                                • エラーハンドリングの動作確認
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">パフォーマンステスト</div>
+                            <div class="task-description">
+                                • 応答時間測定（API エンドポイント）<br>
+                                • スループット測定（1秒あたりのリクエスト数）<br>
+                                • メモリ使用量のプロファイリング<br>
+                                • CPU 使用率の測定<br>
+                                • ボトルネック特定
+                            </div>
+                            <div class="code-block"># 負荷テスト例
+ab -n 1000 -c 10 http://localhost:5000/api/
+# または
+wrk -t4 -c100 -d30s http://localhost:5000/api/</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">ロギング & 監視の設定</div>
+                            <div class="task-description">
+                                • stdout / stderr へのログ出力確認<br>
+                                • docker-compose logs での取得確認<br>
+                                • ログレベルの設定（INFO, DEBUG, ERROR）<br>
+                                • ログローテーション設定（docker logging driver）
+                            </div>
+                            <div class="code-block">docker-compose logs -f --tail=100 firebase-app
+# または特定エラーのみ
+docker-compose logs firebase-app | grep ERROR</div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">障害復旧テスト</div>
+                            <div class="task-description">
+                                • コンテナクラッシュ時の再起動動作<br>
+                                • ネットワーク遮断時の動作<br>
+                                • Freee API タイムアウト時の処理<br>
+                                • データ不整合時の復旧プロセス
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <div class="checkpoint-title">✅ Day 4 チェックポイント</div>
+                        <div class="checkpoint-content">
+                            • すべてのエンドツーエンドテストが成功している<br>
+                            • パフォーマンスが要件を満たしている（初期目標）<br>
+                            • 自動再起動機能が動作している<br>
+                            • ログ出力が正常に機能している
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day<br>5</div>
+                    <div class="day-title">
+                        <h2>ドキュメント & 運用ガイド作成</h2>
+                        <p>保守性と継続的運用の基盤構築</p>
+                    </div>
+                    <div class="duration">8時間</div>
+                </div>
+
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">デプロイメントガイド作成</div>
+                            <div class="task-description">
+                                • 前提条件（Docker, Docker Compose のバージョン）<br>
+                                • ステップバイステップのセットアップ手順<br>
+                                • スクリーンショットと実行例<br>
+                                • よくある間違いと対処法
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">運用ガイド作成</div>
+                            <div class="task-description">
+                                • 日次・週次・月次のチェック項目<br>
+                                • ログの確認方法<br>
+                                • 問題発生時のトラブルシューティング<br>
+                                • バージョンアップ手順<br>
+                                • バックアップ・復旧手順
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">API リファレンス作成</div>
+                            <div class="task-description">
+                                • 利用可能なエンドポイント一覧<br>
+                                • リクエスト / レスポンス フォーマット<br>
+                                • エラーレスポンス パターン<br>
+                                • 認証方法<br>
+                                • レート制限（あれば）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">FAQ & トラブルシューティング作成</div>
+                            <div class="task-description">
+                                • 初期セットアップ時のよくあるエラー<br>
+                                • Freee API 連携に関する Q&A<br>
+                                • パフォーマンス最適化のヒント<br>
+                                • サポート連絡先と対応方針
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-icon">5</div>
+                        <div class="task-content">
+                            <div class="task-title">README 更新</div>
+                            <div class="task-description">
+                                • プロジェクト概要<br>
+                                • Docker を使った利点<br>
+                                • クイックスタートガイド<br>
+                                • ファイル構造の説明<br>
+                                • 追加リソースへのリンク
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <div class="checkpoint-title">✅ Day 5 チェックポイント</div>
+                        <div class="checkpoint-content">
+                            • デプロイメントガイドが完成している<br>
+                            • 運用ガイドが実務的な内容で充実している<br>
+                            • FAQ に Day 1-4 で遭遇したすべての問題が網羅されている<br>
+                            • 新しいチームメンバーがドキュメントだけで運用できる準備ができている
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 全体の注意点 -->
+        <div class="section">
+            <h2>🎯 全工程を通じた重要ポイント</h2>
+
+            <h3>並行作業の可能性</h3>
+            <p>開発チームが複数いる場合、以下の作業を並行化できます：</p>
+            <ul class="checklist">
+                <li>Day 1: Dockerfile 作成と同時に本番サーバー準備（別チーム）</li>
+                <li>Day 2-3: docker-compose 設定と運用ドキュメント作成（別チーム）</li>
+                <li>Day 4: テストと同時に FAQ 作成</li>
+            </ul>
+
+            <h3>リスク管理</h3>
+            <div class="note">
+                <div class="note-title">⚠️ 本番環境への移行リスク</div>
+                <div class="note-content">
+                    Day 4 の統合テストで問題が見つかった場合、スケジュール調整が必要になります。<br>
+                    リスク軽減：
+                    • Day 2 の時点で本番環境構築の準備を進める<br>
+                    • Day 3 で本番への「小規模」移行テストを先行実施
+                </div>
+            </div>
+
+            <h3>セキュリティチェックリスト</h3>
+            <ul class="checklist">
+                <li>Firebase サービスアカウントキーが .gitignore に含まれているか</li>
+                <li>.env ファイルがバージョン管理外か</li>
+                <li>本番サーバーのファイルパーミッション（600 以下）が正しいか</li>
+                <li>ネットワークファイアウォール設定が適切か</li>
+                <li>Docker イメージに機密情報が埋め込まれていないか</li>
+            </ul>
+        </div>
+
+        <!-- ベストプラクティス -->
+        <div class="section">
+            <h2>💡 Docker セットアップのベストプラクティス</h2>
+
+            <h3>イメージサイズの最適化</h3>
+            <p>
+                Alpine Linux ベースイメージ（node:18-alpine）を使用することで、イメージサイズを 200MB 程度に保つことができます。<br>
+                これにより、デプロイ時間が短くなり、ディスク容量の効率化も実現できます。
+            </p>
+
+            <h3>マルチステージビルド</h3>
+            <p>
+                本番環境では不要なツール（テストフレームワークなど）を除外するため、マルチステージビルドの採用を検討してください。
+            </p>
+
+            <h3>ヘルスチェックの重要性</h3>
+            <p>
+                HEALTHCHECK を設定することで、Docker デーモンやオーケストレーション・ツール（Kubernetes など）が自動的に不正なコンテナを検出・再起動できます。
+            </p>
+
+            <h3>ログ戦略</h3>
+            <p>
+                コンテナ化されたアプリケーションは stdout/stderr へログを出力すべきです。<br>
+                これにより、docker logs や Docker Compose のログ機能で一元管理できます。
+            </p>
+        </div>
+
+        <!-- 次のステップ -->
+        <div class="section">
+            <h2>📚 次のステップ</h2>
+
+            <p>セットアップ詳細ガイドの完了後、以下の資料をご参照ください：</p>
+
+            <h3>詳細実装ガイド</h3>
+            <div class="nav-buttons">
+                <a href="docker-dockerfile.html" class="nav-button">🐳 Dockerfile & docker-compose 実装ガイド</a>
+                <a href="docker-troubleshooting.html" class="nav-button nav-button-secondary">🔧 トラブルシューティング</a>
+            </div>
+
+            <h3>その他のリソース</h3>
+            <div class="nav-buttons">
+                <a href="gcp-overview.html" class="nav-button nav-button-secondary">☁️ GCP版 の検討</a>
+                <a href="index.html" class="nav-button nav-button-secondary">📋 ガイドトップに戻る</a>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0f7ff; color: #666;">
+            <p>このガイドは Samurai Terakoya の教材です。</p>
+            <p style="font-size: 0.9em;">最終更新: 2026年4月 | Version: 1.0</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker版 - Dockerfile & docker-compose 実装ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .breadcrumb a {
+            color: #0ea5e9;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            font-size: 1.8em;
+            color: #0ea5e9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0f7ff;
+        }
+        .section h3 {
+            font-size: 1.3em;
+            color: #0369a1;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .section h4 {
+            font-size: 1.1em;
+            color: #0ea5e9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+            line-height: 1.4;
+            border-left: 4px solid #0ea5e9;
+        }
+        .code-label {
+            color: #06b6d4;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 0.9em;
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .note-title {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .note-content {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+        .tip {
+            background: #dbeafe;
+            border-left: 4px solid #0ea5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .tip-title {
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .tip-content {
+            color: #003d82;
+            font-size: 0.95em;
+        }
+        .file-structure {
+            background: #f8fbfd;
+            border-left: 4px solid #06b6d4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-box {
+            background: #f8fbfd;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #0ea5e9;
+        }
+        .comparison-box h4 {
+            color: #0369a1;
+            margin-bottom: 10px;
+        }
+        .comparison-box code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th {
+            background: #e0f7ff;
+            color: #0369a1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0f7ff;
+        }
+        table tr:hover {
+            background: #f8fbfd;
+        }
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .nav-button-secondary {
+            background: white;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
+        }
+        .nav-button-secondary:hover {
+            background: #e0f7ff;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .variable-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        .variable-table th {
+            background: #e0f7ff;
+            color: #0369a1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        .variable-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0f7ff;
+        }
+        .variable-name {
+            font-family: 'Courier New', monospace;
+            color: #0369a1;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐳 Dockerfile & docker-compose 実装ガイド</h1>
+            <p>段階的な実装例から本番環境設定まで</p>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">📋 ガイドトップ</a>
+            > <a href="docker-overview.html">Docker版 全体像</a>
+            > <span style="color: #0ea5e9;">実装ガイド</span>
+        </div>
+
+        <!-- Dockerfile セクション -->
+        <div class="section">
+            <h2>📦 Dockerfile の作成</h2>
+
+            <h3>基本構造と概念</h3>
+            <p>
+                Dockerfile は Docker イメージを構築するための指示書です。<br>
+                Firebase アプリケーション向けの Dockerfile では、以下を定義します：
+            </p>
+            <ul>
+                <li><strong>ベースイメージ</strong>：Node.js が含まれた環境</li>
+                <li><strong>依存パッケージ</strong>：npm install で必要なライブラリをインストール</li>
+                <li><strong>ソースコード</strong>：アプリケーションファイルをコンテナにコピー</li>
+                <li><strong>エントリーポイント</strong>：コンテナ起動時の実行コマンド</li>
+            </ul>
+
+            <h3>最小限の Dockerfile 例</h3>
+            <div class="code-block">
+                <span class="code-label">Dockerfile (開発環境向け)</span>
+FROM node:18-alpine
+
+WORKDIR /app
+
+# 依存関係ファイルをコピー
+COPY package*.json ./
+
+# パッケージをインストール
+RUN npm install
+
+# アプリケーションコードをコピー
+COPY . .
+
+# ポート公開
+EXPOSE 5000
+
+# アプリケーション起動
+CMD ["npm", "run", "dev"]</div>
+
+            <div class="tip">
+                <div class="tip-title">💡 node:18-alpine を選ぶ理由</div>
+                <div class="tip-content">
+                    Alpine Linux ベースイメージは非常に軽量（約 50MB）で、デプロイが高速です。<br>
+                    フルサイズの node:18 （約 900MB）と比べて、10分の1以下のサイズで済みます。
+                </div>
+            </div>
+
+            <h3>本番環境向け Dockerfile（マルチステージビルド）</h3>
+            <p>
+                マルチステージビルドを使うことで、開発時のツール（テストフレームワークなど）を除外し、<br>
+                本番イメージのサイズを最小化できます。
+            </p>
+            <div class="code-block">
+                <span class="code-label">Dockerfile (本番環境向け - マルチステージ)</span>
+# ビルドステージ
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+# 本番ステージ
+FROM node:18-alpine
+
+WORKDIR /app
+
+# ビルドステージから本番パッケージのみコピー
+COPY --from=builder /app/node_modules /app/node_modules
+
+# ソースコード
+COPY . .
+
+# セキュリティ：非rootユーザーで実行
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+USER nodejs
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:5000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+
+CMD ["node", "dist/index.js"]</div>
+
+            <div class="note">
+                <div class="note-title">⚠️ セキュリティ上の考慮</div>
+                <div class="note-content">
+                    本番環境では、root ユーザーではなく非 root ユーザーでアプリケーションを実行すべきです。<br>
+                    これにより、コンテナが侵害された場合のリスクを軽減できます。
+                </div>
+            </div>
+
+            <h3>.dockerignore ファイル</h3>
+            <p>
+                Docker ビルド時に不要なファイルをコピーしないよう指定します：
+            </p>
+            <div class="code-block">
+                <span class="code-label">.dockerignore</span>
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+.DS_Store
+coverage
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.nyc_output
+README.md
+LICENSE
+.dockerignore
+Dockerfile
+docker-compose*.yml
+.github
+.gitlab-ci.yml
+.circleci</div>
+
+            <h3>Dockerfile のベストプラクティス</h3>
+            <table class="variable-table">
+                <tr>
+                    <th>ベストプラクティス</th>
+                    <th>説明</th>
+                </tr>
+                <tr>
+                    <td>最小限のレイヤー数</td>
+                    <td>RUN コマンドを && でつなぎ、レイヤー数を減らす（イメージサイズ削減）</td>
+                </tr>
+                <tr>
+                    <td>キャッシュの活用</td>
+                    <td>package.json を先にコピーして npm install 後、ソースコードをコピー</td>
+                </tr>
+                <tr>
+                    <td>HEALTHCHECK の設定</td>
+                    <td>コンテナの健全性を監視し、異常時に自動再起動</td>
+                </tr>
+                <tr>
+                    <td>非 root ユーザー</td>
+                    <td>セキュリティ上、アプリケーションは非 root で実行</td>
+                </tr>
+                <tr>
+                    <td>.dockerignore 使用</td>
+                    <td>node_modules や .env など不要なファイルを除外</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- docker-compose セクション -->
+        <div class="section">
+            <h2>🔗 docker-compose.yml の作成</h2>
+
+            <h3>docker-compose とは</h3>
+            <p>
+                複数のコンテナをまとめて管理するツールです。<br>
+                このプロジェクトでは、単一コンテナで十分ですが、<br>
+                将来的に Postgres や Redis など他のサービスを追加する場合に備えて、<br>
+                スケーラブルな構成にしています。
+            </p>
+
+            <h3>開発環境用 docker-compose.yml</h3>
+            <div class="code-block">
+                <span class="code-label">docker-compose.yml (開発環境)</span>
+version: '3.8'
+
+services:
+  firebase-budget-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: firebase-budget-dev
+
+    environment:
+      NODE_ENV: development
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/firebase-key.json
+      FREEE_API_TOKEN: ${FREEE_API_TOKEN}
+      FREEE_API_BASE_URL: https://api.freee.co.jp
+
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ${FIREBASE_KEY_PATH}:/app/secrets/firebase-key.json:ro
+
+    ports:
+      - "5000:5000"
+      - "9229:9229"  # Node.js デバッグポート
+
+    restart: unless-stopped
+
+    networks:
+      - firebase-budget-network
+
+networks:
+  firebase-budget-network:
+    driver: bridge</div>
+
+            <h3>本番環境用 docker-compose.yml</h3>
+            <div class="code-block">
+                <span class="code-label">docker-compose.prod.yml (本番環境)</span>
+version: '3.8'
+
+services:
+  firebase-budget-app:
+    image: your-registry/firebase-budget:v1.0.0
+
+    container_name: firebase-budget-prod
+
+    environment:
+      NODE_ENV: production
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/firebase-key.json
+      FREEE_API_TOKEN: ${FREEE_API_TOKEN}
+
+    volumes:
+      - /etc/firebase-budget/secrets/firebase-key.json:/app/secrets/firebase-key.json:ro
+      - firebase-budget-logs:/app/logs
+
+    ports:
+      - "5000:5000"
+
+    restart: always
+
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+
+    # ヘルスチェック
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # ロギング
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - firebase-budget-network
+
+volumes:
+  firebase-budget-logs:
+    driver: local
+
+networks:
+  firebase-budget-network:
+    driver: bridge</div>
+
+            <h3>環境変数の管理</h3>
+            <p>
+                docker-compose では .env ファイルから環境変数を読み込みます：
+            </p>
+            <div class="code-block">
+                <span class="code-label">.env (ローカル開発用 - gitignore に追加)</span>
+# Firebase
+FIREBASE_KEY_PATH=/path/to/firebase-key.json
+
+# Freee API
+FREEE_API_TOKEN=your_freee_api_token_here
+
+# Node 環境
+NODE_ENV=development</div>
+
+            <div class="code-block">
+                <span class="code-label">.env.example (リポジトリに含める)</span>
+# Firebase - 本番環境では /etc/firebase-budget/secrets に配置
+FIREBASE_KEY_PATH=/path/to/firebase-key.json
+
+# Freee API - 本番環境では Secret Manager で管理推奨
+FREEE_API_TOKEN=your_freee_api_token_here
+
+# Node 環境
+NODE_ENV=development</div>
+
+            <div class="tip">
+                <div class="tip-title">💡 本番環境での認証情報管理</div>
+                <div class="tip-content">
+                    <strong>開発環境：</strong> .env ファイル使用（ローカルのみ）<br>
+                    <strong>本番環境：</strong> 環境変数を直接設定するか、Secret Manager 使用<br>
+                    <br>
+                    理由：.env ファイルが誤ってコミットされるリスクを避けるため
+                </div>
+            </div>
+
+            <h3>docker-compose コマンド一覧</h3>
+            <table class="variable-table">
+                <tr>
+                    <th>コマンド</th>
+                    <th>説明</th>
+                </tr>
+                <tr>
+                    <td><code>docker-compose up</code></td>
+                    <td>コンテナ起動（フォアグラウンド）</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose up -d</code></td>
+                    <td>コンテナ起動（バックグラウンド）</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose down</code></td>
+                    <td>コンテナ停止・削除</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose logs -f</code></td>
+                    <td>ログ表示（リアルタイム）</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose ps</code></td>
+                    <td>実行中のコンテナ確認</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose exec firebase-budget-app sh</code></td>
+                    <td>コンテナ内で対話的シェル実行</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose restart</code></td>
+                    <td>コンテナ再起動</td>
+                </tr>
+                <tr>
+                    <td><code>docker-compose -f docker-compose.prod.yml up</code></td>
+                    <td>本番設定ファイルを使用</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 設定値解説 -->
+        <div class="section">
+            <h2>⚙️ 重要な設定値の解説</h2>
+
+            <h3>environment セクション</h3>
+            <table class="variable-table">
+                <tr>
+                    <th>変数名</th>
+                    <th>用途</th>
+                    <th>開発環境</th>
+                    <th>本番環境</th>
+                </tr>
+                <tr>
+                    <td class="variable-name">NODE_ENV</td>
+                    <td>実行環境識別</td>
+                    <td>development</td>
+                    <td>production</td>
+                </tr>
+                <tr>
+                    <td class="variable-name">GOOGLE_APPLICATION_CREDENTIALS</td>
+                    <td>Firebase 認証ファイルパス</td>
+                    <td>/app/secrets/key.json</td>
+                    <td>/app/secrets/firebase-key.json</td>
+                </tr>
+                <tr>
+                    <td class="variable-name">FREEE_API_TOKEN</td>
+                    <td>Freee API トークン</td>
+                    <td>ローカルの .env から</td>
+                    <td>環境変数で直接指定</td>
+                </tr>
+            </table>
+
+            <h3>volumes セクション（開発環境）</h3>
+            <div class="file-structure">
+• <strong>.:/app</strong> - ローカルコードをコンテナと同期（ホットリロード可能）<br>
+• <strong>/app/node_modules</strong> - node_modules をコンテナのみに保持（ホストと分離）<br>
+• <strong>${FIREBASE_KEY_PATH}:/app/secrets/firebase-key.json:ro</strong> - Firebase キーをマウント（読み取り専用）
+            </div>
+
+            <h3>ports セクション</h3>
+            <div class="file-structure">
+開発環境：<br>
+• <strong>5000:5000</strong> - メイン API ポート<br>
+• <strong>9229:9229</strong> - Node.js デバッグポート（VSCode デバッグ用）<br>
+<br>
+本番環境：<br>
+• <strong>5000:5000</strong> - メイン API ポートのみ公開
+            </div>
+
+            <h3>restart ポリシー</h3>
+            <table class="variable-table">
+                <tr>
+                    <th>ポリシー</th>
+                    <th>説明</th>
+                    <th>推奨環境</th>
+                </tr>
+                <tr>
+                    <td><code>no</code></td>
+                    <td>自動再起動なし</td>
+                    <td>開発環境</td>
+                </tr>
+                <tr>
+                    <td><code>unless-stopped</code></td>
+                    <td>停止まで自動再起動（停止後は再起動しない）</td>
+                    <td>開発環境</td>
+                </tr>
+                <tr>
+                    <td><code>always</code></td>
+                    <td>常に自動再起動</td>
+                    <td>本番環境</td>
+                </tr>
+                <tr>
+                    <td><code>on-failure</code></td>
+                    <td>エラー時のみ再起動（回数指定可能）</td>
+                    <td>本番環境</td>
+                </tr>
+            </table>
+
+            <h3>リソース制限（本番環境）</h3>
+            <div class="file-structure">
+<strong>limits（上限）：</strong><br>
+• cpus: '0.5' - CPU使用率を50%に制限<br>
+• memory: 1G - メモリを1GBに制限<br>
+<br>
+<strong>reservations（確保）：</strong><br>
+• cpus: '0.25' - 最低25%のCPUリソース確保<br>
+• memory: 512M - 最低512MBのメモリ確保<br>
+<br>
+これにより、他のコンテナとのリソース競合を制御できます。
+            </div>
+
+            <h3>ヘルスチェック設定</h3>
+            <div class="code-block">
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+  interval: 30s           # 30秒ごとにチェック
+  timeout: 10s            # 10秒でタイムアウト
+  retries: 3              # 3回失敗で unhealthy と判定
+  start_period: 10s       # 起動から10秒間はチェック対象外</div>
+
+            <p>
+                ヘルスチェック成功時は <span class="highlight">healthy</span>、<br>
+                失敗時は <span class="highlight">unhealthy</span> ステータスに変わり、<br>
+                Docker デーモンが自動的に再起動できます。
+            </p>
+        </div>
+
+        <!-- トラブルシューティング -->
+        <div class="section">
+            <h2>🔧 よくあるエラーと対処法</h2>
+
+            <h3>Dockerfile ビルド時のエラー</h3>
+            <h4>❌ "npm: not found"</h4>
+            <p>
+                <strong>原因：</strong> node:18-alpine のベースイメージに npm がインストールされていない<br>
+                <strong>対策：</strong> node:18 （フルサイズ）を使用するか、Alpine 向けのセットアップを確認
+            </p>
+
+            <h4>❌ "COPY failed: file not found"</h4>
+            <p>
+                <strong>原因：</strong> Dockerfile の COPY コマンドで存在しないファイルを指定している<br>
+                <strong>対策：</strong> ファイルパスの確認、.dockerignore の確認
+            </p>
+
+            <h3>docker-compose 実行時のエラー</h3>
+            <h4>❌ "port 5000 is already allocated"</h4>
+            <p>
+                <strong>原因：</strong> ポート 5000 が既に別のプロセスで使用されている<br>
+                <strong>対策：</strong> ports セクションを "5001:5000" に変更するか、既存プロセスを停止
+            </p>
+            <div class="code-block">
+# ポート確認
+lsof -i :5000
+
+# プロセス終了
+kill -9 &lt;PID&gt;</div>
+
+            <h4>❌ "FIREBASE_KEY_PATH: no value"</h4>
+            <p>
+                <strong>原因：</strong> .env ファイルに FIREBASE_KEY_PATH が定義されていない<br>
+                <strong>対策：</strong> .env.example を参考に .env ファイルを作成
+            </p>
+        </div>
+
+        <!-- ベストプラクティス -->
+        <div class="section">
+            <h2>💡 Docker & docker-compose のベストプラクティス</h2>
+
+            <h3>1. イメージサイズの最小化</h3>
+            <ul>
+                <li>Alpine ベースイメージを使用（通常イメージの 1/10 以下のサイズ）</li>
+                <li>マルチステージビルドで開発用ツールを除外</li>
+                <li>.dockerignore で不要なファイルを除外</li>
+            </ul>
+
+            <h3>2. セキュリティ対策</h3>
+            <ul>
+                <li>非 root ユーザーで実行</li>
+                <li>機密情報（.env、キーファイル）は Git リポジトリから除外</li>
+                <li>ボリュームマウントで :ro（読み取り専用）を指定</li>
+                <li>定期的にベースイメージをアップデート</li>
+            </ul>
+
+            <h3>3. ログとモニタリング</h3>
+            <ul>
+                <li>stdout/stderr へのログ出力を基本とする</li>
+                <li>json-file ログドライバーでローテーション設定</li>
+                <li>HEALTHCHECK で自動復旧機能を実装</li>
+            </ul>
+
+            <h3>4. 開発と本番の分離</h3>
+            <ul>
+                <li>docker-compose.yml と docker-compose.prod.yml を分離</li>
+                <li>開発環境：hot reload 有効、volumes マウント</li>
+                <li>本番環境：リソース制限、自動再起動、ヘルスチェック</li>
+            </ul>
+        </div>
+
+        <!-- 次のステップ -->
+        <div class="section">
+            <h2>📚 次のステップ</h2>
+
+            <div class="nav-buttons">
+                <a href="docker-setup-steps.html" class="nav-button nav-button-secondary">📅 セットアップ詳細ガイド</a>
+                <a href="docker-troubleshooting.html" class="nav-button">🔧 トラブルシューティング</a>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-button nav-button-secondary">📋 ガイドトップに戻る</a>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0f7ff; color: #666;">
+            <p>このガイドは Samurai Terakoya の教材です。</p>
+            <p style="font-size: 0.9em;">最終更新: 2026年4月 | Version: 1.0</p>
+        </div>
+    </div>
+</body>
+</html>
