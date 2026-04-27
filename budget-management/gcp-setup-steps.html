@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作業ステップ詳細 | GCP版ガイド</title>
+    <title>GCP版 - セットアップ詳細ガイド（Day 0-7）</title>
     <style>
         * {
             margin: 0;
@@ -12,700 +12,848 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: #f5f5f5;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-            color: white;
-            padding: 30px 20px;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .breadcrumb {
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
-        .breadcrumb a {
-            color: white;
-            text-decoration: none;
-            border-bottom: 1px dotted white;
-        }
-
-        .breadcrumb a:hover {
-            opacity: 0.8;
-        }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.05em;
-            opacity: 0.95;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%);
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
-        .section {
-            background: white;
-            padding: 35px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
         }
 
-        .section h2 {
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
             color: #4285f4;
-            margin-bottom: 25px;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .phase-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid #4285f4;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f7ff;
+        }
+
+        .phase-badge {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.3em;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+        }
+
+        .phase-badge.onetime {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .phase-info {
+            flex-grow: 1;
+        }
+
+        .phase-title {
             font-size: 1.8em;
-            border-bottom: 3px solid #4285f4;
-            padding-bottom: 10px;
+            color: #4285f4;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .phase-badge.onetime ~ .phase-info .phase-title {
+            color: #f57c00;
+        }
+
+        .phase-description {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .phase-meta {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .meta-item {
+            text-align: right;
+        }
+
+        .meta-label {
+            color: #999;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 4px;
+        }
+
+        .why-box {
+            background: #e3f2fd;
+            border-left: 4px solid #4285f4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .why-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .why-content {
+            color: #333;
+            line-height: 1.6;
         }
 
         .day-block {
-            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%);
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+            background: #f9f9f9;
             border-left: 5px solid #4285f4;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
 
         .day-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
             gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .day-badge {
+        .day-label {
             background: #4285f4;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 6px;
             font-weight: bold;
-            min-width: 80px;
+            min-width: 70px;
             text-align: center;
         }
 
         .day-title {
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: 600;
             color: #333;
+            flex-grow: 1;
         }
 
-        .day-duration {
-            color: #666;
-            font-size: 0.95em;
-            margin-left: auto;
+        .day-hours {
+            background: #e3f2fd;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #1976d2;
+            font-weight: 500;
         }
 
-        .task-list {
+        .tasks {
             background: white;
             padding: 20px;
             border-radius: 6px;
             margin-top: 15px;
         }
 
-        .task-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
+        .task {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #fafafa;
+            border-left: 3px solid #34a853;
+            border-radius: 4px;
         }
 
-        .task-item:last-child {
-            border-bottom: none;
+        .task:last-child {
+            margin-bottom: 0;
         }
 
-        .task-item h4 {
+        .task-title {
+            font-weight: 600;
             color: #34a853;
             margin-bottom: 8px;
-            font-size: 1.05em;
         }
 
-        .task-item p {
+        .task-description {
             color: #666;
             font-size: 0.95em;
             margin-bottom: 10px;
         }
 
-        .task-details {
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 4px;
+        .accordion {
             margin-top: 10px;
+        }
+
+        .accordion-button {
+            background: #f0f7ff;
+            border: 1px solid #4285f4;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #4285f4;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accordion-button:hover {
+            background: #4285f4;
+            color: white;
+        }
+
+        .accordion-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-button.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
             border-left: 3px solid #4285f4;
         }
 
-        .task-details ul {
-            margin-left: 20px;
-            font-size: 0.9em;
-            color: #555;
+        .accordion-content.active {
+            display: block;
         }
 
-        .task-details li {
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+
+        .code-label {
+            color: #06b6d4;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9em;
+        }
+
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+
+        .note-title {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .note-content {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+
+        .checkpoint {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+
+        .checkpoint-title {
+            color: #16a34a;
+            font-weight: 600;
             margin-bottom: 8px;
         }
 
-        .tips {
-            background: #fff3e0;
-            border-left: 4px solid #ff9800;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 15px;
+        .checkpoint-content {
+            color: #555;
             font-size: 0.95em;
         }
 
-        .tips strong {
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag.onetime {
+            background: #ffe0b2;
             color: #e65100;
         }
 
-        .risks {
-            background: #ffebee;
-            border-left: 4px solid #f44336;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 15px;
-            font-size: 0.95em;
-        }
-
-        .risks strong {
-            color: #c62828;
-        }
-
-        .phase {
-            background: #f5f5f5;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .phase-title {
-            color: #4285f4;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .checklist {
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
-            margin-top: 15px;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .checklist-item:last-child {
-            border-bottom: none;
-        }
-
-        .checklist-item input[type="checkbox"] {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checklist-item label {
-            cursor: pointer;
-            flex: 1;
-            font-size: 0.95em;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #4285f4;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .back-link:before {
-            content: "← ";
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 60px;
-            border-radius: 8px;
+        .tag.customer {
+            background: #c8e6c9;
+            color: #1b5e20;
         }
 
         .nav-buttons {
             display: flex;
             gap: 15px;
-            justify-content: space-between;
             margin-top: 40px;
+            flex-wrap: wrap;
         }
 
         .nav-button {
-            padding: 12px 24px;
-            background: #4285f4;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
             color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
             text-decoration: none;
-            border-radius: 6px;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
         }
 
         .nav-button:hover {
-            background: #34a853;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
         }
 
-        .nav-button.prev:before {
-            content: "← ";
+        .nav-button-secondary {
+            background: white;
+            color: #4285f4;
+            border: 2px solid #4285f4;
         }
 
-        .nav-button.next:after {
-            content: " →";
+        .nav-button-secondary:hover {
+            background: #f0f7ff;
+        }
+
+        .summary-box {
+            background: #e8f5e9;
+            border-left: 4px solid #34a853;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .summary-title {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table th {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #4285f4;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e3f2fd;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.5em;
+            header h1 {
+                font-size: 1.8em;
             }
 
-            .day-header {
-                flex-wrap: wrap;
-            }
-
-            .day-duration {
-                margin-left: 0;
-                width: 100%;
-                margin-top: 10px;
-            }
-
-            .nav-buttons {
+            .phase-header {
                 flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .phase-meta {
+                width: 100%;
+                flex-direction: column;
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="breadcrumb">
-                <a href="index.html">📊 展開ガイド</a> > <a href="gcp-overview.html">GCP版</a> > 作業ステップ詳細
-            </div>
-            <h1>📝 作業ステップ詳細</h1>
-            <p>Day 1-7 の開発フローを詳細に解説</p>
-        </div>
-    </div>
-
     <div class="container">
-        <a href="gcp-overview.html" class="back-link">GCP版ガイドに戻る</a>
+        <header>
+            <h1>☁️ GCP版 セットアップ詳細ガイド</h1>
+            <p>Day 0（準備）+ Day 1-7（顧客セットアップ）の完全フロー</p>
+        </header>
 
-        <!-- フェーズ1 -->
+        <div class="breadcrumb">
+            <a href="index.html">📋 ガイドトップ</a>
+            > <a href="gcp-overview.html">GCP版 全体像</a>
+            > <span style="color: #4285f4;">セットアップ詳細</span>
+        </div>
+
+        <!-- Day 0: ワンタイム準備 -->
+        <div class="phase-section">
+            <div class="phase-header">
+                <div class="phase-badge onetime">準備</div>
+                <div class="phase-info">
+                    <div class="phase-title">Phase 0: Terraform 準備・テンプレート作成</div>
+                    <div class="phase-description">Terraform スクリプトを開発し、テンプレート化する（初回のみ）</div>
+                </div>
+                <div class="phase-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">実施時期</div>
+                        <div class="meta-value">初回のみ</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">工数</div>
+                        <div class="meta-value">3-4日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-box">
+                <div class="why-title">🎯 なぜこれが必要か？</div>
+                <div class="why-content">
+                    Terraform スクリプトを一度作成すると、<strong>2社目以降の顧客セットアップが大幅に高速化</strong>されます。
+                    手作業で GCP を設定すると、毎回ミスのリスクがありますが、Terraform を使えば
+                    「変数だけ変えて実行」で同じ環境が自動で構築されます。つまり、初回の投資が後々の効率化に繋がります。
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 0-1</div>
+                    <div class="day-title">Terraform ファイル構成設計</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-title">✓ GCP リソースの整理</div>
+                        <div class="task-description">
+                            Terraform で管理すべき GCP リソース（Cloud Functions、Firestore、IAM ロール等）を確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ Terraform ファイル構造の設計</div>
+                        <div class="task-description">
+                            main.tf（メインリソース）、variables.tf（変数）、outputs.tf（出力）、terraform.tfvars（環境値）の設計
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-button" onclick="toggleAccordion(event)">
+                                <span class="accordion-icon">▼</span>
+                                ファイル構造例を見る
+                            </button>
+                            <div class="accordion-content">
+                                <div class="code-block">
+<span class="code-label">推奨構造</span>
+project/
+├── terraform/
+│   ├── main.tf              # Cloud Functions, Firestore の定義
+│   ├── variables.tf         # 変数定義
+│   ├── outputs.tf           # 出力値定義
+│   ├── terraform.tfvars     # 環境別設定（本番・テスト）
+│   └── provider.tf          # GCP プロバイダー設定
+└── docs/
+    └── TERRAFORM_README.md  # 使い方ガイド</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 0-2</div>
+                    <div class="day-title">Terraform コード実装・動作確認</div>
+                    <div class="day-hours">3-4日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-title">✓ main.tf の実装</div>
+                        <div class="task-description">
+                            Firebase リソース（Cloud Functions、Firestore）を Terraform で定義
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-button" onclick="toggleAccordion(event)">
+                                <span class="accordion-icon">▼</span>
+                                実装例を見る（詳細）
+                            </button>
+                            <div class="accordion-content">
+                                <div class="code-block">
+<span class="code-label">main.tf 例：Cloud Functions</span>
+resource "google_cloudfunctions_function" "freee_sync" {
+  name        = "freee-budget-sync-${var.environment}"
+  runtime     = "nodejs18"
+  trigger_http = true
+
+  source_archive_bucket = google_storage_bucket.functions_code.name
+  source_archive_object = google_storage_bucket_object.functions_zip.name
+
+  entry_point = "syncFreeeData"
+
+  environment_variables = {
+    GOOGLE_APPLICATION_CREDENTIALS = var.firebase_key_path
+  }
+}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ IAM ロール・セキュリティ設定</div>
+                        <div class="task-description">
+                            Cloud Functions 実行サービスアカウント、Firestore アクセス権限を定義
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ ローカルテスト実行</div>
+                        <div class="task-description">
+                            terraform plan で差分確認、terraform validate で構文チェック
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkpoint">
+                <div class="checkpoint-title">✅ Day 0 チェックポイント</div>
+                <div class="checkpoint-content">
+                    • Terraform スクリプトがローカルで正常に動作する<br>
+                    • terraform plan で期待通りのリソースが出力される<br>
+                    • 顧客ごとの可変項目（プロジェクト ID、環境名等）が variables.tf に定義されている<br>
+                    • Terraform 実行ドキュメントが整備されている
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 1-7: 顧客ごとの作業 -->
+        <div class="phase-section">
+            <div class="phase-header">
+                <div class="phase-badge">実装</div>
+                <div class="phase-info">
+                    <div class="phase-title">Phase 1-7: 顧客環境への GCP 構築・テスト</div>
+                    <div class="phase-description">Terraform を使って顧客の GCP アカウントに本番環境を構築・テストする（毎顧客実施）</div>
+                </div>
+                <div class="phase-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">実施時期</div>
+                        <div class="meta-value">顧客ごと</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">工数</div>
+                        <div class="meta-value">7日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-box">
+                <div class="why-title">🎯 なぜこれが必要か？</div>
+                <div class="why-content">
+                    各顧客が独立した GCP アカウントを持つため、本番環境をセットアップする必要があります。
+                    Terraform を活用することで、テンプレートから自動構築し、検証・調整を効率的に進められます。
+                    この期間で、顧客固有の要件調整やパフォーマンス最適化を行います。
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 1</div>
+                    <div class="day-title">顧客環境準備・Terraform 実行</div>
+                    <div class="day-hours">1-2日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ GCP プロジェクト作成・権限設定</div>
+                        <div class="task-description">
+                            顧客の GCP アカウントで新規プロジェクト作成、Terraform 実行用のサービスアカウント設定
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ terraform.tfvars の顧客化</div>
+                        <div class="task-description">
+                            テンプレートの variables.tf に顧客固有の値（プロジェクト ID、環境名、リージョン等）を代入
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ terraform apply で自動構築</div>
+                        <div class="task-description">
+                            Terraform コマンドでリソースを自動作成。数分で GCP 環境が整備される
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 2-3</div>
+                    <div class="day-title">統合テスト・調整</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Firebase Cloud Functions 動作確認</div>
+                        <div class="task-description">
+                            Freee API からのデータ取得、Firestore への書き込みテスト
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ IAM ロール・権限動作確認</div>
+                        <div class="task-description">
+                            サービスアカウントが正しい権限を持っているか、Firestore ルールが機能するか確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ パフォーマンス・スケーラビリティ検証</div>
+                        <div class="task-description">
+                            大規模データでの動作確認、Cloud Functions のメモリ・タイムアウト設定の調整
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 4-5</div>
+                    <div class="day-title">セキュリティ検証・本番準備</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Secret Manager でのキー管理</div>
+                        <div class="task-description">
+                            Freee API トークン、Firebase キーが Secret Manager に安全に保存されているか確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Firestore セキュリティルール検証</div>
+                        <div class="task-description">
+                            ルールが正しく適用され、未認可アクセスが拒否されるか確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ バックアップ・復旧策確認</div>
+                        <div class="task-description">
+                            Firestore バックアップが定期実行され、復旧テストが可能か確認
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">Day 6-7</div>
+                    <div class="day-title">ドキュメント・運用引き継ぎ</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ セットアップ記録ドキュメント作成</div>
+                        <div class="task-description">
+                            実際に実行した terraform.tfvars の値、カスタマイズ内容を記録
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ 運用ガイド・トラブルシューティング作成</div>
+                        <div class="task-description">
+                            顧客向けの日次・週次チェック項目、よくあるエラーと対処法を記載
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ 顧客側スタッフ向けトレーニング</div>
+                        <div class="task-description">
+                            Terraform 更新方法、ログ確認方法、問題発生時の連絡フローを説明
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkpoint">
+                <div class="checkpoint-title">✅ Day 1-7 チェックポイント</div>
+                <div class="checkpoint-content">
+                    • Terraform で自動構築した環境が本番で正常に動作している<br>
+                    • すべての統合テストが成功している<br>
+                    • セキュリティ要件が満たされている<br>
+                    • 顧客向けドキュメント・トレーニングが完了している<br>
+                    • Terraform コードとドキュメントが版管理に登録されている
+                </div>
+            </div>
+        </div>
+
+        <!-- スケーラビリティの効果 -->
         <div class="section">
-            <h2>🔧 フェーズ1: Terraform スクリプト作成（Day 1-2）</h2>
+            <h2>📈 Terraform による効率化</h2>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 1</div>
-                    <div class="day-title">Terraform 基盤構築</div>
-                    <div class="day-duration">1日</div>
-                </div>
-
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ Terraform ファイル構成の設計</h4>
-                        <p>GCP プロジェクト用の Terraform ファイルの構成を決定します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>main.tf - メインリソース定義</li>
-                                <li>variables.tf - 変数定義</li>
-                                <li>outputs.tf - 出力値定義</li>
-                                <li>terraform.tfvars - 環境別設定値</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> モジュール化できるものは early から検討。後の保守が楽になります。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ GCP プロバイダー設定</h4>
-                        <p>Terraform が GCP と通信するための認証・プロバイダー設定を行います。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>terraform block で Terraform バージョン指定</li>
-                                <li>Google provider の設定</li>
-                                <li>サービスアカウント認証情報の参照</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> 認証情報は .tfvars に記載せず、環境変数または別ファイルで管理するのがベストプラクティス。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ Firebase プロジェクト作成スクリプト</h4>
-                        <p>GCP プロジェクト内に Firebase プロジェクトを自動作成するコード書き始め。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>google_firebase_project リソース定義</li>
-                                <li>プロジェクト ID、名前の変数化</li>
-                                <li>リージョン設定（asia-northeast1 推奨）</li>
-                            </ul>
-                        </div>
-                        <div class="risks">
-                            <strong>⚠️ 注意：</strong> Firebase プロジェクト作成後は削除が制限されます。テスト環境で十分に検証してから本実装を進めてください。
-                        </div>
-                    </div>
-                </div>
+            <div class="summary-box">
+                <div class="summary-title">2社目以降の優位性</div>
+                <table>
+                    <tr>
+                        <th>パターン</th>
+                        <th>初回（1社目）</th>
+                        <th>2社目以降</th>
+                        <th>効率化率</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Day 0 準備</strong></td>
+                        <td>3-4日</td>
+                        <td>0日（不要）</td>
+                        <td>100%削減</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Day 1-7 実装</strong></td>
+                        <td>7日</td>
+                        <td>5-6日（テスト・調整のみ）</td>
+                        <td>20-30%削減</td>
+                    </tr>
+                    <tr>
+                        <td><strong>合計工数</strong></td>
+                        <td>10-11日</td>
+                        <td>5-6日</td>
+                        <td>40-50%削減</td>
+                    </tr>
+                </table>
             </div>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 2</div>
-                    <div class="day-title">Firestore & IAM 設定</div>
-                    <div class="day-duration">1日</div>
-                </div>
-
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ Firestore データベース初期化</h4>
-                        <p>Firestore の自動構築と初期スキーマ設定を Terraform で実装します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>google_firestore_database リソース作成</li>
-                                <li>デフォルトセキュリティルール設定</li>
-                                <li>データベース ID の指定</li>
-                                <li>テストモード vs 本番モードの検討</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> 初期段階では「テストモード」で作成し、セキュリティルール完成後に本番モードに切り替えるのがお勧め。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ Cloud Functions リソース定義</h4>
-                        <p>Freee データ取得用の Cloud Functions を定義します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>google_cloudfunctions_function リソース</li>
-                                <li>ランタイム指定（Node.js 18/20）</li>
-                                <li>環境変数設定（Freee API トークン参照等）</li>
-                                <li>トリガー設定（HTTP または Pub/Sub）</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> Freee API トークンなどのシークレット情報は Secret Manager と連携するのが安全です。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ IAM ロール & Secret Manager 設定</h4>
-                        <p>セキュリティと権限管理の基盤を構築します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>Cloud Functions 用の IAM ロール割り当て</li>
-                                <li>Firestore へのアクセス権限</li>
-                                <li>Secret Manager リソース作成</li>
-                                <li>Freee API トークンなどの格納</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> 最小権限の原則を適用し、必要な権限のみを付与することが重要です。
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p style="color: #666; margin-top: 20px;">
+                Terraform テンプレートが完成すれば、2社目以降は「変数を変えて実行」するだけで環境構築が完了します。
+                手作業ミスも減り、品質が均一化されるメリットもあります。
+            </p>
         </div>
 
-        <!-- フェーズ2 -->
+        <!-- ベストプラクティス -->
         <div class="section">
-            <h2>⚙️ フェーズ2: Firebase 設定・デプロイパイプライン（Day 3-4）</h2>
+            <h2>💡 Terraform 運用のベストプラクティス</h2>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 3</div>
-                    <div class="day-title">Firebase Hosting & CI/CD</div>
-                    <div class="day-duration">1日</div>
-                </div>
+            <h3>バージョン管理</h3>
+            <p>Terraform ファイルは Git で管理し、変更履歴を保持します。</p>
 
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ Firebase Hosting 設定</h4>
-                        <p>Web UI（React）をデプロイするための Firebase Hosting を設定します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>firebase.json の作成・編集</li>
-                                <li>ビルド出力ディレクトリの指定（build/）</li>
-                                <li>リライトルール設定（SPA 対応）</li>
-                                <li>キャッシュ設定</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> SPA（Single Page Application）の場合、index.html へのリライトルール設定が必須です。
-                        </div>
-                    </div>
+            <h3>環境の分離</h3>
+            <p>
+                本番と開発で異なる terraform.tfvars を用意し、環境混同を防ぎます。
+            </p>
 
-                    <div class="task-item">
-                        <h4>✓ GitHub Actions でのデプロイパイプライン</h4>
-                        <p>コミット時に自動でビルド・デプロイされる CI/CD を構築します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>.github/workflows/deploy.yml 作成</li>
-                                <li>npm build トリガー</li>
-                                <li>Firebase CLI でのデプロイ</li>
-                                <li>Firebase トークン管理（Secrets）</li>
-                            </ul>
-                        </div>
-                        <div class="risks">
-                            <strong>⚠️ 注意：</strong> Firebase トークンは GitHub Secrets に安全に保管し、リポジトリコミットに含めないようにしてください。
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h3>terraform state の安全管理</h3>
+            <p>
+                terraform state（リソース管理状態）は Git に含めず、Google Cloud Storage で共有・保護します。
+            </p>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 4</div>
-                    <div class="day-title">Cloud Functions 最適化 & Firestore ルール</div>
-                    <div class="day-duration">1日</div>
-                </div>
-
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ Cloud Functions の詳細実装</h4>
-                        <p>既存の Freee 連携ロジックを Cloud Functions 内で最適化します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>Freee API 呼び出しロジックの確認</li>
-                                <li>タイムアウト設定（デフォルト 60秒）</li>
-                                <li>メモリ設定（256MB ～ 8GB）</li>
-                                <li>エラーハンドリング & ログ記録</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> 定期実行の場合は Cloud Scheduler と組み合わせ、定期的にデータを同期させるのが効果的。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ Firestore セキュリティルール作成</h4>
-                        <p>Firestore へのアクセス制御を細かく設定します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>ユーザー認証確認ルール</li>
-                                <li>企業ごとのデータ分離ルール</li>
-                                <li>読み取り・書き込み権限設定</li>
-                                <li>データ検証ルール</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> セキュリティルールのテストは Firebase Emulator Suite を使うと便利です。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ ロギング & 監視設定</h4>
-                        <p>本番環境での問題早期発見のためのログ設定。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>Cloud Logging の設定</li>
-                                <li>エラーアラート設定</li>
-                                <li>パフォーマンスメトリクス監視</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h3>CI/CD 統合（将来的）</h3>
+            <p>
+                GitHub Actions 等で自動テスト・デプロイを実装すれば、さらに人的作業を削減できます。
+            </p>
         </div>
 
-        <!-- フェーズ3 -->
+        <!-- 次のステップ -->
         <div class="section">
-            <h2>📋 フェーズ3: ドキュメント・検証（Day 5-7）</h2>
+            <h2>📚 次のステップ</h2>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 5-6</div>
-                    <div class="day-title">ドキュメント作成</div>
-                    <div class="day-duration">2日</div>
-                </div>
-
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ 顧客向けセットアップガイド</h4>
-                        <p>顧客が自社で実行できるようにステップバイステップのガイドを作成。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>「GCP アカウント作成手順」（スクリーンショット付き）</li>
-                                <li>「新規プロジェクト作成手順」</li>
-                                <li>「Terraform 実行手順」</li>
-                                <li>「Freee API トークン取得・設定方法」</li>
-                                <li>「初回セットアップチェックリスト」</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> スクリーンショットは日本語ガイドなら日本語UI での画面が理想。視覚的な分かりやすさが重要です。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ トラブルシューティングドキュメント</h4>
-                        <p>よくある質問や エラーへの対応を事前にまとめます。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>「Terraform 実行時のエラー」対応</li>
-                                <li>「IAM 権限不足」エラー対応</li>
-                                <li>「Freee API 接続エラー」対応</li>
-                                <li>「Firestore セキュリティルール拒否」エラー対応</li>
-                                <li>FAQ セクション</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ セットアップテンプレート用意</h4>
-                        <p>顧客が簡単に利用できるテンプレートファイルを準備。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>terraform.tfvars テンプレート</li>
-                                <li>GCP IAM ロール設定スクリプト</li>
-                                <li>Secret Manager 初期化スクリプト</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav-buttons">
+                <a href="gcp-terraform.html" class="nav-button">🔧 Terraform 実装ガイド（詳細コード）</a>
+                <a href="gcp-security.html" class="nav-button nav-button-secondary">🔒 セキュリティ設定</a>
+                <a href="gcp-troubleshooting.html" class="nav-button nav-button-secondary">🔍 トラブルシューティング</a>
             </div>
 
-            <div class="day-block">
-                <div class="day-header">
-                    <div class="day-badge">Day 7</div>
-                    <div class="day-title">検証・最終調整</div>
-                    <div class="day-duration">1日</div>
-                </div>
-
-                <div class="task-list">
-                    <div class="task-item">
-                        <h4>✓ サンドボックス環境での実装テスト</h4>
-                        <p>提供するドキュメントが本当に機能するか、実際に試します。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>別の GCP アカウント・プロジェクトで実行テスト</li>
-                                <li>ドキュメント通りに実行して引っかかった箇所を修正</li>
-                                <li>所要時間を実測（見積もりとの差異確認）</li>
-                            </ul>
-                        </div>
-                        <div class="tips">
-                            <strong>💡 ポイント：</strong> 可能なら社内の技術者だけでなく、非技術者にも実行してもらい、フィードバックを得ると良いです。
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ パフォーマンス・セキュリティチェック</h4>
-                        <p>本番環境での安定性を確認。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>Cloud Functions の実行時間測定</li>
-                                <li>Firestore クエリのインデックス最適化</li>
-                                <li>セキュリティ設定の再確認</li>
-                                <li>コスト予測の算出</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <h4>✓ デプロイ承認 & リリース</h4>
-                        <p>すべての準備が整い、リリース可能状態に。</p>
-                        <div class="task-details">
-                            <ul>
-                                <li>ドキュメント最終レビュー</li>
-                                <li>社内チェックリスト確認</li>
-                                <li>GitHub にコード・ドキュメントをプッシュ</li>
-                                <li>顧客向けリリース準備完了</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav-buttons">
+                <a href="gcp-overview.html" class="nav-button nav-button-secondary">← GCP版 全体像に戻る</a>
+                <a href="index.html" class="nav-button nav-button-secondary">📋 ガイドトップに戻る</a>
             </div>
         </div>
 
-        <!-- チェックリスト -->
-        <div class="section">
-            <h2>✅ 開発完了チェックリスト</h2>
-
-            <div class="checklist">
-                <div class="checklist-item">
-                    <input type="checkbox" id="item1">
-                    <label for="item1">Terraform スクリプトが作成・テスト完了</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item2">
-                    <label for="item2">Firebase Hosting でフロントエンドがデプロイ可能</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item3">
-                    <label for="item3">Cloud Functions が Freee API と連携確認</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item4">
-                    <label for="item4">Firestore セキュリティルール完成</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item5">
-                    <label for="item5">顧客向けセットアップガイド完成</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item6">
-                    <label for="item6">トラブルシューティング資料完成</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item7">
-                    <label for="item7">実装テスト（サンドボックス環境）完了</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item8">
-                    <label for="item8">社内チェックリスト確認完了</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item9">
-                    <label for="item9">ドキュメント・コード最終レビュー完了</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="item10">
-                    <label for="item10">GitHub にアップロード完了</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- ナビゲーション -->
-        <div class="nav-buttons">
-            <a href="gcp-overview.html" class="nav-button prev">概要に戻る</a>
-            <a href="gcp-terraform.html" class="nav-button next">次: Terraform ガイド</a>
-        </div>
-
-        <div class="footer">
-            <p>GCP版 作業ステップ詳細 | Samurai Terakoya 2026</p>
+        <!-- フッター -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #e3f2fd; color: #666;">
+            <p>このガイドは Samurai Terakoya の教材です。</p>
+            <p style="font-size: 0.9em;">最終更新: 2026年4月 | Version: 2.0</p>
         </div>
     </div>
+
+    <script>
+        function toggleAccordion(event) {
+            event.preventDefault();
+            const button = event.target.closest('.accordion-button');
+            const content = button.nextElementSibling;
+
+            button.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
