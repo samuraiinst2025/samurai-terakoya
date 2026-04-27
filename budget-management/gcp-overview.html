@@ -465,6 +465,49 @@
             </div>
         </div>
 
+        <!-- システム構成図 -->
+        <div class="section">
+            <h2>🏗️ システム構成図</h2>
+
+            <div style="background: #f9f9f9; padding: 40px; border-radius: 8px; text-align: center; font-family: monospace; line-height: 1.8; color: #333; border: 1px solid #e0e0e0;">
+                <div style="margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, #4285f4 0%, #34a853 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 1.1em;">
+                        ☁️ 顧客の GCP アカウント
+                    </div>
+
+                    <div style="background: white; border: 2px solid #4285f4; padding: 20px; border-radius: 8px; margin: 15px auto; max-width: 400px; text-align: left;">
+                        <div style="font-weight: bold; color: #4285f4; margin-bottom: 10px;">Firebase</div>
+                        <div style="margin-left: 15px; color: #666; font-size: 0.95em; line-height: 1.8;">
+                            • Firestore（データベース）<br>
+                            • Cloud Functions（バックエンド）<br>
+                            • Cloud Storage（ファイル保存）<br>
+                            • Secret Manager（API トークン）<br>
+                            • IAM（アクセス制御）
+                        </div>
+                    </div>
+
+                    <div style="font-size: 1.5em; color: #4285f4; margin: 15px 0;">↓ ↓</div>
+
+                    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px;">
+                        <div style="background: white; border: 2px solid #34a853; padding: 15px; border-radius: 8px; max-width: 150px;">
+                            <div style="font-size: 2em; margin-bottom: 5px;">📊</div>
+                            <div style="font-weight: bold; color: #34a853;">Freee API</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">会計データ取得</div>
+                        </div>
+                        <div style="background: white; border: 2px solid #34a853; padding: 15px; border-radius: 8px; max-width: 150px;">
+                            <div style="font-size: 2em; margin-bottom: 5px;">👤</div>
+                            <div style="font-weight: bold; color: #34a853;">Firebase Auth</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">ユーザー認証</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; color: #999; font-size: 0.9em; margin-top: 20px;">
+                    <strong>特徴：</strong> クラウドネイティブ、自動スケーリング、Google が運用
+                </div>
+            </div>
+        </div>
+
         <!-- 詳細ガイドへのナビゲーション -->
         <div class="section">
             <h2>🔍 詳しく知りたい方へ</h2>

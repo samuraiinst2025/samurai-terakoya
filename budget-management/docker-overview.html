@@ -466,6 +466,48 @@
             </div>
         </div>
 
+        <!-- システム構成図 -->
+        <div class="section">
+            <h2>🏗️ システム構成図</h2>
+
+            <div style="background: #f9f9f9; padding: 40px; border-radius: 8px; text-align: center; font-family: monospace; line-height: 1.8; color: #333; border: 1px solid #e0e0e0;">
+                <div style="margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, #2496ed 0%, #0d9eff 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 1.1em;">
+                        🖥️ 顧客のサーバー（オンプレ / VPS）
+                    </div>
+
+                    <div style="background: white; border: 2px solid #2496ed; padding: 20px; border-radius: 8px; margin: 15px auto; max-width: 400px; text-align: left;">
+                        <div style="font-weight: bold; color: #2496ed; margin-bottom: 10px;">🐳 Docker Container</div>
+                        <div style="margin-left: 15px; color: #666; font-size: 0.95em; line-height: 1.8;">
+                            • Node.js アプリケーション<br>
+                            • Firebase SDK<br>
+                            • Freee API SDK<br>
+                            • （docker-compose で管理）
+                        </div>
+                    </div>
+
+                    <div style="font-size: 1.5em; color: #2496ed; margin: 15px 0;">↓ ↓</div>
+
+                    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px;">
+                        <div style="background: white; border: 2px solid #0d9eff; padding: 15px; border-radius: 8px; max-width: 150px;">
+                            <div style="font-size: 2em; margin-bottom: 5px;">📊</div>
+                            <div style="font-weight: bold; color: #0d9eff;">Freee API</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">会計データ取得</div>
+                        </div>
+                        <div style="background: white; border: 2px solid #0d9eff; padding: 15px; border-radius: 8px; max-width: 150px;">
+                            <div style="font-size: 2em; margin-bottom: 5px;">☁️</div>
+                            <div style="font-weight: bold; color: #0d9eff;">Firebase</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">Firestore のみ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; color: #999; font-size: 0.9em; margin-top: 20px;">
+                    <strong>特徴：</strong> オンプレミス対応、シンプル、低コスト
+                </div>
+            </div>
+        </div>
+
         <!-- 詳細ガイドへのナビゲーション -->
         <div class="section">
             <h2>🔍 詳しく知りたい方へ</h2>
