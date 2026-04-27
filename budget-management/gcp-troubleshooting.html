@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トラブルシューティング | GCP版ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px dotted white;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #4285f4;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+
+        .problem-block {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffebee 100%);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #f44336;
+        }
+
+        .problem-title {
+            color: #c62828;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .solution-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .solution-title {
+            color: #2e7d32;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .code-label {
+            background: #333;
+            color: #4285f4;
+            padding: 6px 10px;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: -15px -15px 10px -15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .step {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 12px 0;
+            border-left: 3px solid #4285f4;
+        }
+
+        .step-number {
+            color: #4285f4;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .faq-item {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .faq-question {
+            color: #2e7d32;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+
+        .performance-tips {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .performance-tips h4 {
+            color: #e65100;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .performance-tips ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .performance-tips li {
+            margin-bottom: 10px;
+        }
+
+        .cost-optimization {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .cost-optimization h4 {
+            color: #6a1b9a;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:before {
+            content: "← ";
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-radius: 8px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #34a853;
+        }
+
+        .nav-button.prev:before {
+            content: "← ";
+        }
+
+        .nav-button.back {
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .code-block {
+                font-size: 0.75em;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="breadcrumb">
+                <a href="index.html">📊 展開ガイド</a> > <a href="gcp-overview.html">GCP版</a> > トラブルシューティング
+            </div>
+            <h1>🆘 トラブルシューティング</h1>
+            <p>よくあるエラー・問題と解決方法</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="gcp-overview.html" class="back-link">GCP版ガイドに戻る</a>
+
+        <!-- セットアップ時のエラー -->
+        <div class="section">
+            <h2>⚙️ セットアップ時のエラー</h2>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Error: User does not have permission 'iam.serviceAccounts.create'</div>
+                <div class="solution-section">
+                    <div class="solution-title">原因：</div>
+                    <p>GCP プロジェクトの IAM 権限が不足しています。</p>
+
+                    <div class="solution-title">解決方法：</div>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>GCP コンソール → IAM と管理 → IAM を開く</li>
+                        <li>使用している Google アカウントを検索</li>
+                        <li>「オーナー」または「エディタ」ロールを付与</li>
+                        <li>terraform apply を再実行</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Error: Error creating database: googleapi: Error 400</div>
+                <div class="solution-section">
+                    <div class="solution-title">原因：</div>
+                    <p>同じプロジェクトに既に Firestore データベースが存在しています。</p>
+
+                    <div class="solution-title">解決方法：</div>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>GCP コンソール → Firestore を開く</li>
+                        <li>既存のデータベースを確認</li>
+                        <li>テスト用なら削除（本番なら以下のステップ）</li>
+                        <li>Terraform コード内のデータベースリソースで depends_on を利用し、作成順序を制御</li>
+                    </ol>
+
+                    <div class="code-block">
+                        <div class="code-label">例</div>
+                        <pre>resource "google_firestore_database" "database" {
+  ...
+  depends_on = [google_firebase_project.default]
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Error: Terraform plan succeeds but apply fails</div>
+                <div class="solution-section">
+                    <div class="solution-title">原因：</div>
+                    <p>API がまだ有効化されていない、または IAM 権限の反映に時間が必要な場合があります。</p>
+
+                    <div class="solution-title">解決方法：</div>
+                    <div class="step">
+                        <div class="step-number">1️⃣ API 有効化を確認</div>
+                        <p>GCP コンソール → API とサービス → ライブラリ で以下の API を検索・有効化：</p>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Cloud Firestore API</li>
+                            <li>Cloud Functions API</li>
+                            <li>Cloud Build API</li>
+                            <li>Secret Manager API</li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2️⃣ 数分待機してから再実行</div>
+                        <p>API 有効化と IAM 権限の反映に数分かかることがあります。</p>
+                        <div class="code-block">
+                            <pre>sleep 300  # 5分待機
+terraform apply</pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3️⃣ それでもダメなら Cloud Shell で実行</div>
+                        <p>GCP Cloud Shell から実行すれば、認証情報の問題を回避できます。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 実行時のエラー -->
+        <div class="section">
+            <h2>🚀 実行時のエラー</h2>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Firestore セキュリティルール拒否エラー</div>
+                <div class="solution-section">
+                    <div class="solution-title">エラーメッセージ例：</div>
+                    <div class="code-block">
+                        <pre>Permission denied. (read_document [root/companies/...])</pre>
+                    </div>
+
+                    <div class="solution-title">原因：</div>
+                    <p>Firestore セキュリティルールが正しく設定されていない、またはユーザーが正しい企業に属していない。</p>
+
+                    <div class="solution-title">解決方法：</div>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Firebase コンソール → Firestore → ルール を確認</li>
+                        <li>Firestore Emulator Suite でルールをテスト</li>
+                        <li>Firestore のテストモードを有効化（本番前のデバッグ用）</li>
+                    </ol>
+
+                    <div class="code-block">
+                        <div class="code-label">Firestore Emulator 実行</div>
+                        <pre>firebase emulators:start --only firestore</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Cloud Functions でタイムアウト</div>
+                <div class="solution-section">
+                    <div class="solution-title">原因：</div>
+                    <p>Freee API 呼び出しに時間がかかっている、またはデフォルトのタイムアウト（60秒）では不足。</p>
+
+                    <div class="solution-title">解決方法：</div>
+                    <div class="step">
+                        <div class="step-number">1️⃣ タイムアウト値を増やす</div>
+                        <div class="code-block">
+                            <div class="code-label">Terraform</div>
+                            <pre>resource "google_cloudfunctions_function" "freee_sync" {
+  ...
+  timeout = 540  # 最大540秒（9分）
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2️⃣ メモリを増やす</div>
+                        <p>メモリが少ないと CPU が制限され、処理が遅くなります。</p>
+                        <div class="code-block">
+                            <div class="code-label">Terraform</div>
+                            <pre>available_memory_mb = 512  # 256MB から 512MB に増加</pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3️⃣ Freee API 呼び出しの最適化</div>
+                        <p>不要なデータ取得を避ける、バッチ処理を活用。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-block">
+                <div class="problem-title">❌ Secret Manager へのアクセス失敗</div>
+                <div class="solution-section">
+                    <div class="solution-title">エラーメッセージ例：</div>
+                    <div class="code-block">
+                        <pre>Error: Permission denied on resource:
+projects/[PROJECT]/secrets/freee-api-token/versions/latest</pre>
+                    </div>
+
+                    <div class="solution-title">解決方法：</div>
+                    <div class="step">
+                        <div class="step-number">1️⃣ Cloud Functions の Service Account に権限を付与</div>
+                        <div class="code-block">
+                            <div class="code-label">Terraform</div>
+                            <pre>resource "google_project_iam_member" "functions_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.cloud_functions.email}"
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2️⃣ 権限の反映を待つ</div>
+                        <p>IAM 権限の反映に数分かかることがあります。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- パフォーマンス最適化 -->
+        <div class="section">
+            <h2>⚡ パフォーマンス最適化</h2>
+
+            <div class="performance-tips">
+                <h4>🚀 Cloud Functions を高速化</h4>
+                <ul>
+                    <li><strong>メモリ割り当て：</strong> 256MB から 512MB～ に増加（CPU も比例）</li>
+                    <li><strong>コールドスタート対策：</strong> 定期的に実行してウォーム状態を保つ</li>
+                    <li><strong>並列処理：</strong> Freee API 複数呼び出しを Promise.all() で並列化</li>
+                    <li><strong>キャッシング：</strong> 変更なしのデータは Firestore にキャッシュ</li>
+                </ul>
+            </div>
+
+            <div class="performance-tips">
+                <h4>🔍 Firestore クエリ最適化</h4>
+                <ul>
+                    <li><strong>インデックス作成：</strong> 頻繁に使用するクエリにはインデックスを作成</li>
+                    <li><strong>ページネーション：</strong> 大量データは limit() を使ってページ分割</li>
+                    <li><strong>複合クエリ削減：</strong> where 条件を少なくする</li>
+                    <li><strong>リアルタイムリスニング削減：</strong> 必要な時だけ .onSnapshot() を使用</li>
+                </ul>
+            </div>
+
+            <div class="performance-tips">
+                <h4>📊 Cloud Logging でパフォーマンス監視</h4>
+                <ul>
+                    <li>Cloud Functions の実行時間を記録</li>
+                    <li>Firestore の読み書き数を監視</li>
+                    <li>エラーレートをアラートで通知</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- コスト最適化 -->
+        <div class="section">
+            <h2>💰 コスト最適化</h2>
+
+            <div class="cost-optimization">
+                <h4>💳 GCP コスト削減のポイント</h4>
+                <ul>
+                    <li><strong>Cloud Scheduler 実行回数：</strong> 必要最小限の頻度に設定（1日1回など）</li>
+                    <li><strong>Cloud Functions メモリ：</strong> 必要最小限の割り当て（ただし性能とのバランス）</li>
+                    <li><strong>Firestore インデックス：</strong> 不要なインデックスを削除</li>
+                    <li><strong>ストレージ：</strong> 古いログは自動削除ポリシーを設定</li>
+                </ul>
+            </div>
+
+            <h3>月額費用の見積もり例</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background: #4285f4; color: white;">
+                        <th style="padding: 12px; text-align: left;">サービス</th>
+                        <th style="padding: 12px; text-align: left;">設定</th>
+                        <th style="padding: 12px; text-align: right;">月額目安</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px;">Cloud Functions</td>
+                        <td style="padding: 12px;">256MB × 1日1回 × 100秒</td>
+                        <td style="padding: 12px; text-align: right;">¥100～</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px;">Cloud Scheduler</td>
+                        <td style="padding: 12px;">1日1回 × 30日</td>
+                        <td style="padding: 12px; text-align: right;">¥10 × 3 = ¥30</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px;">Firestore</td>
+                        <td style="padding: 12px;">1000読み取り / 日 + ストレージ 1GB</td>
+                        <td style="padding: 12px; text-align: right;">¥30～50</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px;"><strong>合計</strong></td>
+                        <td style="padding: 12px;"></td>
+                        <td style="padding: 12px; text-align: right;"><strong>¥150～200/月</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FAQ -->
+        <div class="section">
+            <h2>❓ よくある質問</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: Terraform destroy でリソース削除できない</div>
+                <div class="faq-answer">A: Firebase プロジェクトは削除に制限があります。GCP コンソール → Firebase プロジェクト設定 → プロジェクトを削除 から手動で削除してください。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: Freee API トークンの有効期限は？</div>
+                <div class="faq-answer">A: Freee API トークンは有効期限が設定されている場合があります。期限切れの場合は Freee 管理画面で新規発行し、Secret Manager を更新してください。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: 複数の GCP プロジェクトをセットアップしたい</div>
+                <div class="faq-answer">A: terraform.tfvars で project_id を変更すれば、同じコードで複数プロジェクトをセットアップできます。または環境ごとに別ディレクトリを作成し、バックエンド（terraform state）を分離するのがお勧めです。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: Firestore のテストモードと本番モードの違いは？</div>
+                <div class="faq-answer">A: テストモードではセキュリティルール関係なくすべてのアクセスが許可されます（開発用）。本番環境では必ず本番モードに切り替え、厳密なセキュリティルールを設定してください。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: ログが見当たらない</div>
+                <div class="faq-answer">A: GCP コンソール → ログエクスプローラ で「リソースタイプ: Cloud Function」や「リソースタイプ: Firestore」でフィルタリングして検索してください。</div>
+            </div>
+        </div>
+
+        <!-- サポート体制 -->
+        <div class="section">
+            <h2>📞 困った時の対応</h2>
+
+            <ol style="margin-left: 20px; line-height: 2.2; font-size: 1.05em;">
+                <li>
+                    <strong>ドキュメントを確認</strong><br>
+                    このガイドやGCP公式ドキュメントを再確認
+                </li>
+                <li>
+                    <strong>ログを確認</strong><br>
+                    Cloud Logging でエラーメッセージの詳細を確認
+                </li>
+                <li>
+                    <strong>単純化してテスト</strong><br>
+                    複雑な設定を一度削除して、最小限の構成でテスト
+                </li>
+                <li>
+                    <strong>社内チーム・コミュニティに相談</strong><br>
+                    GCP公式フォーラム、Stack Overflow、Slack コミュニティ等
+                </li>
+                <li>
+                    <strong>GCP サポートに問い合わせ</strong><br>
+                    GCP 有償サポートがあれば、プロフェッショナルサポートに相談可能
+                </li>
+            </ol>
+        </div>
+
+        <!-- ナビゲーション -->
+        <div class="nav-buttons">
+            <a href="gcp-security.html" class="nav-button prev">前: セキュリティ設定</a>
+            <a href="gcp-overview.html" class="nav-button back">概要に戻る</a>
+        </div>
+
+        <div class="footer">
+            <p>GCP版 トラブルシューティングガイド | Samurai Terakoya 2026</p>
+        </div>
+    </div>
+</body>
+</html>

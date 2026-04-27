@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terraform ガイド | GCP版ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px dotted white;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #4285f4;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34a853;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .code-label {
+            background: #333;
+            color: #4285f4;
+            padding: 8px 12px;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: -20px -20px 15px -20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        .note strong {
+            color: #1976d2;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong {
+            color: #e65100;
+        }
+
+        .structure {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-left: 3px solid #4285f4;
+        }
+
+        .highlight {
+            background: #ffffcc;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background: #4285f4;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:before {
+            content: "← ";
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-radius: 8px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #34a853;
+        }
+
+        .nav-button.prev:before {
+            content: "← ";
+        }
+
+        .nav-button.next:after {
+            content: " →";
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .code-block {
+                font-size: 0.8em;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="breadcrumb">
+                <a href="index.html">📊 展開ガイド</a> > <a href="gcp-overview.html">GCP版</a> > Terraform ガイド
+            </div>
+            <h1>🛠️ Terraform ガイド</h1>
+            <p>Firebase プロジェクト構築を自動化する Terraform コード解説</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="gcp-overview.html" class="back-link">GCP版ガイドに戻る</a>
+
+        <!-- Terraform 概要 -->
+        <div class="section">
+            <h2>📖 Terraform とは？</h2>
+
+            <p>Terraform は HashiCorp が開発した <strong>Infrastructure as Code（IaC）</strong> ツールです。クラウドリソース（GCP、AWS、Azure など）の構成をコードで管理できます。</p>
+
+            <h3>Terraform を使うメリット</h3>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><strong>再現性：</strong> 同じコードを実行すれば、同じ構成が自動に作成される</li>
+                <li><strong>管理性：</strong> すべてのリソースをテキストファイルで管理・バージョン管理可能</li>
+                <li><strong>効率性：</strong> 手作業を削減し、数分で複雑なセットアップが完了</li>
+                <li><strong>チーム開発：</strong> コードレビュー → 本番反映という流れが可能</li>
+            </ul>
+
+            <h3>Terraform の基本概念</h3>
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>用語</th>
+                        <th>説明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Provider</strong></td>
+                        <td>クラウドプロバイダー（GCP、AWS等）との連携を定義</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resource</strong></td>
+                        <td>作成・管理するリソース（Firestore、Cloud Functions等）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Variable</strong></td>
+                        <td>設定値を変数化（プロジェクト ID、リージョン等）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Output</strong></td>
+                        <td>実行後の出力値（作成されたリソースの ID 等）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State</strong></td>
+                        <td>現在のリソース状態を記録するファイル</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ファイル構成 -->
+        <div class="section">
+            <h2>📁 プロジェクトの構成</h2>
+
+            <p>Terraform プロジェクトの推奨ファイル構成：</p>
+
+            <div class="structure">
+budget-management-gcp/<br>
+├── main.tf<br>
+├── variables.tf<br>
+├── outputs.tf<br>
+├── terraform.tfvars<br>
+└── .gitignore
+            </div>
+
+            <h3>各ファイルの役割</h3>
+
+            <h4>📄 main.tf</h4>
+            <p>メインのリソース定義ファイル。Firebase プロジェクト、Firestore、Cloud Functions などを記述します。</p>
+
+            <h4>📄 variables.tf</h4>
+            <p>変数定義ファイル。プロジェクト ID やリージョンなど、環境によって変わる値を変数として定義します。</p>
+
+            <h4>📄 outputs.tf</h4>
+            <p>出力値定義ファイル。実行後に表示する情報（作成されたリソースのエンドポイント等）を定義します。</p>
+
+            <h4>📄 terraform.tfvars</h4>
+            <p>変数の具体値を設定するファイル。環境ごとに異なる値（本番環境、テスト環境等）を記載します。</p>
+
+            <h4>📄 .gitignore</h4>
+            <p>Git にコミットしてはいけないファイルを指定（terraform.tfstate、.tfvars など）</p>
+        </div>
+
+        <!-- main.tf の実装例 -->
+        <div class="section">
+            <h2>💻 実装例: main.tf</h2>
+
+            <h3>Terraform & Provider 設定</h3>
+            <div class="code-block">
+                <div class="code-label">main.tf - Terraform設定</div>
+                <pre>terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}</pre>
+            </div>
+
+            <h3>Firebase プロジェクト作成</h3>
+            <div class="code-block">
+                <div class="code-label">main.tf - Firebase</div>
+                <pre>resource "google_firebase_project" "default" {
+  project = var.project_id
+  provider = google
+}</pre>
+            </div>
+
+            <h3>Firestore データベース作成</h3>
+            <div class="code-block">
+                <div class="code-label">main.tf - Firestore</div>
+                <pre>resource "google_firestore_database" "database" {
+  project     = var.project_id
+  name        = "budget-app"
+  location_id = var.region
+  type        = "FIRESTORE_NATIVE"
+
+  depends_on = [google_firebase_project.default]
+}</pre>
+            </div>
+
+            <h3>Cloud Functions 作成</h3>
+            <div class="code-block">
+                <div class="code-label">main.tf - Cloud Functions</div>
+                <pre>resource "google_cloudfunctions_function" "freee_sync" {
+  name        = "freee-sync-function"
+  runtime     = "nodejs20"
+  region      = var.region
+  description = "Freee data synchronization function"
+
+  available_memory_mb = 256
+  source_archive_bucket = google_storage_bucket.function_source.name
+  source_archive_object = google_storage_bucket_object.function_zip.name
+
+  entry_point = "syncFreeeData"
+
+  environment_variables = {
+    FIRESTORE_PROJECT_ID = var.project_id
+    FREEE_API_TOKEN      = var.freee_api_token
+  }
+
+  service_account_email = google_service_account.cloud_functions.email
+}</pre>
+            </div>
+
+            <div class="note">
+                <strong>💡 ポイント：</strong> Freee API トークンなどの秘密情報は、環境変数で参照するのではなく Secret Manager を使う方がセキュアです。
+            </div>
+        </div>
+
+        <!-- variables.tf -->
+        <div class="section">
+            <h2>🔧 実装例: variables.tf</h2>
+
+            <div class="code-block">
+                <div class="code-label">variables.tf</div>
+                <pre>variable "project_id" {
+  description = "GCP Project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP Region"
+  type        = string
+  default     = "asia-northeast1"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  validation {
+    condition     = contains(["dev", "staging", "production"], var.environment)
+    error_message = "Environment must be dev, staging, or production."
+  }
+}
+
+variable "freee_api_token" {
+  description = "Freee API Token"
+  type        = string
+  sensitive   = true
+}</pre>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ 重要：</strong> sensitive = true を指定することで、コンソール出力時にトークンが隠されます。
+            </div>
+        </div>
+
+        <!-- terraform.tfvars -->
+        <div class="section">
+            <h2>⚙️ 実装例: terraform.tfvars</h2>
+
+            <p>環境ごとに異なる値を記載します。このファイルは <span class="highlight">.gitignore に追加</span>し、Git にコミットしないようにしてください。</p>
+
+            <div class="code-block">
+                <div class="code-label">terraform.tfvars - テスト環境</div>
+                <pre>project_id      = "budget-app-test"
+region          = "asia-northeast1"
+environment     = "dev"
+freee_api_token = "xxxxxxxxxxxxx"</pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-label">terraform.tfvars - 本番環境</div>
+                <pre>project_id      = "budget-app-production"
+region          = "asia-northeast1"
+environment     = "production"
+freee_api_token = "xxxxxxxxxxxxx"</pre>
+            </div>
+
+            <div class="note">
+                <strong>💡 ポイント：</strong> 秘密情報（API トークン）は terraform.tfvars に記載する代わりに、環境変数から読み込む方法もあります：
+                <br><code>export TF_VAR_freee_api_token="xxxxx"</code>
+            </div>
+        </div>
+
+        <!-- outputs.tf -->
+        <div class="section">
+            <h2>📤 実装例: outputs.tf</h2>
+
+            <p>実行後に表示される出力値を定義します。</p>
+
+            <div class="code-block">
+                <div class="code-label">outputs.tf</div>
+                <pre>output "firebase_project_id" {
+  description = "Firebase Project ID"
+  value       = google_firebase_project.default.project_id
+}
+
+output "firestore_database_name" {
+  description = "Firestore Database Name"
+  value       = google_firestore_database.database.name
+}
+
+output "cloud_function_name" {
+  description = "Cloud Function Name"
+  value       = google_cloudfunctions_function.freee_sync.name
+}
+
+output "firebase_hosting_url" {
+  description = "Firebase Hosting URL"
+  value       = google_firebase_web_app.default.default_url
+}</pre>
+            </div>
+        </div>
+
+        <!-- Terraform コマンド -->
+        <div class="section">
+            <h2>🚀 実行コマンド</h2>
+
+            <h3>1. 初期化</h3>
+            <div class="code-block">
+                <pre>terraform init</pre>
+            </div>
+            <p>Terraform の初期化。プロバイダーをダウンロード・セットアップします。初回実行時に1回だけ実行。</p>
+
+            <h3>2. フォーマットと検証</h3>
+            <div class="code-block">
+                <pre>terraform fmt          # コードをフォーマット
+terraform validate    # 構文エラーをチェック</pre>
+            </div>
+
+            <h3>3. プラン確認</h3>
+            <div class="code-block">
+                <pre>terraform plan</pre>
+            </div>
+            <p>実際に実行する前に、どんなリソースが作成・変更されるかを確認します。</p>
+
+            <h3>4. 本実行</h3>
+            <div class="code-block">
+                <pre>terraform apply</pre>
+            </div>
+            <p>実際にリソースを作成。確認メッセージが出るので「yes」を入力。</p>
+
+            <h3>5. 削除</h3>
+            <div class="code-block">
+                <pre>terraform destroy</pre>
+            </div>
+            <p>テスト後に全リソースを削除したい場合。</p>
+
+            <div class="warning">
+                <strong>⚠️ 注意：</strong> <span class="highlight">destroy は危険</span>。本番環境では実行しないよう注意。
+            </div>
+        </div>
+
+        <!-- ベストプラクティス -->
+        <div class="section">
+            <h2>✨ Terraform ベストプラクティス</h2>
+
+            <h3>1. State ファイル管理</h3>
+            <p>terraform.tfstate は Git にコミットしてはいけません。チーム開発の場合は GCS（Google Cloud Storage）にリモート保存するのがお勧め。</p>
+            <div class="code-block">
+                <div class="code-label">backend.tf</div>
+                <pre>terraform {
+  backend "gcs" {
+    bucket = "budget-app-terraform-state"
+    prefix = "prod"
+  }
+}</pre>
+            </div>
+
+            <h3>2. 環境の分離</h3>
+            <p>dev、staging、production を separate な directories で管理し、異なる tfvars ファイルを使用。</p>
+
+            <h3>3. セキュリティ</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li>secret 情報は Secret Manager で管理</li>
+                <li>sensitive = true で出力から隠す</li>
+                <li>.gitignore で tfvars ファイルを除外</li>
+            </ul>
+
+            <h3>4. テスト</h3>
+            <p>本番環境に適用する前に、必ず terraform plan で確認・テスト環境で検証。</p>
+
+            <h3>5. ドキュメント</h3>
+            <p>各変数と出力値に description をつけ、保守性を高める。</p>
+        </div>
+
+        <!-- トラブルシューティング -->
+        <div class="section">
+            <h2>🆘 よくあるエラー</h2>
+
+            <h3>❌ Error: User does not have permission</h3>
+            <p><strong>原因：</strong> 認証情報の IAM 権限不足</p>
+            <p><strong>対策：</strong> GCP コンソール → IAM & 管理 → ロール編集で必要な権限を追加</p>
+
+            <h3>❌ Error: Error creating database: googleapi: Error 400</h3>
+            <p><strong>原因：</strong> Firestore database が既に存在</p>
+            <p><strong>対策：</strong> GCP コンソール → Firestore で既存 DB を確認・削除</p>
+
+            <h3>❌ Terraform Plan が成功するが Apply で失敗</h3>
+            <p><strong>原因：</strong> API 有効化忘れ、IAM 権限のタイミング問題</p>
+            <p><strong>対策：</strong> terraform apply の数分後に再実行（API 反映待ち）</p>
+        </div>
+
+        <!-- ナビゲーション -->
+        <div class="nav-buttons">
+            <a href="gcp-setup-steps.html" class="nav-button prev">前: 作業ステップ</a>
+            <a href="gcp-security.html" class="nav-button next">次: セキュリティ設定</a>
+        </div>
+
+        <div class="footer">
+            <p>GCP版 Terraform ガイド | Samurai Terakoya 2026</p>
+        </div>
+    </div>
+</body>
+</html>
