@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ai-agent-vs-llm</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown-light.css" />
+</head>
+<body>
+<h1 id="aiエージェント-vs-汎用型llm">AIエージェント vs 汎用型LLM</h1>
+<h2 id="はじめに">はじめに</h2>
+<p>AIの活用が急速に拡大する中で、「AIエージェント」と「汎用型LLM（大規模言語モデル）」という2つの概念がよく混同されます。これらは似ているようで異なる特性を持っており、用途に応じて使い分けることが重要です。</p>
+<p>本資料では、両者の本質的な違い、メリット・デメリット、そして適切な使い分けについてまとめています。</p>
+<hr />
+<h2 id="基本的な違い">1. 基本的な違い</h2>
+<h3 id="汎用型llmlarge-language-model">汎用型LLM（Large Language Model）</h3>
+<p><strong>定義</strong>：与えられたテキスト入力に対して、確率的に最も適切と思われるテキストを生成するニューラルネットワークモデル。</p>
+<p><strong>特徴</strong>： - 単体で動作する自己完結型のシステム - ユーザーの質問や指示に対して直接応答 - 学習時に習得した知識をベースに出力を生成 - 外部システムとの連携なしで完成</p>
+<p><strong>例</strong>：ChatGPT、Claude、Gemini など</p>
+<h3 id="aiエージェント">AIエージェント</h3>
+<p><strong>定義</strong>：LLMを中核として、外部ツール・API・データベースと連携し、複数のステップを経て問題を解決するシステム。</p>
+<h4 id="シングルエージェント">シングルエージェント</h4>
+<p><strong>特徴</strong>： - 1つのLLMが単独で動作 - 1つのAIが全ての判断と実行を行う - 処理の流れが単純で予測しやすい - スケーラビリティに限界がある</p>
+<p><strong>例</strong>：基本的なChatbot、シンプルな自動化タスク</p>
+<h4 id="マルチエージェント">マルチエージェント</h4>
+<p><strong>定義</strong>：複数のAIエージェントが協働し、各々が異なる役割を担いながら複合的な問題を解決するシステム。</p>
+<p><strong>特徴</strong>： - 複数のエージェントが役割分担して動作 - エージェント間で情報共有・協調・チェック機能を実装 - より複雑なタスクに対応可能 - 並列処理により処理スピード向上 - エージェント同士の相互検証で精度向上</p>
+<p><strong>例</strong>：複数の専門家エージェントによる診断、分散型タスク処理、Dify など</p>
+<h3 id="aiエージェント全般の共通特徴">AIエージェント（全般の共通特徴）</h3>
+<p><strong>特徴</strong>： - LLMをコントローラーとして、他のツールと協動 - 目標達成のために自律的に行動計画を立案 - ツール呼び出しを通じて外部リソースにアクセス - 反復的に判断と実行を繰り返す</p>
+<p><strong>例</strong>：Claude Code、AutoGPT、Cowork など</p>
+<hr />
+<h2 id="構成の違い">2. 構成の違い</h2>
+<h3 id="汎用型llm">汎用型LLM</h3>
+<pre><code>ユーザー入力
+    ↓
+  LLM
+    ↓
+  テキスト出力</code></pre>
+<p>シンプルで直線的なフロー。入力から出力まで一度のプロセスで完結。</p>
+<h3 id="aiエージェントシングルエージェント">AIエージェント（シングルエージェント）</h3>
+<pre><code>ユーザー入力
+    ↓
+  LLM（推論）
+    ↓
+ツール呼び出し判断
+    ↓
+外部ツール実行 ← API、ファイルシステム、データベース等
+    ↓
+結果をLLMに報告
+    ↓
+次のステップ判断（反復）
+    ↓
+最終出力</code></pre>
+<p>複数のコンポーネントが協働し、LLMが「次に何をするか」を判断しながら進む。</p>
+<h3 id="aiエージェントマルチエージェント">AIエージェント（マルチエージェント）</h3>
+<pre><code>ユーザー入力
+    ↓
+タスク分析・振り分け
+    ↓
+┌─────────────────────────────────────────┐
+│  並列処理: 複数エージェントが同時稼働  │
+│                                         │
+│  [エージェントA]  [エージェントB]  [エージェントC] │
+│  (データ取得)    (分析)       (検証)   │
+│       ↓            ↓           ↓       │
+│   ツール実行   ツール実行   ツール実行  │
+│       ↓            ↓           ↓       │
+│    結果集約 ← エージェント間で情報共有・検証 │
+└─────────────────────────────────────────┘
+    ↓
+チェック・統合（相互検証）
+    ↓
+最終出力</code></pre>
+<p>複数のエージェントが役割分担し、並列で処理を進める。各エージェント間で情報共有や相互チェックが行われ、より高い精度と処理速度を実現。</p>
+<hr />
+<h2 id="メリットデメリット">3. メリット・デメリット</h2>
+<h3 id="汎用型llm-1">汎用型LLM</h3>
+<p><strong>メリット</strong>： - ✅ <strong>導入が簡単</strong>：APIキー一つで使用開始可能 - ✅ <strong>レイテンシが低い</strong>：一度のAPI呼び出しで完結 - ✅ <strong>予測可能</strong>：出力の流れが読みやすい - ✅ <strong>コスト効率</strong>：シンプルな問題解決に最適</p>
+<p><strong>デメリット</strong>： - ❌ <strong>リアルタイム情報に弱い</strong>：学習データのカットオフ後の情報は知らない - ❌ <strong>複雑なタスクに対応困難</strong>：単一のLLMでは解決できない問題がある - ❌ <strong>外部リソースへのアクセスなし</strong>：ファイル操作、データベース検索などができない - ❌ <strong>長いプロセスに非対応</strong>：複数ステップが必要な業務に対応できない</p>
+<h3 id="aiエージェントシングルエージェント-1">AIエージェント（シングルエージェント）</h3>
+<p><strong>メリット</strong>： - ✅ <strong>複雑なタスク対応</strong>：複数ステップの問題を自律的に解決 - ✅ <strong>外部リソース連携</strong>：ファイル、API、データベースなどにアクセス可能 - ✅ <strong>リアルタイム情報取得</strong>：必要に応じて最新データを取得 - ✅ <strong>自己修正能力</strong>：エラーが発生しても修正を試みる - ✅ <strong>業務自動化に最適</strong>：反復的な作業を自動化 - ✅ <strong>セットアップが比較的簡単</strong>：単一エージェントの場合、構成がシンプル</p>
+<p><strong>デメリット</strong>： - ❌ <strong>スケーラビリティに限界</strong>：複雑になると単一エージェントでは対応困難 - ❌ <strong>処理スピードに限界</strong>：1つのエージェントが順序立てて処理 - ❌ <strong>エラーに弱い</strong>：単一エージェントのエラーが全体に影響 - ❌ <strong>レイテンシが高い</strong>：複数回の実行が必要なため時間がかかる - ❌ <strong>予測困難</strong>：エージェントの行動が事前に予想しにくい場合がある - ❌ <strong>コストが高い</strong>：複数API呼び出しによる料金発生 - ❌ <strong>セキュリティ考慮</strong>：外部リソースアクセス権限の管理が必要</p>
+<h3 id="aiエージェントマルチエージェント-1">AIエージェント（マルチエージェント）</h3>
+<p><strong>メリット</strong>： - ✅ <strong>複雑なタスク対応</strong>：複数ステップの問題を自律的に解決 - ✅ <strong>高い並列処理性能</strong>：複数のエージェントが同時に異なるタスクを処理 - ✅ <strong>処理速度の向上</strong>：並列実行により全体処理時間を短縮 - ✅ <strong>役割分担</strong>：各エージェントが専門分野に特化し精度向上 - ✅ <strong>相互検証・チェック機能</strong>：複数エージェント間で結果の検証、エラー検出 - ✅ <strong>耐障害性</strong>：1つのエージェントに問題が生じても他が補完 - ✅ <strong>スケーラビリティ</strong>：より複雑な問題への対応が可能 - ✅ <strong>柔軟な問題解決</strong>：異なる観点から問題にアプローチ - ✅ <strong>精度向上</strong>：複数の視点による検証で信頼性向上</p>
+<p><strong>デメリット</strong>： - ❌ <strong>セットアップがより複雑</strong>：複数エージェント間の協調設計が必要 - ❌ <strong>コストが高い</strong>：複数エージェントの並列実行による料金増加 - ❌ <strong>管理の複雑性</strong>：エージェント間の通信・同期・コンフリクト解決が必要 - ❌ <strong>予測困難性</strong>：複数エージェントの相互作用で挙動が読みにくい - ❌ <strong>デバッグが困難</strong>：複数エージェント間の問題箇所の特定が難しい - ❌ <strong>セキュリティ・ガバナンス</strong>：エージェント間のデータ共有管理が複雑 - ❌ <strong>オーバーヘッド</strong>：エージェント間の通信・協調にコストがかかる</p>
+<hr />
+<h2 id="適切な使い分け">4. 適切な使い分け</h2>
+<h3 id="汎用型llm-を選ぶべき場面">汎用型LLM を選ぶべき場面</h3>
+<ul>
+<li><strong>素早い回答が必要な場合</strong>
+<ul>
+<li>質問への即座の対応</li>
+<li>文章生成、レポート作成</li>
+<li>コード片の説明</li>
+</ul></li>
+<li><strong>シンプルな問題解決</strong>
+<ul>
+<li>テキストの要約</li>
+<li>翻訳</li>
+<li>ブレインストーミング</li>
+</ul></li>
+<li><strong>リアルタイム性が重要でない場合</strong>
+<ul>
+<li>過去の知識ベースで十分な質問</li>
+<li>予測や分析</li>
+</ul></li>
+<li><strong>コストを最小化したい場合</strong>
+<ul>
+<li>単発の軽い問い合わせ</li>
+</ul></li>
+</ul>
+<h3 id="aiエージェントシングルを選ぶべき場面">AIエージェント（シングル）を選ぶべき場面</h3>
+<ul>
+<li><strong>複数ステップのプロセスが必要だが規模が中程度</strong>
+<ul>
+<li>ファイル処理：読み込み→変換→保存</li>
+<li>データ分析：取得→処理→レポート作成</li>
+</ul></li>
+<li><strong>外部システムの操作が必要</strong>
+<ul>
+<li>ファイルシステムの操作</li>
+<li>APIを通じたデータ取得</li>
+<li>メール送信などの業務システム連携</li>
+</ul></li>
+<li><strong>リアルタイム情報が必要</strong>
+<ul>
+<li>最新のニュース検索</li>
+<li>現在の株価・天気情報</li>
+</ul></li>
+<li><strong>業務の自動化・効率化</strong>
+<ul>
+<li>定期的なデータ処理</li>
+<li>ワークフロー自動化</li>
+<li>繰り返し作業の削減</li>
+</ul></li>
+<li><strong>対話的な問題解決</strong>
+<ul>
+<li>ChatGPTに「調べてから答えて」が必要な場合</li>
+<li>エラーが発生した時に自動復旧が必要</li>
+</ul></li>
+</ul>
+<h3 id="aiエージェントマルチを選ぶべき場面">AIエージェント（マルチ）を選ぶべき場面</h3>
+<ul>
+<li><strong>非常に複雑なプロセスが必要</strong>
+<ul>
+<li>複数の専門分野が絡む問題解決</li>
+<li>複合的な意思決定が必要な業務</li>
+<li>大規模なワークフロー自動化</li>
+</ul></li>
+<li><strong>高速処理が必須</strong>
+<ul>
+<li>複数のタスクを同時並列で処理したい場合</li>
+<li>時間制約が厳しい業務</li>
+</ul></li>
+<li><strong>高い精度・信頼性が必須</strong>
+<ul>
+<li>複数エージェント間の相互検証で精度向上が必要</li>
+<li>クリティカルな判断や意思決定</li>
+<li>エラー耐性が重要なシステム</li>
+</ul></li>
+<li><strong>複数の観点からのアプローチが有効</strong>
+<ul>
+<li>マーケティング戦略：営業視点＋戦略視点＋技術視点の統合</li>
+<li>医療診断：複数の医療専門家の相互診査</li>
+<li>法務判断：複数の法律分野専門家による検証</li>
+</ul></li>
+<li><strong>スケーラビリティが重要</strong>
+<ul>
+<li>今後の機能拡張を見込んでいる</li>
+<li>複数チーム間の協調が必要</li>
+<li>大規模組織での運用</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="ハイブリッドアプローチ">5. ハイブリッドアプローチ</h2>
+<p>実務では、LLM、シングルエージェント、マルチエージェントの強みを活かしたハイブリッド運用が効果的な場合も多いです。</p>
+<p><strong>例</strong>： - <strong>クイックレスポンスの層</strong>：LLMで初期判定 - ユーザーの質問を受け取る - LLMが「即座に答えられるか」「調査が必要か」を判定</p>
+<ul>
+<li><strong>詳細処理の層</strong>：シングルエージェントで基本的な処理
+<ul>
+<li>簡易的な調査や処理</li>
+<li>ツール連携して初期回答を作成</li>
+</ul></li>
+<li><strong>複雑処理の層</strong>：マルチエージェントで高度な処理
+<ul>
+<li>複数の専門性が必要な場合</li>
+<li>複数視点からの検証が必要な場合</li>
+</ul></li>
+<li><strong>フィードバック</strong>：結果をユーザーに返却</li>
+</ul>
+<p>このアプローチにより、速度と複雑性のバランスが取れ、コスト最適化も実現できます。</p>
+<hr />
+<h2 id="ツール連携とプラットフォームdifyの例">6. ツール連携とプラットフォーム：Difyの例</h2>
+<p>AIエージェント（特にマルチエージェント）の実装に重要な役割を果たすのが、<strong>ツール連携プラットフォーム</strong>です。<strong>Dify</strong>はその代表例です。</p>
+<h3 id="difyとは">Difyとは</h3>
+<p>Difyは、複数のLLMモデルやエージェントを統合・管理するための<strong>ノーコード/ローコードプラットフォーム</strong>です。AIエージェントのツール連携を簡単に実現します。</p>
+<p><strong>主な特徴</strong>： - 複数LLMの統合管理（OpenAI、Anthropic、ローカルモデルなど） - ビジュアルエディターでワークフロー設計 - ツール（API、Database、Webhook等）の簡単な接続 - マルチエージェント構成のサポート - RAG（Retrieval Augmented Generation）機能</p>
+<h3 id="difyでのマルチエージェント実装例">Difyでのマルチエージェント実装例</h3>
+<pre><code>[ユーザー入力]
+    ↓
+[Difyワークフロー]
+    ↓
+┌─────────────────────────────────────────────┐
+│  エージェントA（データ収集）                │
+│  └→ 外部API連携 → データベース查询          │
+│                                             │
+│  エージェントB（分析・加工）                │
+│  └→ 取得したデータを分析 → 結果生成        │
+│                                             │
+│  エージェントC（品質チェック）              │
+│  └→ 結果を検証 → エラーチェック             │
+└─────────────────────────────────────────────┘
+    ↓
+[最終結果をユーザーに返却]</code></pre>
+<h3 id="difyを使用するメリット">Difyを使用するメリット</h3>
+<ul>
+<li><strong>ノーコード/ローコード</strong>：プログラミング不要でマルチエージェントシステムを構築</li>
+<li><strong>ツール連携の簡素化</strong>：APIやデータベースの接続が直感的</li>
+<li><strong>複雑な条件分岐</strong>：if-thenロジックを視覚的に設計</li>
+<li><strong>複数LLM間での切り替え</strong>：コストや性能に応じてモデル選択</li>
+<li><strong>監視・デバッグ</strong>：各ステップの実行結果を可視化</li>
+<li><strong>バージョン管理</strong>：ワークフローの変更履歴を追跡</li>
+<li><strong>本番環境への展開</strong>：APIやチャットボットとして即座に公開</li>
+</ul>
+<h3 id="difyでのツール連携の具体例">Difyでのツール連携の具体例</h3>
+<p>Difyプラットフォーム上では、以下のようなツール連携が実現します：</p>
+<ol type="1">
+<li><strong>Webhook/REST API連携</strong>
+<ul>
+<li>外部システムとの双方向通信</li>
+<li>リアルタイムデータ取得</li>
+</ul></li>
+<li><strong>Database連携</strong>
+<ul>
+<li>PostgreSQL、MySQL等のデータベースアクセス</li>
+<li>履歴管理、ナレッジベース活用</li>
+</ul></li>
+<li><strong>外部LLMサービス連携</strong>
+<ul>
+<li>OpenAI、Anthropic、ローカルモデルなど複数モデルの同時利用</li>
+<li>モデル間の役割分担</li>
+</ul></li>
+<li><strong>ファイル処理</strong>
+<ul>
+<li>PDFやExcelの読み込み・処理</li>
+<li>ドキュメント解析</li>
+</ul></li>
+<li><strong>メッセージング連携</strong>
+<ul>
+<li>Slack、メールなどとの統合</li>
+<li>ユーザー通知の自動化</li>
+</ul></li>
+</ol>
+<h3 id="llmシングルエージェントマルチエージェントにおけるツール連携">LLM、シングルエージェント、マルチエージェントにおけるツール連携</h3>
+<table>
+<thead>
+<tr class="header">
+<th>方式</th>
+<th>ツール連携</th>
+<th>実装例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>汎用型LLM</strong></td>
+<td>直接連携のみ（限定的）</td>
+<td>ChatGPTのプラグイン</td>
+</tr>
+<tr class="even">
+<td><strong>シングルエージェント</strong></td>
+<td>プログラムで連携実装</td>
+<td>Claude Codeでの自動実装</td>
+</tr>
+<tr class="odd">
+<td><strong>マルチエージェント</strong></td>
+<td>プラットフォームで統合管理</td>
+<td><strong>Difyでの連携</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Difyのようなプラットフォームを使うことで、マルチエージェント間の<strong>ツール共有</strong>、<strong>データの受け渡し</strong>、<strong>エラーハンドリング</strong>が統一的に管理できます。</p>
+<hr />
+<h2 id="選択フローチャート">7. 選択フローチャート</h2>
+<pre><code>                        タスク受け取り
+                             |
+            ┌────────────────┴────────────────┐
+            |                                  |
+        即座に答えられる？            複数ステップが必要？
+            |                                  |
+           YES                               YES
+            |                                  |
+           LLM                                 |
+                                ┌─────────────┴──────────┐
+                                |                        |
+                    複数エージェント 並列処理が有効か？
+                                |                        |
+                               NO                       YES
+                                |                        |
+                        シングルエージェント  マルチエージェント
+                            （AGENT）           （Multi-AGENT）
+                                |                        |
+                        ツール連携              Difyなどのプラット
+                        外部API               フォームで統合
+                        ファイル処理              複数役割分担</code></pre>
+<p><strong>判定ポイント</strong>： - 処理が複雑で時間がかかる場合 → マルチエージェント - 並列処理で精度向上が期待できる → マルチエージェント - 複数の専門性が必要 → マルチエージェント - それ以外の複雑タスク → シングルエージェント</p>
+<hr />
+<h2 id="今後のトレンド">8. 今後のトレンド</h2>
+<h3 id="llmの進化">LLMの進化</h3>
+<ul>
+<li>より大きなコンテキストウィンドウ（長文対応）</li>
+<li>より正確な推論能力</li>
+<li>マルチモーダル化（画像、音声の同時処理）</li>
+<li>より安価で高速なモデルの開発</li>
+</ul>
+<h3 id="シングルエージェントの進化">シングルエージェントの進化</h3>
+<ul>
+<li>より自律的な行動判定</li>
+<li>ツール連携の簡素化</li>
+<li>セキュリティ・ガバナンスの強化</li>
+<li>より少ないAPI呼び出しで高い精度を実現</li>
+</ul>
+<h3 id="マルチエージェントの進化">マルチエージェントの進化</h3>
+<ul>
+<li><strong>エージェント間協調メカニズムの成熟</strong>
+<ul>
+<li>より効率的な通信プロトコル</li>
+<li>自動的なコンフリクト解決</li>
+</ul></li>
+<li><strong>プラットフォーム化の加速</strong>
+<ul>
+<li>Difyのようなノーコードプラットフォームの普及</li>
+<li>マルチエージェント設計の標準化</li>
+</ul></li>
+<li><strong>自己組織化エージェント</strong>
+<ul>
+<li>タスクに応じて動的にエージェント構成を変更</li>
+<li>必要な時だけ専門エージェントを追加</li>
+</ul></li>
+<li><strong>AI間の検証メカニズム</strong>
+<ul>
+<li>エージェント同士が互いの結果をチェック</li>
+<li>信頼性向上</li>
+</ul></li>
+</ul>
+<h3 id="統合の進化">統合の進化</h3>
+<ul>
+<li>LLMとエージェントの境界が曖昧化</li>
+<li>「適応的エージェント」：状況に応じて自動的に動作モードを切り替え</li>
+<li>オーケストレーション層の重要性増加</li>
+<li>マルチエージェントとシングルエージェントの自動的な使い分け</li>
+</ul>
+<hr />
+<h2 id="まとめ">まとめ</h2>
+<table>
+<thead>
+<tr class="header">
+<th>項目</th>
+<th>汎用型LLM</th>
+<th>シングルエージェント</th>
+<th>マルチエージェント</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>得意な領域</strong></td>
+<td>知識問答、テキスト生成</td>
+<td>単体の複雑タスク</td>
+<td>複合的な複雑タスク</td>
+</tr>
+<tr class="even">
+<td><strong>応答速度</strong></td>
+<td>高速</td>
+<td>中速</td>
+<td>低速（並列処理のオーバーヘッド）</td>
+</tr>
+<tr class="odd">
+<td><strong>外部連携</strong></td>
+<td>不可</td>
+<td>可能</td>
+<td>可能（統合管理）</td>
+</tr>
+<tr class="even">
+<td><strong>リアルタイム対応</strong></td>
+<td>困難</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr class="odd">
+<td><strong>導入難度</strong></td>
+<td>簡単</td>
+<td>やや複雑</td>
+<td>複雑（設計・管理）</td>
+</tr>
+<tr class="even">
+<td><strong>運用コスト</strong></td>
+<td>低い</td>
+<td>中程度</td>
+<td>高い</td>
+</tr>
+<tr class="odd">
+<td><strong>精度・信頼性</strong></td>
+<td>単体では限定的</td>
+<td>良好</td>
+<td>優秀（相互検証）</td>
+</tr>
+<tr class="even">
+<td><strong>スケーラビリティ</strong></td>
+<td>低い</td>
+<td>中程度</td>
+<td>高い</td>
+</tr>
+<tr class="odd">
+<td><strong>並列処理</strong></td>
+<td>不可</td>
+<td>不可</td>
+<td>可能</td>
+</tr>
+<tr class="even">
+<td><strong>役割分担</strong></td>
+<td>なし</td>
+<td>なし</td>
+<td>あり</td>
+</tr>
+<tr class="odd">
+<td><strong>推奨プラットフォーム</strong></td>
+<td>各種LLMAPI</td>
+<td>Claude Code等</td>
+<td><strong>Dify等のプラットフォーム</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>最適な選択は、タスクの特性と要件によって決まります。</strong></p>
+<ul>
+<li><strong>シンプルな問題</strong> → LLM</li>
+<li><strong>複雑だが単体で対応可能</strong> → シングルエージェント</li>
+<li><strong>非常に複雑で並列処理・複数視点が必要</strong> → マルチエージェント（Difyなど）</li>
+</ul>
+<p>両者が補完し合う<strong>ハイブリッドアプローチ</strong>を検討することで、AI活用の効果を最大化できます。</p>
+<hr />
+<h2 id="参考資料">参考資料</h2>
+<ul>
+<li>Anthropic Claude Documentation</li>
+<li>OpenAI Agent Documentation</li>
+<li>各種LLMプロバイダーの公式情報</li>
+</ul>
+<hr />
+<p><em>最終更新日：2026年4月28日</em></p>
+</body>
+</html>
