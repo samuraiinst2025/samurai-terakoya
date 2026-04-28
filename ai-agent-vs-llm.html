@@ -67,6 +67,12 @@
             margin-top: 32px;
             margin-bottom: 16px;
         }
+        h4 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
         p {
             margin-bottom: 16px;
         }
@@ -235,7 +241,7 @@
                 <li>スケーラビリティに限界がある</li>
             </ul>
             
-            <p><strong>例</strong>：Claude Code、基本的な自動化システム</p>
+            <p><strong>例</strong>：Claude Code（単体）、AutoGPT、Genspark</p>
             
             <h4>マルチエージェント</h4>
             <p>複数のAIエージェントが協働し、各々が異なる役割を担いながら複合的な問題を解決します。</p>
@@ -247,7 +253,12 @@
                 <li>エージェント同士の相互検証で精度向上</li>
             </ul>
             
-            <p><strong>例</strong>：複数の専門家エージェントによる診断、分散型タスク処理、Dify など</p>
+            <p><strong>例</strong>：複数の専門家エージェントによる診断、分散型タスク処理、Claude Code（サブエージェント利用）など</p>
+            
+            <div class="alert alert-note">
+                <strong>🔑 重要：構築方法でシングル/マルチが決まる</strong>
+                同じツール（Dify、LangChain等）を使っていても、設計によってシングルエージェントにもマルチエージェントにもなります。Claude Codeも、サブエージェント機能を利用することでマルチエージェント構成を実現できます。
+            </div>
         </div>
         
         <!-- 第2章：構成の違い -->
@@ -440,73 +451,73 @@
             </ul>
         </div>
         
-        <!-- 第5章：ツール連携とDify -->
+        <!-- 第5章：ツール連携とプラットフォーム -->
         <div class="card">
-            <h2>5. ツール連携とプラットフォーム：Difyの例</h2>
+            <h2>5. ツール連携とプラットフォーム</h2>
             
-            <p>AIエージェント（特にマルチエージェント）の実装に重要な役割を果たすのが、<strong>ツール連携プラットフォーム</strong>です。<strong>Dify</strong>はその代表例です。</p>
+            <p>AIエージェント（シングル・マルチ両方）の実装に重要な役割を果たすのが、<strong>ツール連携プラットフォーム・フレームワーク</strong>です。重要なポイントは、<strong>設計と構築方法によってシングルエージェントにもマルチエージェントにもなる</strong>ということです。</p>
             
-            <h3>Difyとは</h3>
+            <h3>主要なプラットフォーム・フレームワーク</h3>
             
-            <p>Difyは、複数のLLMモデルやエージェントを統合・管理するための<strong>ノーコード/ローコードプラットフォーム</strong>です。AIエージェントのツール連携を簡単に実現します。</p>
+            <h4>Dify</h4>
+            <p><strong>概要</strong>：複数のLLMモデルを統合・管理し、ノーコード/ローコードでワークフローを構築できるプラットフォーム。</p>
+            <p><strong>構築可能な形態</strong>：シングルエージェント構成（単一のLLMが複数ステップを実行）、マルチエージェント構成（複数エージェントが協働）</p>
+            <ul>
+                <li>複数LLMの統合管理（OpenAI、Anthropic、ローカルモデルなど）</li>
+                <li>ビジュアルエディターでワークフロー設計</li>
+                <li>ツール（API、Database、Webhook等）の簡単な接続</li>
+                <li>RAG（Retrieval Augmented Generation）機能</li>
+            </ul>
             
-            <div class="alert alert-note">
-                <strong>💡 Difyの主な特徴</strong>
-                複数LLMの統合管理、ビジュアルエディターでのワークフロー設計、ツール（API、Database、Webhook等）の簡単な接続、マルチエージェント構成のサポート、RAG（Retrieval Augmented Generation）機能
-            </div>
+            <h4>LangChain</h4>
+            <p><strong>概要</strong>：Python/JavaScriptフレームワーク。LLMを中心に、メモリ、ツール、チェーンを組み合わせてエージェント的な動作を実装。</p>
+            <p><strong>構築可能な形態</strong>：シングルエージェント、マルチエージェント両対応</p>
             
-            <h3>Difyでのマルチエージェント実装例</h3>
-            <div class="mermaid">
-                graph TD
-                    A["👤 ユーザー入力"] --> B["🔄 Difyワークフロー"]
-                    
-                    B --> C["🤖 エージェントA<br/>データ収集"]
-                    B --> D["🤖 エージェントB<br/>分析・加工"]
-                    B --> E["🤖 エージェントC<br/>品質チェック"]
-                    
-                    C -->|"外部API<br/>DB検索"| F["💾 外部リソース"]
-                    D -->|"データ処理"| F
-                    E -->|"検証"| F
-                    
-                    F --> G["🔄 結果統合"]
-                    
-                    G --> H["✅ 最終結果を返却"]
-                    
-                    style A fill:#e3f2fd
-                    style B fill:#fff3e0
-                    style C fill:#e0e7ff
-                    style D fill:#e0e7ff
-                    style E fill:#e0e7ff
-                    style H fill:#f0fdf4
-            </div>
+            <h4>AutoGen（Microsoft）</h4>
+            <p><strong>概要</strong>：複数のAIエージェントが会話を通じてタスク完了を目指すフレームワーク。</p>
+            <p><strong>構築可能な形態</strong>：複数エージェント構成に特化。エージェント間の自動的な会話・協調メカニズム。</p>
             
-            <h3>ツール連携の比較</h3>
+            <h3>実装方法とツール連携の関係</h3>
             <table>
                 <tr>
-                    <th>方式</th>
-                    <th>ツール連携</th>
-                    <th>実装例</th>
+                    <th>実装方法</th>
+                    <th>対応形態</th>
+                    <th>例</th>
                 </tr>
                 <tr>
-                    <td><strong>汎用型LLM</strong></td>
-                    <td>直接連携のみ（限定的）</td>
-                    <td>ChatGPTのプラグイン</td>
+                    <td><strong>プロダクト</strong></td>
+                    <td>シングル/マルチ両対応</td>
+                    <td>Claude Code、AutoGPT</td>
                 </tr>
                 <tr>
-                    <td><strong>シングルエージェント</strong></td>
-                    <td>プログラムで連携実装</td>
-                    <td>Claude Codeでの自動実装</td>
+                    <td><strong>ノーコードプラットフォーム</strong></td>
+                    <td>シングル/マルチ両対応</td>
+                    <td><strong>Dify</strong>（設計次第で実現）</td>
                 </tr>
                 <tr>
-                    <td><strong>マルチエージェント</strong></td>
-                    <td>プラットフォームで統合管理</td>
-                    <td><strong>🌟 Difyでの連携</strong></td>
+                    <td><strong>フレームワーク</strong></td>
+                    <td>シングル/マルチ両対応</td>
+                    <td><strong>LangChain</strong>、<strong>AutoGen</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>リサーチ特化型</strong></td>
+                    <td>シングルエージェント的</td>
+                    <td>Genspark</td>
                 </tr>
             </table>
             
+            <div class="alert alert-warning">
+                <strong>⚠️ よくある誤解</strong>
+                「Difyはマルチエージェントツールだからマルチエージェントになる」わけではありません。Difyは<strong>プラットフォーム</strong>であり、その中でどう構築するかによってシングルにもマルチにもなります。同じことはLangChainやAutoGenにも言えます。
+            </div>
+            
             <div class="alert alert-tip">
-                <strong>🚀 Difyを使用するメリット</strong>
-                ノーコード/ローコードでマルチエージェントシステムを構築、APIやデータベース接続が直感的、複雑な条件分岐を視覚的に設計、複数LLM間での切り替えが可能、各ステップの実行結果を可視化、ワークフローのバージョン管理
+                <strong>💡 設計が重要</strong>
+                <ul style="margin-top: 12px;">
+                    <li><strong>Claude Code</strong>：単体で使えばシングル、サブエージェント機能を利用すればマルチ</li>
+                    <li><strong>Dify</strong>：単一LLMの複数ステップ設計ならシングル、複数エージェント協調設計ならマルチ</li>
+                    <li><strong>LangChain</strong>：プログラム次第でシングルエージェント、マルチエージェント両方実装可能</li>
+                </ul>
             </div>
         </div>
         
@@ -526,9 +537,9 @@
                     
                     Q2 -->|YES| Q3{"⚙️ 並列処理や<br/>複数視点が有効か？"}
                     
-                    Q3 -->|NO| SA["✅ シングルエージェント<br/>Claude Code等"]
+                    Q3 -->|NO| SA["✅ シングルエージェント<br/>Claude Code, AutoGPT等"]
                     
-                    Q3 -->|YES| Multi["✅ マルチエージェント<br/>Dify等のプラットフォーム"]
+                    Q3 -->|YES| Multi["✅ マルチエージェント<br/>Dify, LangChain等"]
                     
                     style Start fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
                     style LLM fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
@@ -562,6 +573,7 @@
                 <li>「適応的エージェント」：状況に応じて自動的に動作モードを切り替え</li>
                 <li>オーケストレーション層の重要性増加</li>
                 <li>マルチエージェントとシングルエージェントの自動的な使い分け</li>
+                <li>プラットフォーム間の相互運用性向上</li>
             </ul>
         </div>
         
@@ -634,7 +646,12 @@
                     <li><strong>複雑だが単体で対応可能</strong> → シングルエージェント</li>
                     <li><strong>非常に複雑で並列処理・複数視点が必要</strong> → マルチエージェント</li>
                 </ul>
-                <p style="margin-top: 12px;">これら3つが補完し合うハイブリッドアプローチを検討することで、AI活用の効果を最大化できます。</p>
+                <p style="margin-top: 12px;">これら3つが補完し合う<strong>ハイブリッドアプローチ</strong>を検討することで、AI活用の効果を最大化できます。</p>
+            </div>
+            
+            <div class="alert alert-note">
+                <strong>🔑 重要な認識：ツールとその使い方は別</strong>
+                同じツール（Dify、LangChain等）でも、設計によってシングルエージェント構成にもマルチエージェント構成にもなります。「このツールはマルチエージェント専用」という固定的な見方ではなく、「このツールでマルチエージェント構成を作ることができる」という柔軟な理解が重要です。
             </div>
         </div>
     </div>
