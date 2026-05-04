@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Agent SDK マルチエージェント構築ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-white);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px 60px;
+        }
+
+        /* セクション */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ヘッダー */
+        .section h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .section h2 {
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        /* テキスト */
+        .section p {
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: var(--text-gray);
+        }
+
+        .section ul, .section ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        /* ボックス */
+        .box {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+
+        .box.info {
+            background: #f0f9ff;
+            border-left-color: var(--primary);
+        }
+
+        .box.warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .box.success {
+            background: #f0fdf4;
+            border-left-color: var(--success);
+        }
+
+        .box.danger {
+            background: #fef2f2;
+            border-left-color: var(--danger);
+        }
+
+        .box p {
+            margin: 0;
+        }
+
+        /* コード */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 6px 6px 0 0;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        /* 言語切り替え */
+        .lang-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* テーブル */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--primary-light);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        /* プログレスバー */
+        .progress {
+            background: var(--border);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+
+        /* ボタン */
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .button.secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+
+        /* トップへ戻る */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- サイドバー -->
+        <div class="sidebar">
+            <h2>📚 目次</h2>
+            <div class="nav-item active" onclick="showSection('intro')">01. はじめに</div>
+            <div class="nav-item" onclick="showSection('concept')">02. 基本概念</div>
+            <div class="nav-item" onclick="showSection('architecture')">03. アーキテクチャ</div>
+            <div class="nav-item" onclick="showSection('setup')">04. 環境構築</div>
+            <div class="nav-item" onclick="showSection('step1')">05. Step 1: 基本セットアップ</div>
+            <div class="nav-item" onclick="showSection('step2')">06. Step 2: エージェント定義</div>
+            <div class="nav-item" onclick="showSection('step3')">07. Step 3: Cloud Functions</div>
+            <div class="nav-item" onclick="showSection('step4')">08. Step 4: Firestore 連携</div>
+            <div class="nav-item" onclick="showSection('deploy')">09. デプロイ</div>
+            <div class="nav-item" onclick="showSection('troubleshoot')">10. トラブルシューティング</div>
+            <div class="nav-item" onclick="showSection('faq')">11. よくある質問</div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <small style="color: var(--text-gray);">
+                    <strong>進捗</strong><br/>
+                    <div class="progress" style="margin: 10px 0;">
+                        <div class="progress-bar" id="progressBar" style="width: 10%"></div>
+                    </div>
+                    <span id="progressText">0/11 完了</span>
+                </small>
+            </div>
+        </div>
+
+        <!-- メインコンテンツ -->
+        <div class="main">
+
+            <!-- 01. はじめに -->
+            <div id="intro" class="section active">
+                <h1>🚀 Claude Agent SDK マルチエージェント構築ガイド</h1>
+
+                <p style="font-size: 16px; margin: 20px 0;">
+                    このガイドは、Claude Agent SDKを使ってマルチエージェント予算管理システムを構築するための完全な学習教材です。初級～中級者向けに、基本概念から本番デプロイまでを段階的に学習できます。
+                </p>
+
+                <h2>📖 このガイドについて</h2>
+
+                <div class="box info">
+                    <p><strong>対象者</strong>: JavaScript/Node.js の基本知識があり、Firebase を触ったことのある方</p>
+                </div>
+
+                <h3>📚 学習内容</h3>
+                <ul>
+                    <li><strong>基本概念</strong>: Claude Agent SDK とは？マルチエージェントの利点</li>
+                    <li><strong>システムアーキテクチャ</strong>: 親エージェント、子エージェント、SDK 自動管理の仕組み</li>
+                    <li><strong>実装ステップ</strong>: Node.js と Python の両言語で、段階的に実装</li>
+                    <li><strong>Firestore 連携</strong>: データベース設計とセキュリティルール</li>
+                    <li><strong>デプロイ</strong>: Cloud Functions への本番デプロイ手順</li>
+                </ul>
+
+                <h3>⏱️ 学習時間目安</h3>
+                <table>
+                    <tr>
+                        <th>セクション</th>
+                        <th>所要時間</th>
+                        <th>難易度</th>
+                    </tr>
+                    <tr>
+                        <td>基本概念（セクション 02-03）</td>
+                        <td>30 分</td>
+                        <td>⭐ 易</td>
+                    </tr>
+                    <tr>
+                        <td>環境構築（セクション 04）</td>
+                        <td>30 分</td>
+                        <td>⭐ 易</td>
+                    </tr>
+                    <tr>
+                        <td>実装ステップ（セクション 05-08）</td>
+                        <td>3-4 時間</td>
+                        <td>⭐⭐ 中</td>
+                    </tr>
+                    <tr>
+                        <td>デプロイ（セクション 09）</td>
+                        <td>30 分</td>
+                        <td>⭐ 易</td>
+                    </tr>
+                </table>
+
+                <h3>🎯 学習のコツ</h3>
+                <ol>
+                    <li>このガイドを<strong>順序通り</strong>読んでください。後のセクションが前のセクションに依存しています。</li>
+                    <li><strong>コード例は必ず手で入力</strong>してください。コピペだけでは実力がつきません。</li>
+                    <li><strong>各ステップごとに、動作確認</strong>してから次に進んでください。</li>
+                    <li>わからないことがあれば、セクション 11「よくある質問」を参照してください。</li>
+                </ol>
+
+                <div class="box success">
+                    <p>💡 <strong>このガイドの最終目標</strong>: 完全に機能する予算管理システムをあなた自身の環境で構築・デプロイできるようになること。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button" onclick="showSection('concept')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 02. 基本概念 -->
+            <div id="concept" class="section">
+                <h1>📚 Claude Agent SDK の基本概念</h1>
+
+                <h2>Claude Agent SDK とは？</h2>
+
+                <p>
+                    Claude Agent SDK は、Anthropic が提供するツールで、<strong>複数の AI エージェント（Claude）を協調させて、複雑なタスクを解決</strong>するためのフレームワークです。
+                </p>
+
+                <div class="box info">
+                    <p><strong>簡単に言うと</strong>: 「複数の AI が協力して仕事をする」仕組みを簡単に作れるツール</p>
+                </div>
+
+                <h3>単一エージェント vs マルチエージェント</h3>
+
+                <table>
+                    <tr>
+                        <th>特性</th>
+                        <th>単一エージェント</th>
+                        <th>マルチエージェント</th>
+                    </tr>
+                    <tr>
+                        <td>構成</td>
+                        <td>Claude 1個</td>
+                        <td>Claude 複数個（親 + 子エージェント）</td>
+                    </tr>
+                    <tr>
+                        <td>適している用途</td>
+                        <td>単純なタスク（翻訳、質問回答）</td>
+                        <td>複雑なタスク（データ入力 + 分析）</td>
+                    </tr>
+                    <tr>
+                        <td>実装の複雑さ</td>
+                        <td>シンプル</td>
+                        <td>複雑だが、SDK が管理を簡潔に</td>
+                    </tr>
+                    <tr>
+                        <td>コスト</td>
+                        <td>低い</td>
+                        <td>高い（複数エージェント × API呼び出し）</td>
+                    </tr>
+                </table>
+
+                <h3>📊 予算管理システムでの例</h3>
+
+                <p>このガイドで構築する「予算管理システム」では、マルチエージェント構成が必要になります：</p>
+
+                <ul>
+                    <li><strong>親エージェント</strong>（Budget Orchestrator）: ユーザーのリクエストを受け取り、適切なエージェントに振り分ける</li>
+                    <li><strong>子エージェント 1</strong>（InputAssistant）: 取引データの入力サポート、バリデーション、重複検知</li>
+                    <li><strong>子エージェント 2</strong>（AnalysisAgent）: 支出パターン分析、予算予測、異常検知</li>
+                </ul>
+
+                <div class="box success">
+                    <p>✅ <strong>マルチエージェント構造がもたらすメリット</strong>:
+                    <ul style="margin-top: 10px;">
+                        <li>各エージェントが専門分野に集中 → 精度向上</li>
+                        <li>複雑なタスクが複数の小さなタスクに分割 → 実装が簡潔</li>
+                        <li>SDK が通信・エラーハンドリングを自動管理 → 開発が楽</li>
+                    </ul>
+                    </p>
+                </div>
+
+                <h3>🔑 重要なコンセプト</h3>
+
+                <h4>1. 親エージェント（Orchestrator）</h4>
+                <p>
+                    ユーザーのリクエストを分析して、どのエージェントに仕事を任せるか判断する司令官的な存在です。
+                </p>
+                <div class="code-block">
+// 親エージェントのイメージ
+「ユーザーが 『新しい取引を追加して』 と言った」
+  ↓ 分析
+「これは入力系のリクエストだ」
+  ↓ 判定
+「InputAssistant エージェントに任せよう」
+  ↓ 委譲
+InputAssistant が動作開始
+                </div>
+
+                <h4>2. 子エージェント（Sub-agents）</h4>
+                <p>
+                    親エージェントから委譲されたタスクに特化したエージェント。各エージェントは独自のツールと指示を持ちます。
+                </p>
+
+                <h4>3. SDK の自動管理</h4>
+                <p>
+                    親と子の間の通信、エラーハンドリング、タイムアウト管理などを SDK が自動で行います。開発者は実装に専念できます。
+                </p>
+
+                <div class="box warning">
+                    <p>⚠️ <strong>注意</strong>: SDK は子エージェントの子エージェント（3層以上）を許可していません。親 → 子、この 2 層構成で設計してください。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('intro')">← 前へ</button>
+                    <button class="button" onclick="showSection('architecture')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 03. アーキテクチャ -->
+            <div id="architecture" class="section">
+                <h1>🏗️ システムアーキテクチャ</h1>
+
+                <h2>予算管理システムの全体像</h2>
+
+                <p>ここでは、このガイドで構築する予算管理システムの全体像をお見せします。</p>
+
+                <div style="background: var(--bg-light); padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <pre style="color: var(--text-dark); font-family: monospace; font-size: 13px; overflow-x: auto;">
+┌─────────────────────────────────────────────────────┐
+│  ユーザー（Web / Mobile アプリ）                    │
+└────────────────────┬────────────────────────────────┘
+                     │
+                     ↓
+            ┌────────────────────┐
+            │  API Gateway       │ ← 認証・ルーティング
+            │ (Cloud Functions)  │
+            └────────────┬───────┘
+                         │
+                    ↓ 親エージェント
+            ┌────────────────────────────────┐
+            │ Budget Orchestrator            │
+            │ (親エージェント)               │
+            │ - リクエスト分析              │
+            │ - 子エージェント選択         │
+            └────────────┬──────────────────┘
+                         │
+         ┌───────────────┴──────────────────┐
+         │                                  │
+    ↓ 子1                              ↓ 子2
+
+  ┌──────────────────┐    ┌──────────────────┐
+  │ InputAssistant   │    │ AnalysisAgent    │
+  │（入力補助）      │    │（分析）          │
+  │ - バリデーション│    │ - トレンド分析   │
+  │ - 重複検知      │    │ - 予測生成       │
+  └────────┬─────────┘    └────────┬─────────┘
+           │                       │
+           └───────────┬───────────┘
+                       │
+                   ↓ 両エージェント共通
+            ┌─────────────────────┐
+            │ Firestore + Storage │
+            │ （データベース）      │
+            └─────────────────────┘
+                    </pre>
+                </div>
+
+                <h3>🔄 データフロー例</h3>
+
+                <h4>シナリオ: 「新しい取引を追加して」</h4>
+
+                <div class="box info" style="background: #f0f9ff;">
+                    <p><strong>ステップ 1</strong>: ユーザーが「新しい取引: 1500円、食費、今日」とリクエスト</p>
+                </div>
+
+                <div class="code-block">
+{
+  "userId": "user_123",
+  "request": {
+    "type": "input_assistance",
+    "action": "addTransaction",
+    "payload": {
+      "amount": 1500,
+      "category": "food",
+      "date": "2026-05-03"
+    }
+  }
+}
+                </div>
+
+                <div class="box info" style="background: #f0f9ff; margin-top: 20px;">
+                    <p><strong>ステップ 2</strong>: 親エージェント（Budget Orchestrator）が「これは入力系だ」と判定</p>
+                </div>
+
+                <div class="box info" style="background: #f0f9ff; margin-top: 20px;">
+                    <p><strong>ステップ 3</strong>: SDK が自動的に InputAssistant エージェントを呼び出し</p>
+                </div>
+
+                <div class="code-block">
+🟢 SDK が自動管理：
+- コンテキストを親から子に渡す
+- タイムアウト: 30秒
+- リトライ: 最大3回
+                </div>
+
+                <div class="box info" style="background: #f0f9ff; margin-top: 20px;">
+                    <p><strong>ステップ 4</strong>: InputAssistant がデータをバリデーション</p>
+                </div>
+
+                <ul>
+                    <li>金額は正の数か？ ✅ OK</li>
+                    <li>カテゴリは有効か？ ✅ OK（food は許可された値）</li>
+                    <li>過去7日間に同じ取引はないか？ ✅ OK</li>
+                </ul>
+
+                <div class="box info" style="background: #f0f9ff; margin-top: 20px;">
+                    <p><strong>ステップ 5</strong>: Firestore に保存</p>
+                </div>
+
+                <div class="code-block">
+transactions/{transactionId}
+{
+  "userId": "user_123",
+  "amount": 1500,
+  "category": "food",
+  "date": "2026-05-03",
+  "processingStatus": "validated",
+  "createdAt": "2026-05-03T10:30:45Z"
+}
+                </div>
+
+                <div class="box info" style="background: #f0f9ff; margin-top: 20px;">
+                    <p><strong>ステップ 6</strong>: 結果を親エージェントが受け取り、ユーザーに返却</p>
+                </div>
+
+                <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "transactionId": "txn_abc123",
+    "message": "取引を追加しました：1500円（食費）"
+  }
+}
+                </div>
+
+                <h2>🟢 SDK が自動管理する部分</h2>
+
+                <p>以下の複雑な処理は、すべて SDK が自動的に行います。開発者は実装に専念できます！</p>
+
+                <div class="box success">
+                    <ul style="margin: 0;">
+                        <li>✅ 親と子の間のコンテキスト受け渡し</li>
+                        <li>✅ タイムアウト管理（30秒）</li>
+                        <li>✅ エラーハンドリング</li>
+                        <li>✅ リトライ（最大3回）</li>
+                        <li>✅ 結果の親への返却</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('concept')">← 前へ</button>
+                    <button class="button" onclick="showSection('setup')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 04. 環境構築 -->
+            <div id="setup" class="section">
+                <h1>⚙️ 環境構築</h1>
+
+                <h2>必要なもの</h2>
+
+                <p>マルチエージェント予算管理システムを構築するには、以下の環境が必要です：</p>
+
+                <div class="box info">
+                    <h4>システム要件</h4>
+                    <ul style="margin: 10px 0;">
+                        <li>macOS / Windows / Linux（開発PC）</li>
+                        <li>Node.js 20.0 以上、または Python 3.10 以上</li>
+                        <li>npm または pip（パッケージマネージャ）</li>
+                        <li>Firebase CLI</li>
+                        <li>Git（バージョン管理）</li>
+                    </ul>
+                </div>
+
+                <div class="box success">
+                    <h4>アカウント・サービス</h4>
+                    <ul style="margin: 10px 0;">
+                        <li>Anthropic API キー（Claude へのアクセス）</li>
+                        <li>Google Cloud アカウント（Firebase）</li>
+                        <li>Firebase プロジェクト</li>
+                    </ul>
+                </div>
+
+                <h2>📥 Step-by-Step インストール</h2>
+
+                <h3>1️⃣ Node.js または Python のインストール</h3>
+
+                <div class="lang-toggle">
+                    <button class="lang-btn active" onclick="toggleCode('nodejs')">Node.js</button>
+                    <button class="lang-btn" onclick="toggleCode('python')">Python</button>
+                </div>
+
+                <div id="nodejs-install" class="lang-content">
+                    <p><strong>Node.js のインストール</strong></p>
+                    <p>以下のサイトから Node.js 20.0 以上をダウンロード＆インストール：<br/>
+                    <a href="https://nodejs.org/" style="color: var(--primary);">https://nodejs.org/</a></p>
+
+                    <p>インストール後、ターミナルで確認：</p>
+                    <div class="code-block">
+$ node --version
+v20.0.0
+
+$ npm --version
+9.0.0
+                    </div>
+                </div>
+
+                <div id="python-install" class="lang-content" style="display: none;">
+                    <p><strong>Python のインストール</strong></p>
+                    <p>以下のサイトから Python 3.10 以上をダウンロード＆インストール：<br/>
+                    <a href="https://www.python.org/" style="color: var(--primary);">https://www.python.org/</a></p>
+
+                    <p>インストール後、ターミナルで確認：</p>
+                    <div class="code-block">
+$ python --version
+Python 3.10.0
+
+$ pip --version
+pip 21.0.0
+                    </div>
+                </div>
+
+                <h3>2️⃣ Firebase CLI のインストール</h3>
+
+                <div class="code-block">
+$ npm install -g firebase-tools
+
+# 確認
+$ firebase --version
+11.0.0 (または最新版)
+                </div>
+
+                <h3>3️⃣ Firebase ログイン</h3>
+
+                <div class="code-block">
+$ firebase login
+# ブラウザが開きます。Google アカウントでログイン
+                </div>
+
+                <h3>4️⃣ プロジェクト作成</h3>
+
+                <div class="box info">
+                    <p>Firebase コンソール（<a href="https://console.firebase.google.com/" style="color: var(--primary);">https://console.firebase.google.com/</a>）で新しいプロジェクトを作成</p>
+                </div>
+
+                <h3>5️⃣ Anthropic API キー 取得</h3>
+
+                <div class="box info">
+                    <p>Anthropic のコンソール（<a href="https://console.anthropic.com/" style="color: var(--primary);">https://console.anthropic.com/</a>）から API キーを生成</p>
+                </div>
+
+                <h2>🎯 セットアップの確認</h2>
+
+                <div class="code-block">
+# 以下がすべて動作することを確認
+$ node --version      # Node.js が入ってるか
+$ npm --version       # npm が入ってるか
+$ firebase --version  # Firebase CLI が入ってるか
+$ echo $CLAUDE_API_KEY # 環境変数が設定されてるか
+                </div>
+
+                <div class="box success">
+                    <p>✅ すべてのセットアップが完了したら、次のステップに進めます！</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('architecture')">← 前へ</button>
+                    <button class="button" onclick="showSection('step1')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 05. Step 1 -->
+            <div id="step1" class="section">
+                <h1>📝 Step 1: 基本セットアップ</h1>
+
+                <p>いよいよコーディングを始めます！まずは最小限のプロジェクト構成を作成します。</p>
+
+                <h2>プロジェクトディレクトリ作成</h2>
+
+                <div class="code-block">
+$ mkdir budget-system
+$ cd budget-system
+$ npm init -y
+                </div>
+
+                <h2>必要なパッケージをインストール</h2>
+
+                <div class="lang-toggle">
+                    <button class="lang-btn active" onclick="toggleCode('pkg-node')">Node.js</button>
+                    <button class="lang-btn" onclick="toggleCode('pkg-python')">Python</button>
+                </div>
+
+                <div id="pkg-node" class="lang-content">
+                    <div class="code-block">
+$ npm install @anthropic-ai/sdk \
+  firebase-admin \
+  firebase-functions \
+  dotenv
+                    </div>
+                </div>
+
+                <div id="pkg-python" class="lang-content" style="display: none;">
+                    <div class="code-block">
+$ pip install anthropic \
+  firebase-admin \
+  python-dotenv
+                    </div>
+                </div>
+
+                <h2>環境変数設定</h2>
+
+                <p>プロジェクトルートに <code>.env</code> ファイルを作成：</p>
+
+                <div class="code-block">
+CLAUDE_API_KEY=sk-...（あなたの API キーを入力）
+FIREBASE_PROJECT_ID=budget-system-xxx
+FIREBASE_CREDENTIALS=path/to/serviceAccountKey.json
+NODE_ENV=development
+                </div>
+
+                <div class="box warning">
+                    <p>⚠️ <strong>重要</strong>: .env ファイルは絶対に GitHub にコミットしないこと！.gitignore に追加してください。</p>
+                </div>
+
+                <h2>プロジェクト構造</h2>
+
+                <p>以下のようなディレクトリ構造を作成：</p>
+
+                <div class="code-block">
+budget-system/
+├── .env                    ← 環境変数
+├── .gitignore
+├── package.json
+├── .claude/
+│   └── agents/
+│       ├── main-agent.md          ← 親エージェント定義
+│       ├── input-assistant-agent.md ← 子エージェント1
+│       └── analysis-agent.md        ← 子エージェント2
+├── functions/
+│   ├── index.js            ← Cloud Functions エントリ
+│   ├── agents/
+│   │   ├── parent.js
+│   │   ├── input-assistant.js
+│   │   └── analysis.js
+│   └── tools/
+│       ├── firestore-tools.js
+│       └── validation-tools.js
+└── firebase.json
+                </div>
+
+                <h2>Firebase 初期化</h2>
+
+                <div class="code-block">
+$ firebase init
+# 以下を選択：
+# ✓ Firestore
+# ✓ Functions
+# ✓ Storage
+                </div>
+
+                <h2>ローカル開発の確認</h2>
+
+                <div class="code-block">
+$ firebase emulators:start
+# Firestore Emulator が localhost:8080 で起動
+                </div>
+
+                <div class="box success">
+                    <p>✅ ここまでで基本的なプロジェクト構造が完成しました！</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('setup')">← 前へ</button>
+                    <button class="button" onclick="showSection('step2')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 06. Step 2 -->
+            <div id="step2" class="section">
+                <h1>🤖 Step 2: エージェント定義</h1>
+
+                <p>ここでは、親エージェントと子エージェントをマークダウンで定義します。</p>
+
+                <h2>親エージェント定義</h2>
+
+                <p>ファイル: <code>.claude/agents/main-agent.md</code></p>
+
+                <div class="code-block">
+# Budget Management Orchestrator
+
+## Role
+You are the orchestrator for a Firebase-based budget management system.
+Analyze user requests and delegate tasks to specialized sub-agents.
+
+## Capabilities
+- InputAssistantAgent: Data validation, duplicate detection
+- AnalysisAgent: Spending analysis, predictions
+
+## Instructions
+
+When a user request arrives, determine the intent:
+
+1. **Input-focused** (add, record, input)
+   → Delegate to InputAssistantAgent
+
+2. **Analysis-focused** (analyze, predict, compare)
+   → Delegate to AnalysisAgent
+
+3. **Complex requests** (both input AND analysis)
+   → First InputAssistantAgent, then AnalysisAgent
+   → Synthesize results
+
+Always maintain context from the initial request.
+                </div>
+
+                <h2>子エージェント1: 入力補助</h2>
+
+                <p>ファイル: <code>.claude/agents/input-assistant-agent.md</code></p>
+
+                <div class="code-block">
+# InputAssistantAgent
+
+## Role
+Validate and process budget transaction data.
+
+## Responsibilities
+- Validate transaction data (amount, date, category)
+- Detect duplicate entries
+- Auto-correct formatting errors
+- Guide users with missing information
+
+## Available Tools
+- validateTransaction: Schema validation
+- checkDuplicates: Search for duplicates
+- saveTransaction: Write to Firestore
+
+## Instructions
+
+When receiving a transaction request:
+1. Extract and validate each field
+2. Check for duplicates in last 7 days
+3. Ask user for confirmation if duplicates found
+4. Auto-correct common formatting issues
+5. Save to Firestore with validation timestamp
+
+Always prioritize data accuracy.
+                </div>
+
+                <h2>子エージェント2: 分析</h2>
+
+                <p>ファイル: <code>.claude/agents/analysis-agent.md</code></p>
+
+                <div class="code-block">
+# AnalysisAgent
+
+## Role
+Analyze spending patterns and generate budget insights.
+
+## Responsibilities
+- Fetch transaction data for analysis periods
+- Identify spending trends and patterns
+- Detect anomalies (unusual spending)
+- Generate spending predictions
+
+## Available Tools
+- fetchTransactions: Query from Firestore
+- analyzeTrends: Compute patterns
+- generatePrediction: Forecast spending
+- saveBudgetRecommendation: Store results
+
+## Instructions
+
+When receiving an analysis request:
+1. Determine the analysis period
+2. Fetch transactions for that period
+3. Analyze trends by category
+4. Detect anomalies
+5. Generate predictions
+6. Create actionable recommendations
+
+Provide data-driven insights with clear reasoning.
+                </div>
+
+                <div class="box success">
+                    <p>✅ エージェント定義が完成しました！次はコード実装に進みます。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('step1')">← 前へ</button>
+                    <button class="button" onclick="showSection('step3')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 07. Step 3 -->
+            <div id="step3" class="section">
+                <h1>☁️ Step 3: Cloud Functions 実装</h1>
+
+                <p>ここでは、親エージェントと子エージェントを Node.js / Python で実装します。</p>
+
+                <h2>親エージェント実装</h2>
+
+                <p>ファイル: <code>functions/agents/parent.js</code> または <code>functions/agents/parent.py</code></p>
+
+                <div class="lang-toggle">
+                    <button class="lang-btn active" onclick="toggleCode('parent-node')">Node.js</button>
+                    <button class="lang-btn" onclick="toggleCode('parent-python')">Python</button>
+                </div>
+
+                <div id="parent-node" class="lang-content">
+                    <div class="code-block">
+const Anthropic = require("@anthropic-ai/sdk");
+
+const client = new Anthropic({
+  apiKey: process.env.CLAUDE_API_KEY
+});
+
+async function createParentAgent(inputAgentId, analysisAgentId) {
+  const parentAgent = await client.beta.agents.create({
+    name: "Budget Management Orchestrator",
+    model: "claude-opus-4-6",
+    instructions: `
+      You are the orchestrator for a budget management system.
+      [main-agent.md の内容をここに記載]
+    `,
+
+    // ✅ サブエージェント参照
+    tools: [
+      {
+        type: "agent",
+        agent_id: inputAgentId
+      },
+      {
+        type: "agent",
+        agent_id: analysisAgentId
+      }
+    ]
+  });
+
+  return parentAgent;
+}
+
+module.exports = { createParentAgent };
+                    </div>
+                </div>
+
+                <div id="parent-python" class="lang-content" style="display: none;">
+                    <div class="code-block">
+from anthropic import Anthropic
+
+client = Anthropic(api_key=os.environ.get("CLAUDE_API_KEY"))
+
+def create_parent_agent(input_agent_id, analysis_agent_id):
+    parent_agent = client.beta.agents.create(
+        name="Budget Management Orchestrator",
+        model="claude-opus-4-6",
+        instructions="""
+            You are the orchestrator for a budget management system.
+            [main-agent.md の内容をここに記載]
+        """,
+
+        # ✅ サブエージェント参照
+        tools=[
+            {
+                "type": "agent",
+                "agent_id": input_agent_id
+            },
+            {
+                "type": "agent",
+                "agent_id": analysis_agent_id
+            }
+        ]
+    )
+
+    return parent_agent
+                    </div>
+                </div>
+
+                <h2>子エージェント1: 入力補助</h2>
+
+                <p>ファイル: <code>functions/agents/input-assistant.js</code> または <code>functions/agents/input_assistant.py</code></p>
+
+                <div class="lang-toggle">
+                    <button class="lang-btn active" onclick="toggleCode('child1-node')">Node.js</button>
+                    <button class="lang-btn" onclick="toggleCode('child1-python')">Python</button>
+                </div>
+
+                <div id="child1-node" class="lang-content">
+                    <div class="code-block">
+const Anthropic = require("@anthropic-ai/sdk");
+
+const client = new Anthropic({
+  apiKey: process.env.CLAUDE_API_KEY
+});
+
+async function createInputAssistant() {
+  const agent = await client.beta.agents.create({
+    name: "InputAssistantAgent",
+    model: "claude-opus-4-6",
+    instructions: `
+      [input-assistant-agent.md の内容]
+    `,
+
+    // ✅ サブエージェントは独自ツールのみ
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "validateTransaction",
+          description: "Validate transaction data",
+          input_schema: {
+            type: "object",
+            properties: {
+              amount: { type: "number" },
+              category: {
+                type: "string",
+                enum: ["food", "transport", "utilities", "other"]
+              },
+              date: { type: "string", format: "date" },
+              description: { type: "string" }
+            },
+            required: ["amount", "category", "date"]
+          }
+        }
+      },
+      {
+        type: "function",
+        function: {
+          name: "saveTransaction",
+          description: "Save to Firestore",
+          input_schema: {
+            type: "object",
+            properties: {
+              userId: { type: "string" },
+              transactionData: { type: "object" }
+            }
+          }
+        }
+      }
+    ]
+  });
+
+  return agent;
+}
+
+module.exports = { createInputAssistant };
+                    </div>
+                </div>
+
+                <div id="child1-python" class="lang-content" style="display: none;">
+                    <div class="code-block">
+from anthropic import Anthropic
+import os
+
+client = Anthropic(api_key=os.environ.get("CLAUDE_API_KEY"))
+
+def create_input_assistant():
+    agent = client.beta.agents.create(
+        name="InputAssistantAgent",
+        model="claude-opus-4-6",
+        instructions="""
+            [input-assistant-agent.md の内容]
+        """,
+
+        # ✅ サブエージェントは独自ツールのみ
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "validateTransaction",
+                    "description": "Validate transaction data",
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {
+                            "amount": {"type": "number"},
+                            "category": {
+                                "type": "string",
+                                "enum": ["food", "transport", "utilities", "other"]
+                            },
+                            "date": {"type": "string", "format": "date"},
+                            "description": {"type": "string"}
+                        },
+                        "required": ["amount", "category", "date"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "saveTransaction",
+                    "description": "Save to Firestore",
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {
+                            "userId": {"type": "string"},
+                            "transactionData": {"type": "object"}
+                        }
+                    }
+                }
+            }
+        ]
+    )
+
+    return agent
+                    </div>
+                </div>
+
+                <div class="box success">
+                    <p>✅ エージェント実装が完成しました！次は Firestore 連携に進みます。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('step2')">← 前へ</button>
+                    <button class="button" onclick="showSection('step4')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 08. Step 4 -->
+            <div id="step4" class="section">
+                <h1>🔐 Step 4: Firestore 連携</h1>
+
+                <p>ここでは、Firestore データベースの設定とセキュリティルールを実装します。</p>
+
+                <h2>Firestore コレクション設計</h2>
+
+                <p>以下の構造で Firestore を設計：</p>
+
+                <div class="code-block">
+firebase-project/
+├── users/{userId}
+│   ├── email: string
+│   ├── name: string
+│   ├── createdAt: timestamp
+│   └── preferences: object
+│
+├── transactions/{transactionId}
+│   ├── userId: string
+│   ├── amount: number
+│   ├── category: string
+│   ├── date: timestamp
+│   ├── description: string
+│   ├── createdAt: timestamp
+│   └── processingStatus: string
+│
+└── analysis_results/{resultId}
+    ├── userId: string
+    ├── period: string (YYYY-MM)
+    ├── trends: object
+    ├── recommendations: array
+    └── generatedAt: timestamp
+                </div>
+
+                <h2>セキュリティルール設定</h2>
+
+                <p>ファイル: <code>firestore.rules</code></p>
+
+                <div class="code-block">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ユーザー: 自分のデータのみアクセス可能
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    // 取引: 自分のデータのみアクセス可能
+    match /transactions/{transactionId} {
+      allow create: if request.auth.uid == request.resource.data.userId
+                   && request.resource.data.keys().hasAll(['amount', 'date', 'category']);
+      allow read: if request.auth.uid == resource.data.userId;
+      allow update: if request.auth.uid == resource.data.userId
+                   && !('userId' in request.resource.data.diff().changedKeys());
+      allow delete: if request.auth.uid == resource.data.userId;
+    }
+
+    // 分析結果: 自分のデータのみアクセス可能
+    match /analysis_results/{resultId} {
+      allow read, write: if request.auth.uid == resource.data.userId;
+    }
+  }
+}
+                </div>
+
+                <h2>Firestore ツール実装</h2>
+
+                <p>ファイル: <code>functions/tools/firestore-tools.js</code></p>
+
+                <div class="code-block">
+const admin = require("firebase-admin");
+
+const db = admin.firestore();
+
+// トランザクション保存
+async function saveTransaction(userId, transactionData) {
+  const docRef = db.collection("transactions").doc();
+
+  await docRef.set({
+    userId,
+    ...transactionData,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    processingStatus: "validated"
+  });
+
+  return docRef.id;
+}
+
+// 取引をフェッチ（期間指定）
+async function fetchTransactions(userId, startDate, endDate) {
+  const snapshot = await db
+    .collection("transactions")
+    .where("userId", "==", userId)
+    .where("date", ">=", startDate)
+    .where("date", "<=", endDate)
+    .get();
+
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
+
+// 重複チェック
+async function checkDuplicates(userId, amount, dateRange = 7) {
+  const now = new Date();
+  const pastDate = new Date(now.getTime() - dateRange * 24 * 60 * 60 * 1000);
+
+  const snapshot = await db
+    .collection("transactions")
+    .where("userId", "==", userId)
+    .where("amount", "==", amount)
+    .where("date", ">=", pastDate)
+    .get();
+
+  return snapshot.docs.length > 0;
+}
+
+module.exports = {
+  saveTransaction,
+  fetchTransactions,
+  checkDuplicates
+};
+                </div>
+
+                <div class="box success">
+                    <p>✅ Firestore 連携が完成しました！次はデプロイ手順に進みます。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('step3')">← 前へ</button>
+                    <button class="button" onclick="showSection('deploy')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 09. デプロイ -->
+            <div id="deploy" class="section">
+                <h1>🚀 デプロイ手順</h1>
+
+                <p>ローカルで完成したシステムを、Cloud に本番デプロイします。</p>
+
+                <h2>デプロイ前のチェックリスト</h2>
+
+                <div class="box warning">
+                    <ul style="margin: 0;">
+                        <li>☑️ .env ファイルが .gitignore に追加されたか？</li>
+                        <li>☑️ Firestore セキュリティルール が設定されたか？</li>
+                        <li>☑️ Cloud Functions のメモリが 2GB に設定されたか？</li>
+                        <li>☑️ Firebase プロジェクトが Google Cloud と連携したか？</li>
+                        <li>☑️ API キーが環境変数に設定されたか？</li>
+                    </ul>
+                </div>
+
+                <h2>本番デプロイ</h2>
+
+                <h3>ステップ 1: Firebase プロジェクト選択</h3>
+
+                <div class="code-block">
+$ firebase use --add
+# プロジェクトを選択
+# エイリアスを設定（例：production）
+                </div>
+
+                <h3>ステップ 2: 環境変数設定</h3>
+
+                <div class="code-block">
+$ firebase functions:config:set \
+  claude.api_key="sk-..." \
+  firebase.project_id="your-project-id"
+                </div>
+
+                <h3>ステップ 3: デプロイ</h3>
+
+                <div class="code-block">
+$ firebase deploy --only functions
+$ firebase deploy --only firestore:rules
+$ firebase deploy --only firestore:indexes
+                </div>
+
+                <h3>ステップ 4: デプロイ確認</h3>
+
+                <div class="code-block">
+$ firebase functions:list
+# デプロイされた関数が表示される
+                </div>
+
+                <div class="box success">
+                    <p>✅ 本番環境へのデプロイが完成しました！</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('step4')">← 前へ</button>
+                    <button class="button" onclick="showSection('troubleshoot')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 10. トラブルシューティング -->
+            <div id="troubleshoot" class="section">
+                <h1>🔧 トラブルシューティング</h1>
+
+                <p>よくあるエラーと その解決方法を紹介します。</p>
+
+                <h2>API キーが見つからない</h2>
+
+                <div class="box danger">
+                    <p><strong>エラー</strong>: Error: API key not found. Set CLAUDE_API_KEY environment variable.</p>
+                </div>
+
+                <p><strong>原因</strong>: 環境変数が設定されていない</p>
+
+                <p><strong>解決策</strong>:</p>
+                <ol>
+                    <li>.env ファイルを確認: <code>CLAUDE_API_KEY=sk-...</code></li>
+                    <li>ターミナルでリロード: <code>source .env</code></li>
+                    <li>設定確認: <code>echo $CLAUDE_API_KEY</code></li>
+                </ol>
+
+                <h2>Firebase 認証失敗</h2>
+
+                <div class="box danger">
+                    <p><strong>エラー</strong>: Error: User must be authenticated to call this Cloud Function</p>
+                </div>
+
+                <p><strong>原因</strong>: リクエストに ID Token が含まれていない</p>
+
+                <p><strong>解決策</strong>:</p>
+                <ol>
+                    <li>Firebase Authentication を有効化</li>
+                    <li>クライアント側で ID Token を取得して送信</li>
+                    <li>Cloud Functions でトークンを検証</li>
+                </ol>
+
+                <h2>Firestore セキュリティルール エラー</h2>
+
+                <div class="box danger">
+                    <p><strong>エラー</strong>: Error: Missing or insufficient permissions.</p>
+                </div>
+
+                <p><strong>原因</strong>: セキュリティルール が存在しないか、権限がない</p>
+
+                <p><strong>解決策</strong>:</p>
+                <ol>
+                    <li>Firestore コンソールでテストモードか本番モードか確認</li>
+                    <li>セキュリティルールが正しく展開されたか確認: <code>firebase deploy --only firestore:rules</code></li>
+                    <li>userId がリクエストとドキュメントで一致しているか確認</li>
+                </ol>
+
+                <h2>Cloud Functions タイムアウト</h2>
+
+                <div class="box danger">
+                    <p><strong>エラー</strong>: Error: Function execution took 540 seconds and timed out.</p>
+                </div>
+
+                <p><strong>原因</strong>: エージェント処理が遅い、またはネットワーク待機</p>
+
+                <p><strong>解決策</strong>:</p>
+                <ol>
+                    <li>Cloud Functions のタイムアウトを増やす: <code>timeoutSeconds: 600</code></li>
+                    <li>エージェント処理を最適化（不要な API 呼び出しを削減）</li>
+                    <li>非同期処理を導入（Pub/Sub）</li>
+                </ol>
+
+                <h2>エージェント間通信エラー</h2>
+
+                <div class="box danger">
+                    <p><strong>エラー</strong>: Error: Sub-agent invocation failed.</p>
+                </div>
+
+                <p><strong>原因</strong>: 親エージェントから子エージェントへの通信失敗</p>
+
+                <p><strong>解決策</strong>:</p>
+                <ol>
+                    <li>親エージェントの agent_id が正しいか確認</li>
+                    <li>子エージェント が正しく作成されたか確認</li>
+                    <li>SDK のバージョンが最新か確認: <code>npm list @anthropic-ai/sdk</code></li>
+                    <li>CloudLogging でエラーログを確認</li>
+                </ol>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('deploy')">← 前へ</button>
+                    <button class="button" onclick="showSection('faq')">次へ →</button>
+                </div>
+            </div>
+
+            <!-- 11. FAQ -->
+            <div id="faq" class="section">
+                <h1>❓ よくある質問</h1>
+
+                <h2>Q1: マルチエージェント構造の利点は？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 以下のメリットがあります：</p>
+                    <ul style="margin: 10px 0;">
+                        <li>各エージェントが専門分野に集中 → 精度向上</li>
+                        <li>複雑なタスクが小さなタスクに分割 → 実装が簡潔</li>
+                        <li>スケーラビリティ向上 → 新しい機能の追加が容易</li>
+                    </ul>
+                </div>
+
+                <h2>Q2: SDK が自動管理する「タイムアウト」って何？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 子エージェントの処理が 30 秒を超えた場合、SDK が自動的に中断してリトライ（最大 3 回）します。</p>
+                </div>
+
+                <h2>Q3: エージェントは何層まで作れる？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 親 → 子、この 2 層まです。子エージェント が子エージェント（孫エージェント）を作ることはできません。</p>
+                </div>
+
+                <h2>Q4: 複数ユーザーが同時リクエストしたら？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: Cloud Functions が自動的にスケーリングして並列処理します。ただし、Claude API のレート制限（例：1分当たりのトークン数）に注意してください。</p>
+                </div>
+
+                <h2>Q5: コストはどのくらい？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: Claude API は入出力トークンで課金されます。</p>
+                    <ul style="margin: 10px 0;">
+                        <li>月 1,000 リクエスト（平均 2,500 tokens/request）: 約 $80</li>
+                        <li>Firebase Firestore: 読み取り/書き込み回数で課金</li>
+                    </ul>
+                </div>
+
+                <h2>Q6: ローカルで完全にテストできる？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: はい。Firebase Emulator を使用すればローカル Firestore でテストできます。ただし、Claude API はクラウドで実行されるため、実際の API 呼び出し環境でのテストが必要です。</p>
+                </div>
+
+                <h2>Q7: Python で実装する場合、何が変わる？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: Claude Agent SDK の API は同じです。言語の違いは以下のみ：</p>
+                    <ul style="margin: 10px 0;">
+                        <li>import 文が異なる</li>
+                        <li>変数の型宣言</li>
+                        <li>async/await の構文</li>
+                    </ul>
+                    <p>アーキテクチャ・ロジックは完全に同じです。</p>
+                </div>
+
+                <h2>Q8: セキュリティで注意することは？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 以下が重要です：</p>
+                    <ul style="margin: 10px 0;">
+                        <li>API キーを .env で管理（GitHub にコミットしない）</li>
+                        <li>Firestore Security Rules で userId チェック</li>
+                        <li>ログから個人情報（金額など）を削除またはハッシュ化</li>
+                        <li>本番環境では HTTPS 必須</li>
+                    </ul>
+                </div>
+
+                <h2>Q9: エラーが出た時、どこを見る？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 以下の順番でログを確認：</p>
+                    <ol style="margin: 10px 0;">
+                        <li>ローカル: ターミナル出力</li>
+                        <li>Cloud Functions: <code>firebase functions:log</code></li>
+                        <li>Google Cloud: Cloud Logging コンソール</li>
+                        <li>Firestore: Firestore コンソール（データ確認）</li>
+                    </ol>
+                </div>
+
+                <h2>Q10: 本番環境で何を監視すべき？</h2>
+
+                <div class="box info">
+                    <p><strong>A</strong>: 以下を監視してください：</p>
+                    <ul style="margin: 10px 0;">
+                        <li>Cloud Functions の実行時間（> 5秒でアラート）</li>
+                        <li>エラーレート（> 5%でアラート）</li>
+                        <li>Claude API のトークン使用量（日額上限の 80%でアラート）</li>
+                        <li>Firestore の読み取り/書き込み数（クォータの 80%でアラート）</li>
+                    </ul>
+                </div>
+
+                <div class="box success">
+                    <p>🎉 <strong>おめでとうございます！</strong><br/>このガイドを完了したあなたは、Claude Agent SDK を使って本格的なマルチエージェント予算管理システムを構築・デプロイできるようになりました。</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="button secondary" onclick="showSection('troubleshoot')">← 前へ</button>
+                    <button class="button secondary" onclick="showSection('intro')">トップに戻る</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // すべてのセクションを非表示
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // すべてのナビアイテムをアクティブ解除
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // 指定されたセクションを表示
+            document.getElementById(sectionId).classList.add('active');
+
+            // 対応するナビアイテムをアクティブ化
+            event.target.classList.add('active');
+
+            // プログレス更新
+            updateProgress(sectionId);
+
+            // スクロール
+            window.scrollTo(0, 0);
+        }
+
+        function updateProgress(sectionId) {
+            const sectionMap = {
+                'intro': 1,
+                'concept': 2,
+                'architecture': 3,
+                'setup': 4,
+                'step1': 5,
+                'step2': 6,
+                'step3': 7,
+                'step4': 8,
+                'deploy': 9,
+                'troubleshoot': 10,
+                'faq': 11
+            };
+
+            const completed = sectionMap[sectionId] || 0;
+            const total = 11;
+            const percent = (completed / total) * 100;
+
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = completed + '/' + total + ' 完了';
+        }
+
+        function toggleCode(language) {
+            // 言語ボタンの切り替え
+            const buttons = event.target.parentElement.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // コンテンツの表示/非表示
+            const parent = event.target.closest('.section');
+            const contents = parent.querySelectorAll('.lang-content');
+            contents.forEach(content => content.style.display = 'none');
+
+            // 指定された言語のコンテンツを表示
+            const langId = language + '-install' || language + '-node' || language + '-python' || language;
+            const targetContent = parent.querySelector('#' + langId) ||
+                                parent.querySelector('[id*="' + language + '"]');
+            if (targetContent) {
+                targetContent.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
