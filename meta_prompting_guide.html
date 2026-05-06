@@ -340,19 +340,19 @@
             <div class="case-study">
                 <strong>Stanford University & OpenAI 研究チーム (2024年)</strong>
                 <p>論文: <a href="https://arxiv.org/abs/2401.12954" target="_blank" rel="noopener" style="color: #0055cc;">"Meta-Prompting: Enhancing Language Models with Task-Agnostic Scaffolding"</a></p>
-                <p>スタンフォード大学とOpenAIの研究者らによる論文。一つの言語モデル（Meta Model）が自ら「指揮者」となり、複雑なタスクを分解して複数の「専門家ペルソナ」に議論させる手法（Role-play Orchestration）を提唱。単一のプロンプトよりもGPT-4のパフォーマンスと堅牢性が劇的に向上することが実証されました。</p>
+                <p>スタンフォード大学とOpenAIの共同研究チームが発表した、メタプロンプティングの有効性を科学的に証明した画期的な論文です。ここでは、一つの言語モデル（Meta Model）が自ら「指揮者（Conductor）」となり、複雑なタスクを自律的に細かいサブタスクに分解します。そして、それぞれのサブタスクに最適な「専門家ペルソナ（Expert Models）」をモデル内部で立ち上げ、彼らに議論や検証を行わせるという「役割のオーケストレーション」を提唱しています。結果として、人間が単一のプロンプトで指示を出す従来の手法と比較して、GPT-4のパフォーマンス、推論能力、およびエラーに対する堅牢性が劇的に向上することが実証されています。これは「AIに役割を与えて議論させる」というメタアプローチが、論理的思考の限界を突破する鍵であることを示しています。</p>
             </div>
 
             <div class="case-study">
                 <strong>Anthropic 公式ドキュメント (Claude)</strong>
                 <p>資料: <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-generator" target="_blank" rel="noopener" style="color: #0055cc;">"Prompt Generator" (メタプロンプト)</a></p>
-                <p>最高峰の言語モデル「Claude」を開発するAnthropic社は、公式ガイドにて「メタプロンプト」を標準ツールとして提供しています。「AIに完璧なプロンプトを作らせるための指示書（プロンプト生成型）」が公開されており、実務における最も確実なアプローチとして推奨されています。</p>
+                <p>世界最高峰の推論能力を持つ言語モデル「Claude」を開発するAnthropic社は、その公式プロンプトエンジニアリングガイドにおいて、「メタプロンプト（Meta-prompt）」という概念を標準実装のツールとして大々的に提供しています。同社は「人間がゼロからプロンプトを書くよりも、要件だけを伝えてAI自身にプロンプトを書かせた方がはるかに高品質になる」と明言しており、そのための「プロンプトを生成させるための公式指示書（Prompt Generator）」を公開しています。これにより、ユーザーは「どのように指示すべきか（How）」で悩む必要がなくなり、「何を達成したいか（What）」の定義に集中できるようになります。プロンプト作成作業自体をAIにアウトソースするこの手法は、実務において最も確実で効率的なアプローチとして強く推奨されています。</p>
             </div>
 
             <div class="case-study">
                 <strong>OpenAI 公式 Prompt Engineering Guide</strong>
                 <p>資料: <a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank" rel="noopener" style="color: #0055cc;">"Prompt engineering - Six strategies for getting better results"</a></p>
-                <p>ChatGPTの開発元であるOpenAIの公式ガイド。「複雑なタスクをシンプルなサブタスクに分割する」「モデルに考えさせるステップを与える」など、本稿で解説したメタプロンプティングの基礎となる「AIの思考プロセスを外部から設計する」アプローチが、ベストプラクティスとして明記されています。</p>
+                <p>ChatGPTの開発元であるOpenAIの公式ガイドライン（2025年最新版）。以前は「タスクを分割する」「考える時間を与える」といった基礎的な記述でしたが、最新のGPT-4.1/GPT-5や推論モデルの登場により、AIの「自律的な思考プロセス（Agentic workflow）」を外部から設計する究極のメタプロンプティングへと進化しています。例えばフロントエンド開発では、いきなりコードを書かせるのではなく、「まず最高の結果を出すための『評価基準（ルーブリック）』を自ら考えさせ、その基準をすべて満たすまで自己修正を繰り返させる」という手法がベストプラクティスとして紹介されています。また、タスクをAI自身に分解（Decompose）させ、実行前に徹底的に計画（Plan）し、結果を内省（Reflect）させるなど、AIを「指示待ちの作業者」から「自律的なプロジェクトマネージャー」へと引き上げるための実践的なノウハウが詳細に解説されています。</p>
             </div>
         </div>
     </div>
