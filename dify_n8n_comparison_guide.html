@@ -346,8 +346,8 @@
                 </tr>
                 <tr>
                     <td>RAG実装方式</td>
-                    <td>自動化型（ファイル→自動処理）</td>
-                    <td>手動構成型（各ステップ設定）</td>
+                    <td>自動化型<br/>ファイルUP→自動チャンク化・ベクトル化<br/>ベクターDB管理も自動</td>
+                    <td>手動構成型<br/>Embedding API・ベクターDB選択・構築必須<br/>各ステップを手動設定</td>
                 </tr>
                 <tr>
                     <td>処理単位</td>
@@ -611,9 +611,9 @@
 
                 <strong>Q3: 既存システム連携（CRM/会計/在庫等）は必須？</strong>
                 <ul>
-                    <li><strong>不要（AIチャットボット/RAG単独）</strong> → <span class="highlight">Dify 単独型</span></li>
+                    <li><strong>不要（AIチャットボット/RAG単独）</strong> → <span class="highlight">Dify 単独型</span>（RAG構築が自動で手軽）</li>
                     <li><strong>1～3システム連携</strong> → n8n Cloud or Dify + Zapier併用</li>
-                    <li><strong>4システム+（複雑フロー）</strong> → <span class="highlight">n8n 単独型</span></li>
+                    <li><strong>4システム+（複雑フロー）</strong> → <span class="highlight">n8n 単独型</span>（ベクターDB等構築可能）</li>
                 </ul>
 
                 <strong>Q4: 技術者リソース（インフラ管理スキル）はありますか？</strong>
@@ -931,8 +931,8 @@
 
             <h3>最終選択基準</h3>
             <ul>
-                <li><span class="highlight">Dify 単独</span> → 「シンプルなAIチャットボット」が欲しい場合。最速・最簡単・低コスト</li>
-                <li><span class="highlight">n8n 単独</span> → 「既存システム連携が必須」な場合。複雑フロー対応可能（ただし初心者には難しい）</li>
+                <li><span class="highlight">Dify 単独</span> → 「シンプルなAIチャットボット」「RAG構築の手軽さ重視」の場合。最速・最簡単・低コスト。ベクターDB管理も全自動</li>
+                <li><span class="highlight">n8n 単独</span> → 「既存システム連携が必須」「複雑なワークフロー+AI統合」な場合。複雑フロー対応可能。ベクターDB等の構築が必須</li>
                 <li><span class="highlight">Dify + n8n</span> → 「複数チャネル対応」が本当に必須で、予算・期間・技術力が十分な場合のみ。隠れたコストが大きい</li>
             </ul>
 
