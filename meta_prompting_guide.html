@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta-Prompting Guide - AI自動化・プロンプト設計手法</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .version-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            border-left: 4px solid #333;
+            padding-left: 15px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: #222;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        table th, table td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table td {
+            background-color: #fafafa;
+        }
+
+        .case-study {
+            background-color: #f9f9f9;
+            border-left: 3px solid #666;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .case-study strong {
+            display: block;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .failure-case {
+            background-color: #ffe6e6;
+            border-left: 3px solid #cc0000;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .failure-case strong {
+            display: block;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tool-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+
+        .tool-card h3 {
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pros {
+            margin-bottom: 15px;
+        }
+
+        .pros strong {
+            color: #006600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .cons {
+            margin-bottom: 15px;
+        }
+
+        .cons strong {
+            color: #cc0000;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .recommendation {
+            background-color: #fff9e6;
+            border: 1px solid #cc9900;
+            border-left: 4px solid #cc9900;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+
+        .warning {
+            background-color: #ffe6e6;
+            border: 1px solid #cc0000;
+            border-left: 4px solid #cc0000;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+
+        .recommendation-title {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meta-Prompting Guide</h1>
+            <div class="subtitle">AIの思考プロセスを外部からコントロールする高度なプロンプト設計手法</div>
+            <div class="version-info">
+                Last Updated: 2026-05-07 | Status: Draft | Author: Tommy
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>1. メタプロンプティングとは？</h2>
+            <p>
+                メタプロンプティング（Meta-Prompting）は、単に「AIに質問させる」テクニックにとどまらず、<strong>「AIの思考プロセスそのものを外部からコントロール（設計）する技術」</strong>です。
+            </p>
+            <p>
+                通常、私たちは「AIにタスクを実行させる（例：要約して、分析して）」ためにプロンプトを書きます。しかしメタプロンプティングでは、<strong>「タスクを実行する前の準備（どうやって解くべきか、どう指示すべきか）」</strong>をAIに相談します。AIを単なる作業者としてではなく、「コンサルタント」や「プロンプトエンジニア」として活用するアプローチです。
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>2. なぜ機能するのか？（構造的理由）</h2>
+            
+            <div class="case-study">
+                <strong>コンテキスト（文脈）の強制的最適化</strong>
+                <p>AIはいきなり指示されると、膨大な知識の海からランダムに情報を拾ってしまいます。事前に「どのようなフレームワークが良いか？」を議論させることで、チャットの履歴（コンテキストウィンドウ）に「その目的に最適な専門用語や前提知識」がキャッシュされ、後続の出力精度が劇的に向上します。</p>
+            </div>
+
+            <div class="case-study">
+                <strong>「人間の認知バイアス」の排除</strong>
+                <p>人間がプロンプトを書くと、どうしても「自分が見えている範囲の課題」に縛られます。AIの客観的で網羅的なデータペースを使い、自分では気づけなかった死角（未知の知）を埋めることができます。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. 高度なメタプロンプティングの4つの型</h2>
+            
+            <div class="comparison-grid">
+                <div class="tool-card">
+                    <h3>自己評価・自己修正型 (Self-Reflection)</h3>
+                    <div class="pros">
+                        <strong>利用シーン</strong>
+                        <p>初稿を出させた後、さらに品質を一段階引き上げたい時。</p>
+                    </div>
+                    <div class="cons">
+                        <strong>プロンプト例</strong>
+                        <p><code>あなたが『厳しい編集長』になったつもりで、このレポートの『論理的飛躍』を3点指摘してください。その後、自己修正し完全版を出力してください。</code></p>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>多角的な専門家会議型 (Role-play Orchestration)</h3>
+                    <div class="pros">
+                        <strong>利用シーン</strong>
+                        <p>一人の視点ではなく、複数の専門的視点での議論が必要な企画立案時。</p>
+                    </div>
+                    <div class="cons">
+                        <strong>プロンプト例</strong>
+                        <p><code>『マーケ責任者』『財務責任者』『営業責任者』の3人のペルソナを立ち上げ、最適な価格について議論させ、最後に結論を1つ提案してください。</code></p>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>プロンプト最適化型 (Prompt Refinement)</h3>
+                    <div class="pros">
+                        <strong>利用シーン</strong>
+                        <p>自分の作ったプロンプトの精度に自信がない時。</p>
+                    </div>
+                    <div class="cons">
+                        <strong>プロンプト例</strong>
+                        <p><code>プロンプトエンジニアの視点で、以下のプロンプトを100点満点で評価し、欠けている要素を指摘した上で完璧なプロンプトに書き直してください。</code></p>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>制約条件の逆提案型 (Constraint Elicitation)</h3>
+                    <div class="pros">
+                        <strong>利用シーン</strong>
+                        <p>新しいプロジェクトの立ち上げ時など、リスクを事前に把握したい時。</p>
+                    </div>
+                    <div class="cons">
+                        <strong>プロンプト例</strong>
+                        <p><code>計画を具体化する前に、このプロジェクトが失敗する『よくある落とし穴』と『あらかじめ設定すべきルール』を5つ挙げてください。</code></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. 実務で回す「メタプロンプティング・ループ」</h2>
+            <p>ビジネスの実務で複雑な課題を解く場合、以下のループ（対話ステップ）を回すのが最も効果的です。</p>
+            
+            <ol>
+                <li><strong>目的の共有:</strong> 「〇〇を達成したい」とゴールだけを投げる。</li>
+                <li><strong>メタプロンプト発動:</strong> 「そのために、どんな手順やフレームワークで進めるのがベストか提案して？」とHowを相談する。</li>
+                <li><strong>アラインメント（すり合わせ）:</strong> 提案された手順に対し、「手順2は不要。代わりに〇〇の視点を入れて」と微調整する。</li>
+                <li><strong>情報収集（リバース・プロンプト）:</strong> 「よし、その手順で進めよう。実行にあたって、私から提供すべき情報があれば質問して」とAIにヒアリングさせる。</li>
+                <li><strong>実行と自己評価:</strong> 回答を出させ、さらに「この回答の弱点はどこ？」と自己評価・修正させる。</li>
+            </ol>
+            
+            <div class="recommendation">
+                <span class="recommendation-title">マインドセットの変化: 作業者への指示出しから、プロジェクトマネージャーへ</span>
+                <p>メタプロンプティングを実践することで、「このプロンプトを使えば正解が出る」というマインドセットから、「AIとどう対話して枠組みを創り出すか」という一段上のリテラシー（AIとの協働力）が身につきます。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
