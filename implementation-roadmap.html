@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVP SaaS 化 実装ロードマップ - AI 協働ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .overview {
+            background: #f5f7fa;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 30px;
+            border-radius: 6px;
+        }
+
+        .overview h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .overview p {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .toc {
+            background: #f9f9f9;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .toc h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .phase-group {
+            margin-bottom: 20px;
+        }
+
+        .phase-title {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .phase-title:hover {
+            background: #764ba2;
+        }
+
+        .task-list {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .task-list li {
+            padding: 8px 0;
+        }
+
+        .task-list a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .task-list a:hover {
+            text-decoration: underline;
+        }
+
+        .phase-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 3px solid #667eea;
+        }
+
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .phase-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .phase-header p {
+            opacity: 0.95;
+            font-size: 1.05em;
+        }
+
+        .task {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .task:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .task-title {
+            font-size: 1.4em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .task-section {
+            margin-bottom: 25px;
+        }
+
+        .task-section h4 {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .task-section h4::before {
+            content: "▸";
+            color: #667eea;
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+
+        .task-content {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .task-content ul {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        .task-content li {
+            padding: 8px 0;
+            margin-left: 20px;
+        }
+
+        .task-content li::before {
+            content: "→";
+            color: #667eea;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .perspective {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .perspective-label {
+            font-weight: 600;
+            color: #667eea;
+            display: inline-block;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .deliverable-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .deliverable-label {
+            font-weight: 600;
+            color: #2e7d32;
+            display: inline-block;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .note-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .note-label {
+            font-weight: 600;
+            color: #e65100;
+            display: inline-block;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .back-to-top {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .back-to-top:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .task {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 MVP SaaS 化 実装ロードマップ</h1>
+            <p>AI 協働による段階的な SaaS 化実装ガイド</p>
+        </header>
+
+        <div class="content">
+            <!-- Overview -->
+            <div class="overview">
+                <h2>📖 このドキュメントについて</h2>
+                <p>
+                    このロードマップは、Firebase ベースの予算管理システムを <strong>MVP（Phase 1-3）として SaaS 化する際の実装ガイド</strong> です。
+                </p>
+                <p>
+                    各タスクに対して <strong>「AI に相談する観点」</strong> を明記しており、
+                    AI（Claude）と対話しながら実装を進める際の思考枠組みを提供します。
+                </p>
+                <p style="margin-top: 15px; padding: 15px; background: #f0f9ff; border-radius: 4px; border-left: 4px solid #2563eb;">
+                    📌 <strong>MVP（Phase 1-3）の位置づけ：</strong>
+                    「信頼できるマルチテナント基盤」の構築に集中。Claude SDK 統合（AI 機能強化）は Phase 4 以降に分離し、
+                    MVP 提供開始後、ユーザーフィードバックを踏まえて計画的に進めます。
+                </p>
+                <p style="margin-top: 15px; font-weight: 600;">
+                    💡 <strong>使い方：</strong> 各タスクの「観点」を参考に、AI に質問・相談し、具体的な実装方法を掘り下げていってください。
+                </p>
+            </div>
+
+            <!-- Key Points / What to Build -->
+            <div style="background: #f0f8ff; padding: 30px; margin-bottom: 40px; border-radius: 8px; border: 2px solid #4a90e2;">
+                <h2 style="color: #4a90e2; margin-bottom: 25px; font-size: 1.5em;">🎯 構築のポイント～MVP で何を実現するのか～</h2>
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    以下の3つのポイントを理解することで、各タスクの意味・目的が明確になります。
+                    Phase 1～3 のタスクは、これらのポイントをクリアするために設計されています。
+                </p>
+                <p style="margin-bottom: 20px; padding: 15px; background: #fff8e1; border-left: 4px solid #ff9800; border-radius: 4px; color: #e65100;">
+                    💡 <strong>注記：</strong> Claude SDK による AI 機能統合は MVP 外とし、Phase 4 以降に分離します。MVP は「信頼できるマルチテナント基盤」の構築に集中します。
+                </p>
+
+                <div style="background: white; border-left: 4px solid #4a90e2; padding: 20px; margin-bottom: 20px; border-radius: 4px;">
+                    <h3 style="color: #4a90e2; font-size: 1.2em; margin-bottom: 15px;">What 1：MVP SaaS化とは何か？</h3>
+                    <p style="margin-bottom: 10px;">
+                        <strong>「最小限の機能・信頼ベースで、顧客を一気に獲得する戦略」</strong>
+                    </p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>無料提供：</strong> 5～10社の既存信頼顧客に無料で提供し、市場検証を行う</li>
+                        <li><strong>最小限機能：</strong> 既存システムの機能をそのまま活かし、追加開発は最小限にする</li>
+                        <li><strong>フィードバック重視：</strong> ユーザーからのご意見を集め、次の段階での改善に活かす</li>
+                        <li><strong>スピード重視：</strong> 2～3ヶ月で本提供開始。完璧さより「市場への迅速な投入」を優先する</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">
+                        → Phase 1～3 全体を通じて、このポイントをクリアするための準備と実装を進めます。
+                    </p>
+                </div>
+
+                <div style="background: white; border-left: 4px solid #4a90e2; padding: 20px; margin-bottom: 20px; border-radius: 4px;">
+                    <h3 style="color: #4a90e2; font-size: 1.2em; margin-bottom: 15px;">What 2：マルチテナント化とは何か？</h3>
+                    <p style="margin-bottom: 10px;">
+                        <strong>「複数の顧客が同じシステムを使えるように、データとアクセス権を分離すること」</strong>
+                    </p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>テナント ID：</strong> 各顧客（テナント）に一意の ID を付与し、識別する</li>
+                        <li><strong>データ分離：</strong> Firestore のスキーマを修正し、テナント A のデータがテナント B に見えないようにする</li>
+                        <li><strong>権限管理：</strong> Firebase Auth とカスタムクレイムで「このユーザーはこのテナントのこのデータを見られる」を制御する</li>
+                        <li><strong>セキュリティルール：</strong> Firestore ルールで「他のテナントのデータへのアクセスは許可しない」を自動的に実装する</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">
+                        → Task 1.2（マルチテナント設計）→ Task 2.2（実装）で実現します。
+                    </p>
+
+                    <!-- マルチテナント概略図 -->
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                        <p style="font-weight: 600; margin-bottom: 15px; color: #333;">📊 マルチテナント化のイメージ</p>
+                        <svg viewBox="0 0 800 300" style="width: 100%; max-width: 700px; margin: 0 auto; display: block;" xmlns="http://www.w3.org/2000/svg">
+                            <!-- タイトル -->
+                            <text x="400" y="25" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">シングルテナント vs マルチテナント</text>
+
+                            <!-- シングルテナント（左側） -->
+                            <text x="150" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#666">シングルテナント（現在）</text>
+                            <rect x="80" y="65" width="140" height="40" fill="#fff3cd" stroke="#ff9800" stroke-width="2" rx="4"/>
+                            <text x="150" y="92" text-anchor="middle" font-size="11" fill="#333">A社のシステム</text>
+                            <rect x="80" y="115" width="140" height="70" fill="#ffe0e0" stroke="#d32f2f" stroke-width="1" rx="4"/>
+                            <text x="150" y="140" text-anchor="middle" font-size="10" fill="#333">DB: A社のみ</text>
+                            <text x="150" y="155" text-anchor="middle" font-size="10" fill="#333">予算: 0000～9999</text>
+                            <text x="150" y="170" text-anchor="middle" font-size="10" fill="#333">ユーザー: A社のみ</text>
+
+                            <!-- 矢印 -->
+                            <path d="M 230 150 L 310 150" stroke="#999" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+                            <!-- マルチテナント（右側） -->
+                            <text x="650" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#666">マルチテナント（目標）</text>
+
+                            <!-- 統一されたシステム -->
+                            <rect x="550" y="65" width="200" height="40" fill="#c8e6c9" stroke="#388e3c" stroke-width="2" rx="4"/>
+                            <text x="650" y="92" text-anchor="middle" font-size="11" fill="#333">統一SaaSシステム</text>
+
+                            <!-- 複数のテナント表示 -->
+                            <rect x="550" y="115" width="60" height="70" fill="#b3e5fc" stroke="#0277bd" stroke-width="1" rx="4"/>
+                            <text x="580" y="135" text-anchor="middle" font-size="9" fill="#333">A社</text>
+                            <text x="580" y="150" text-anchor="middle" font-size="8" fill="#333">tenant_001</text>
+                            <text x="580" y="163" text-anchor="middle" font-size="8" fill="#333">予算: 0000～3333</text>
+
+                            <rect x="620" y="115" width="60" height="70" fill="#f8bbd0" stroke="#c2185b" stroke-width="1" rx="4"/>
+                            <text x="650" y="135" text-anchor="middle" font-size="9" fill="#333">B社</text>
+                            <text x="650" y="150" text-anchor="middle" font-size="8" fill="#333">tenant_002</text>
+                            <text x="650" y="163" text-anchor="middle" font-size="8" fill="#333">予算: 3334～6666</text>
+
+                            <rect x="690" y="115" width="60" height="70" fill="#f0f4c3" stroke="#827717" stroke-width="1" rx="4"/>
+                            <text x="720" y="135" text-anchor="middle" font-size="9" fill="#333">C社</text>
+                            <text x="720" y="150" text-anchor="middle" font-size="8" fill="#333">tenant_003</text>
+                            <text x="720" y="163" text-anchor="middle" font-size="8" fill="#333">予算: 6667～9999</text>
+
+                            <!-- 下部の説明 -->
+                            <text x="150" y="210" text-anchor="middle" font-size="10" fill="#666">単一顧客向け</text>
+                            <text x="150" y="225" font-size="9" fill="#999" text-anchor="middle">新しい顧客 = 新しいシステム</text>
+                            <text x="150" y="240" font-size="9" fill="#999" text-anchor="middle">コスト⬆ 管理⬆</text>
+
+                            <text x="650" y="210" text-anchor="middle" font-size="10" fill="#666">複数顧客で共有</text>
+                            <text x="650" y="225" font-size="9" fill="#999" text-anchor="middle">データは テナント ID で分離</text>
+                            <text x="650" y="240" font-size="9" fill="#999" text-anchor="middle">コスト⬇ スケール⬆</text>
+
+                            <!-- 矢印定義 -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#999" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+
+                <div style="background: white; border-left: 4px solid #4a90e2; padding: 20px; margin-bottom: 0; border-radius: 4px;">
+                    <h3 style="color: #4a90e2; font-size: 1.2em; margin-bottom: 15px;">What 3：データセキュリティ・テナント間分離とは何か？</h3>
+                    <p style="margin-bottom: 10px;">
+                        <strong>「複数顧客が同じデータベースを使っても、他社のデータが見えない仕組みを保証すること」</strong>
+                    </p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>完全分離：</strong> テナント A のユーザーが、テナント B の予算データを「理論的に」見られない設計にする</li>
+                        <li><strong>Firestore ルール：</strong> データベースレベルでの強制 - ルール違反のアクセスは自動で拒否される</li>
+                        <li><strong>API 層の保護：</strong> バックエンド API でも、リクエストしたユーザーの権限を確認し、不正アクセスを防ぐ</li>
+                        <li><strong>監査ログ：</strong> 「誰が・いつ・何を・どのデータを」操作したかを記録し、セキュリティインシデント時に調査可能にする</li>
+                        <li><strong>なぜ重要？：</strong> 顧客が「自分たちの財務データが安全か」を信頼できるかどうかが、SaaS ビジネスの成功を左右する</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">
+                        → Task 1.2（設計）→ Task 2.2（実装）→ Task 2.6（監査ログ）→ Task 3.1（セキュリティテスト）で実現します。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h2>📑 全タスク一覧</h2>
+
+                <div class="phase-group">
+                    <div class="phase-title">📋 Phase 1: 準備・設計（Week 1-3）</div>
+                    <ul class="task-list">
+                        <li><a href="#task-1-1">Task 1.1: 現状分析と設計</a></li>
+                        <li><a href="#task-1-2">Task 1.2: マルチテナント設計</a></li>
+                        <li><a href="#task-1-3">Task 1.3: ユーザー・リソース確保</a></li>
+                    </ul>
+                </div>
+
+                <div class="phase-group">
+                    <div class="phase-title">⚙️ Phase 2: MVP 実装（Week 4-10）</div>
+                    <ul class="task-list">
+                        <li><a href="#task-2-1">Task 2.1: 既存機能確認・改善</a></li>
+                        <li><a href="#task-2-2">Task 2.2: マルチテナント化実装</a></li>
+                        <li><a href="#task-2-3">Task 2.3: Freee 連携確認</a></li>
+                        <li><a href="#task-2-4">Task 2.4: Firebase Auth 改善</a></li>
+                        <li><a href="#task-2-5">Task 2.5: 監査ログ実装</a></li>
+                        <li><a href="#task-2-6">Task 2.6: ドキュメント作成</a></li>
+                    </ul>
+                </div>
+
+                <div class="phase-group">
+                    <div class="phase-title">🧪 Phase 3: テスト・提供開始（Week 11-14）</div>
+                    <ul class="task-list">
+                        <li><a href="#task-3-1">Task 3.1: テスト・検証</a></li>
+                        <li><a href="#task-3-2">Task 3.2: ユーザーオンボーディング</a></li>
+                        <li><a href="#task-3-3">Task 3.3: フィードバック収集システム</a></li>
+                        <li><a href="#task-3-4">Task 3.4: サポート体制構築</a></li>
+                    </ul>
+                </div>
+
+                <div class="phase-group">
+                    <div class="phase-title">🤖 Phase 4: AI 機能強化（Month 6～8）</div>
+                    <p style="margin: 10px 0 0 0; color: #666; font-size: 0.9em;">
+                        Claude SDK マルチエージェント統合（詳細タスクは Phase 3 完了後に策定）
+                    </p>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 PHASE 1: 準備・設計
+                 ============================================ -->
+            <div class="phase-section">
+                <div class="phase-header">
+                    <h2>📋 Phase 1: 準備・設計（Week 1-3）</h2>
+                    <p>目標：システム分析、設計、初期ユーザー確保</p>
+                </div>
+
+                <!-- Task 1.1 -->
+                <div class="task" id="task-1-1">
+                    <div class="task-title">Task 1.1: 現状分析と設計</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            既存の Firebase ベースシステムの全体像を理解し、SaaS 化に向けた基礎設計を行う。
+                            Firestore スキーマ、React コンポーネント、Node.js API、既存 AI 機能を把握する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：現状把握</span>
+                                既存システムの構成要素は何か？（Firestore のコレクション、API エンドポイント、React の主要コンポーネント）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：既存 AI 機能の理解</span>
+                                現在実装されている「入力補助」の AI 機能は具体的に何をしているか？どのデータを使っているか？（どの AI API / サービスを使用しているか）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：アーキテクチャの課題</span>
+                                現在のシステムで、SaaS 化（複数顧客対応）する上での主な課題は何か？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：性能・スケーラビリティ</span>
+                                現在のシステムで 10 社～100 社の規模に対応する場合、どこがボトルネックになるか？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「System Current State Analysis Document」
+                            <ul>
+                                <li>Firestore スキーマ図（主要コレクション）</li>
+                                <li>API エンドポイント一覧</li>
+                                <li>React コンポーネント構成図</li>
+                                <li>既存 AI 機能の詳細（入力補助の動作フロー）</li>
+                                <li>SaaS 化に向けた課題リスト</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        まだ完璧な設計を目指す必要はありません。「現状を理解する」ことが目的です。
+                    </div>
+                </div>
+
+                <!-- Task 1.2 -->
+                <div class="task" id="task-1-2">
+                    <div class="task-title">Task 1.2: マルチテナント設計</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            複数の顧客（テナント）が同じシステムを使える仕組みの基本設計を行う。
+                            データ分離、認証・認可、権限管理の戦略を決定する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：テナント ID 戦略</span>
+                                テナント（顧客）をどう識別・管理するか？（テナント ID の形式、どこに保存するか）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：データ分離の仕組み</span>
+                                Firestore でテナント A とテナント B のデータを完全に分離する方法は？（スキーマ設計）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：認証・認可</span>
+                                Firebase Auth で複数テナントに対応する場合、どのようにユーザーを管理し、テナント情報を保持するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：シンプルな権限管理</span>
+                                MVP 段階でのシンプルな権限モデル（例：管理者、ユーザー）をどう実装するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：Firestore セキュリティルール</span>
+                                Firestore ルールで「このユーザーは自分のテナントのデータだけを見る」を実現する方法は？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Multitenancy Design Document」
+                            <ul>
+                                <li>テナント ID 戦略</li>
+                                <li>修正後の Firestore スキーマ（テナント ID 追加）</li>
+                                <li>データ分離図</li>
+                                <li>Firebase Auth の custom claims 設計</li>
+                                <li>Firestore セキュリティルール案</li>
+                                <li>簡易権限モデル（管理者 / ユーザー）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        「100% 完璧な設計」を目指さず、「実装可能で、後から修正できる設計」を意識してください。
+                    </div>
+
+                    <!-- マルチテナント化の実装イメージ -->
+                    <div style="margin-top: 25px; padding: 20px; background: #f0f8ff; border-radius: 8px; border: 2px solid #4a90e2;">
+                        <p style="font-weight: 600; margin-bottom: 20px; color: #4a90e2;">🔐 マルチテナント化の実装フロー</p>
+
+                        <!-- データフロー図 -->
+                        <svg viewBox="0 0 800 400" style="width: 100%; max-width: 750px; margin: 0 auto 20px; display: block;" xmlns="http://www.w3.org/2000/svg">
+                            <!-- タイトル -->
+                            <text x="400" y="25" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">ユーザーリクエスト → データ取得フロー</text>
+
+                            <!-- テナントA -->
+                            <g>
+                                <rect x="50" y="60" width="100" height="50" fill="#b3e5fc" stroke="#01579b" stroke-width="2" rx="4"/>
+                                <text x="100" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#01579b">A社のユーザー</text>
+                            </g>
+
+                            <!-- テナントB -->
+                            <g>
+                                <rect x="650" y="60" width="100" height="50" fill="#f8bbd0" stroke="#880e4f" stroke-width="2" rx="4"/>
+                                <text x="700" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#880e4f">B社のユーザー</text>
+                            </g>
+
+                            <!-- Firebase Auth -->
+                            <g>
+                                <rect x="175" y="55" width="450" height="60" fill="#fff9c4" stroke="#f57f17" stroke-width="2" rx="4"/>
+                                <text x="400" y="80" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Firebase Authentication</text>
+                                <text x="400" y="103" text-anchor="middle" font-size="9" fill="#666">ユーザーを認証 → Custom Claims に「tenant_id」を設定</text>
+                            </g>
+
+                            <!-- 矢印Down（Auth → API） -->
+                            <line x1="100" y1="110" x2="100" y2="155" stroke="#01579b" stroke-width="2" marker-end="url(#arrowblue)"/>
+                            <line x1="700" y1="110" x2="700" y2="155" stroke="#880e4f" stroke-width="2" marker-end="url(#arrowred)"/>
+
+                            <!-- API層 -->
+                            <g>
+                                <rect x="50" y="160" width="650" height="50" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="4"/>
+                                <text x="375" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Node.js API層（Cloud Run）</text>
+                                <text x="375" y="200" text-anchor="middle" font-size="9" fill="#666">リクエストから tenant_id を取得 → テナント検証</text>
+                            </g>
+
+                            <!-- 矢印Down（API → Firestore） -->
+                            <line x1="100" y1="210" x2="100" y2="255" stroke="#01579b" stroke-width="2" marker-end="url(#arrowblue)"/>
+                            <line x1="700" y1="210" x2="700" y2="255" stroke="#880e4f" stroke-width="2" marker-end="url(#arrowred)"/>
+
+                            <!-- Firestore -->
+                            <g>
+                                <text x="400" y="240" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Firestore Database</text>
+                                <text x="400" y="258" text-anchor="middle" font-size="9" fill="#666">セキュリティルール：リクエストの tenant_id と DB の tenant_id が一致 → アクセス許可</text>
+                                <line x1="50" y1="270" x2="750" y2="270" stroke="#ddd" stroke-width="1"/>
+                            </g>
+
+                            <!-- テナントAのデータ -->
+                            <g>
+                                <rect x="30" y="280" width="140" height="100" fill="#b3e5fc" stroke="#01579b" stroke-width="1.5" rx="4"/>
+                                <text x="100" y="300" text-anchor="middle" font-size="10" font-weight="bold" fill="#01579b">A社のデータ</text>
+                                <text x="100" y="320" text-anchor="middle" font-size="8" fill="#333">budgets/</text>
+                                <text x="100" y="333" text-anchor="middle" font-size="8" fill="#333">  tenant_id: "tenant_001"</text>
+                                <text x="100" y="346" text-anchor="middle" font-size="8" fill="#333">  amount: 500000</text>
+                                <text x="100" y="359" text-anchor="middle" font-size="8" fill="#333">users/</text>
+                                <text x="100" y="372" text-anchor="middle" font-size="8" fill="#333">  tenant_id: "tenant_001"</text>
+                            </g>
+
+                            <!-- テナントBのデータ -->
+                            <g>
+                                <rect x="630" y="280" width="140" height="100" fill="#f8bbd0" stroke="#880e4f" stroke-width="1.5" rx="4"/>
+                                <text x="700" y="300" text-anchor="middle" font-size="10" font-weight="bold" fill="#880e4f">B社のデータ</text>
+                                <text x="700" y="320" text-anchor="middle" font-size="8" fill="#333">budgets/</text>
+                                <text x="700" y="333" text-anchor="middle" font-size="8" fill="#333">  tenant_id: "tenant_002"</text>
+                                <text x="700" y="346" text-anchor="middle" font-size="8" fill="#333">  amount: 800000</text>
+                                <text x="700" y="359" text-anchor="middle" font-size="8" fill="#333">users/</text>
+                                <text x="700" y="372" text-anchor="middle" font-size="8" fill="#333">  tenant_id: "tenant_002"</text>
+                            </g>
+
+                            <!-- 矢印Down（検証） -->
+                            <line x1="100" y1="255" x2="100" y2="280" stroke="#01579b" stroke-width="2" marker-end="url(#arrowblue)"/>
+                            <text x="65" y="265" font-size="8" fill="#01579b">tenant_001</text>
+                            <text x="65" y="275" font-size="8" fill="#01579b">が一致 ✓</text>
+
+                            <line x1="700" y1="255" x2="700" y2="280" stroke="#880e4f" stroke-width="2" marker-end="url(#arrowred)"/>
+                            <text x="655" y="265" font-size="8" fill="#880e4f">tenant_002</text>
+                            <text x="655" y="275" font-size="8" fill="#880e4f">が一致 ✓</text>
+
+                            <!-- 矢印Up（レスポンス） -->
+                            <line x1="100" y1="280" x2="100" y2="110" stroke="#01579b" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowblue)"/>
+                            <line x1="700" y1="280" x2="700" y2="110" stroke="#880e4f" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowred)"/>
+
+                            <text x="120" y="200" font-size="9" fill="#01579b" font-weight="bold">A社のデータのみ</text>
+                            <text x="700" y="200" font-size="9" fill="#880e4f" font-weight="bold">B社のデータのみ</text>
+
+                            <!-- 矢印定義 -->
+                            <defs>
+                                <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#01579b" />
+                                </marker>
+                                <marker id="arrowred" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#880e4f" />
+                                </marker>
+                            </defs>
+                        </svg>
+
+                        <p style="margin-top: 15px; padding: 12px; background: white; border-left: 3px solid #4a90e2; font-size: 9px; color: #555; border-radius: 3px;">
+                            💡 <strong>ポイント：</strong>
+                            各テナントのユーザーがシステムにアクセスすると、Firebase Auth が「このユーザーは tenant_001」と認識。
+                            API層とFirestore のセキュリティルールが協力して、自分のテナントのデータだけを返す仕組みです。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Task 1.3 -->
+                <div class="task" id="task-1-3">
+                    <div class="task-title">Task 1.3: ユーザー・リソース確保</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            MVP テスト用の初期ユーザー（5～10 社）を選定し、必要な契約書・NDA を準備する。
+                            IT 担当者リソースの確保状況を確認する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：初期ユーザーの選定基準</span>
+                                MVP テスト向けの「信頼できる顧客」の選定基準は？（既存顧客？新規顧客？業種？）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：NDA・契約書の内容</span>
+                                MVP 無料提供時に必要な NDA 項目は？（機密保持、フィードバック権、SLA 免責など）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：フィードバック収集の仕組み</span>
+                                初期ユーザーから効果的にフィードバックを集める仕組みは？（アンケート、インタビュー、使用ログ）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：サポート体制</span>
+                                MVP 段階でのサポート（チャネル、対応時間、エスカレーション）をどう設定するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：IT 担当リソース確認</span>
+                                IT 担当者の確保状況、スキルセット、期待される役割分担は？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            <ul>
+                                <li>初期ユーザー候補リスト（5～10 社）</li>
+                                <li>NDA テンプレート</li>
+                                <li>MVP 無料提供条件書</li>
+                                <li>サポート SOP（標準対応手順）</li>
+                                <li>IT 担当者との役割分担表</li>
+                                <li>フィードバック収集フォーム案</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        この段階では「完璧な契約書」ではなく、「安全で柔軟な枠組み」を準備することが重要です。
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 PHASE 2: MVP 実装
+                 ============================================ -->
+            <div class="phase-section">
+                <div class="phase-header">
+                    <h2>⚙️ Phase 2: MVP 実装（Week 4-10）</h2>
+                    <p>目標：マルチテナント対応、Freee 連携確認、本番前の統合テスト</p>
+                </div>
+
+                <!-- Task 2.1 -->
+                <div class="task" id="task-2-1">
+                    <div class="task-title">Task 2.1: 既存機能の粗い確認</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            既存システムが「基本的に動く」ことを確認する。詳細なテストやバグ修正は Task 2.2（マルチテナント化）後の統合テストに含める。
+                            マルチテナント化による大規模な設計変更を進める上で、現状を把握する程度の確認。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：主要機能の動作確認</span>
+                                予算作成・編集・削除、レポート出力などの主要機能は問題なく動くか？（簡易的な確認）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：致命的バグの有無</span>
+                                システムがクラッシュするような致命的バグは見当たらないか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：データの基本的な整合性</span>
+                                既存データに明らかな問題（重複、欠落）はないか？（簡易チェック）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Existing System Status Check」
+                            <ul>
+                                <li>主要機能の動作確認チェックリスト（OK/NG）</li>
+                                <li>見つかった致命的問題（あれば）</li>
+                                <li>既存データの簡易整合性確認結果</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">💡 重要</span>
+                        このタスクは「粗い確認」です。詳細なテストやパフォーマンス測定、軽微なバグ修正は Task 2.3（統合テスト）に含めてください。
+                        マルチテナント化後の「最終形」で総合的にテストする方が効率的です。
+                    </div>
+                </div>
+
+                <!-- Task 2.2 -->
+                <div class="task" id="task-2-2">
+                    <div class="task-title">Task 2.2: マルチテナント化実装</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            Firestore スキーマを修正し、複数の顧客がデータを共有することなく使用できる仕組みを実装する。
+                            Firebase Auth と Firestore セキュリティルールで、テナント間のデータ完全分離を実現する。
+                            既存の予算管理機能（予算作成・編集・削除・レポートなど）を、マルチテナント対応に適応させる。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：データ分離戦略</span>
+                                Firestore のコレクション構造をどう修正するか？（各コレクションにテナント ID を追加？新しいコレクション構造？）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：権限管理の実装</span>
+                                Firebase Auth の custom claims で「ユーザーがどのテナントに属するか」をどう管理するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：セキュリティルール</span>
+                                Firestore ルールで「このユーザーは自分のテナントのデータだけを読み書きできる」ロジックをどう実装するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：API 層の修正</span>
+                                Node.js のバックエンド API で、テナント分離をどのレベルで実装するか？（リクエスト段階？クエリ段階？）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：既存データの移行</span>
+                                既存データ（テナント ID がない）を新しいスキーマに移行する方法は？ダウンタイムをどう最小化するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点6：フロントエンドの修正</span>
+                                React で「現在のユーザーが属するテナント」を把握し、UI で正しくデータを表示する実装方法は？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Multitenancy Implementation」
+                            <ul>
+                                <li>修正後の Firestore スキーマ（実装版）</li>
+                                <li>Firebase セキュリティルール（テスト済み）</li>
+                                <li>データ移行スクリプト</li>
+                                <li>バックエンド API の修正内容</li>
+                                <li>フロントエンドの修正内容</li>
+                                <li>テスト結果（複数テナント間でデータが分離されていることを確認）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        実装中に「テナント A のデータが見えない」「テナント B のクエリが遅い」といった問題が出た場合、即座に AI に相談して解決策を探ってください。
+                    </div>
+
+                    <!-- Firestoreスキーマ図 -->
+                    <div style="margin-top: 25px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+                        <p style="font-weight: 600; margin-bottom: 20px; color: #333;">🗂️ Firestore スキーマ設計（マルチテナント対応）</p>
+
+                        <svg viewBox="0 0 800 450" style="width: 100%; max-width: 750px; margin: 0 auto; display: block;" xmlns="http://www.w3.org/2000/svg">
+                            <!-- タイトル -->
+                            <text x="400" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">各コレクションに tenant_id を追加</text>
+
+                            <!-- Firestore ルート -->
+                            <g>
+                                <rect x="300" y="45" width="200" height="40" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                                <text x="400" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#ff6f00">Firestore Database</text>
+                            </g>
+
+                            <!-- 矢印Down -->
+                            <line x1="400" y1="85" x2="400" y2="110" stroke="#999" stroke-width="2" marker-end="url(#arrow99)"/>
+
+                            <!-- コレクション -->
+                            <g>
+                                <!-- budgets コレクション -->
+                                <rect x="50" y="115" width="140" height="300" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="4"/>
+                                <text x="120" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">budgets/</text>
+                                <line x1="50" y1="150" x2="190" y2="150" stroke="#388e3c" stroke-width="1"/>
+
+                                <!-- ドキュメント例 -->
+                                <g>
+                                    <rect x="60" y="160" width="120" height="50" fill="#ffffff" stroke="#4caf50" stroke-width="1" rx="2"/>
+                                    <text x="75" y="178" font-size="8" fill="#333">doc_id: "budget_001"</text>
+                                    <text x="75" y="191" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="75" y="203" font-size="8" fill="#333">category: "旅費"</text>
+                                </g>
+
+                                <g>
+                                    <rect x="60" y="220" width="120" height="50" fill="#ffffff" stroke="#4caf50" stroke-width="1" rx="2"/>
+                                    <text x="75" y="238" font-size="8" fill="#333">doc_id: "budget_002"</text>
+                                    <text x="75" y="251" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_002"</text>
+                                    <text x="75" y="263" font-size="8" fill="#333">category: "会議費"</text>
+                                </g>
+
+                                <g>
+                                    <rect x="60" y="280" width="120" height="50" fill="#ffffff" stroke="#4caf50" stroke-width="1" rx="2"/>
+                                    <text x="75" y="298" font-size="8" fill="#333">doc_id: "budget_003"</text>
+                                    <text x="75" y="311" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="75" y="323" font-size="8" fill="#333">category: "通信費"</text>
+                                </g>
+                            </g>
+
+                            <!-- users コレクション -->
+                            <g>
+                                <rect x="330" y="115" width="140" height="300" fill="#e1f5fe" stroke="#0277bd" stroke-width="2" rx="4"/>
+                                <text x="400" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#01579b">users/</text>
+                                <line x1="330" y1="150" x2="470" y2="150" stroke="#0277bd" stroke-width="1"/>
+
+                                <!-- ドキュメント例 -->
+                                <g>
+                                    <rect x="340" y="160" width="120" height="50" fill="#ffffff" stroke="#29b6f6" stroke-width="1" rx="2"/>
+                                    <text x="355" y="178" font-size="8" fill="#333">user_id: "user_a01"</text>
+                                    <text x="355" y="191" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="355" y="203" font-size="8" fill="#333">role: "admin"</text>
+                                </g>
+
+                                <g>
+                                    <rect x="340" y="220" width="120" height="50" fill="#ffffff" stroke="#29b6f6" stroke-width="1" rx="2"/>
+                                    <text x="355" y="238" font-size="8" fill="#333">user_id: "user_b01"</text>
+                                    <text x="355" y="251" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_002"</text>
+                                    <text x="355" y="263" font-size="8" fill="#333">role: "user"</text>
+                                </g>
+
+                                <g>
+                                    <rect x="340" y="280" width="120" height="50" fill="#ffffff" stroke="#29b6f6" stroke-width="1" rx="2"/>
+                                    <text x="355" y="298" font-size="8" fill="#333">user_id: "user_a02"</text>
+                                    <text x="355" y="311" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="355" y="323" font-size="8" fill="#333">role: "user"</text>
+                                </g>
+                            </g>
+
+                            <!-- expenses コレクション -->
+                            <g>
+                                <rect x="610" y="115" width="140" height="300" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="4"/>
+                                <text x="680" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a148c">expenses/</text>
+                                <line x1="610" y1="150" x2="750" y2="150" stroke="#7b1fa2" stroke-width="1"/>
+
+                                <!-- ドキュメント例 -->
+                                <g>
+                                    <rect x="620" y="160" width="120" height="50" fill="#ffffff" stroke="#ce93d8" stroke-width="1" rx="2"/>
+                                    <text x="635" y="178" font-size="8" fill="#333">exp_id: "exp_001"</text>
+                                    <text x="635" y="191" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="635" y="203" font-size="8" fill="#333">amount: 5000</text>
+                                </g>
+
+                                <g>
+                                    <rect x="620" y="220" width="120" height="50" fill="#ffffff" stroke="#ce93d8" stroke-width="1" rx="2"/>
+                                    <text x="635" y="238" font-size="8" fill="#333">exp_id: "exp_002"</text>
+                                    <text x="635" y="251" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_002"</text>
+                                    <text x="635" y="263" font-size="8" fill="#333">amount: 12000</text>
+                                </g>
+
+                                <g>
+                                    <rect x="620" y="280" width="120" height="50" fill="#ffffff" stroke="#ce93d8" stroke-width="1" rx="2"/>
+                                    <text x="635" y="298" font-size="8" fill="#333">exp_id: "exp_003"</text>
+                                    <text x="635" y="311" font-size="8" fill="#d32f2f" font-weight="bold">tenant_id: "tenant_001"</text>
+                                    <text x="635" y="323" font-size="8" fill="#333">amount: 8000</text>
+                                </g>
+                            </g>
+
+                            <!-- 説明 -->
+                            <text x="400" y="430" text-anchor="middle" font-size="10" fill="#666">
+                                🔑 <strong>重要：</strong> すべてのドキュメントに <strong style="color: #d32f2f;">tenant_id</strong> フィールドを追加
+                            </text>
+
+                            <!-- 矢印定義 -->
+                            <defs>
+                                <marker id="arrow99" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#999" />
+                                </marker>
+                            </defs>
+                        </svg>
+
+                        <p style="margin-top: 20px; padding: 12px; background: #fff8e1; border-left: 4px solid #ff9800; border-radius: 4px; font-size: 9px; color: #333;">
+                            💡 <strong>tenant_id の役割：</strong><br/>
+                            • Firestore のセキュリティルール内で「この tenant_id のデータだけ」と指定できる<br/>
+                            • API 層でもこの値を使ってバリデーション「リクエストユーザーの tenant_id とDBの tenant_id が同じか」<br/>
+                            • インデックス作成時に「tenant_id + category」「tenant_id + created_at」など、テナント + 属性でクエリを最適化
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Task 2.3 -->
+                <div class="task" id="task-2-3">
+                    <div class="task-title">Task 2.3: Freee 連携確認</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            既存の Freee MCP（会計 API）連携が、マルチテナント環境でも正常に動作することを確認する。
+                            複数テナントの会計データを正しく取得・処理できることをテストする。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：Freee API の認証</span>
+                                複数テナント（複数の Freee アカウント）を管理する場合、各テナントの Freee API トークンをどのように保存・管理するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：データ取得テスト</span>
+                                テナント A の会計データを取得する際、テナント B のデータが混ざらないことをどう確認するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：エラーハンドリング</span>
+                                Freee API が失敗した場合（認証エラー、限度超過、API 仕様変更など）、ユーザーにどう通知するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：パフォーマンス</span>
+                                複数テナントの Freee データを同時に取得する場合、レイテンシはどう最適化するか？（キャッシング？バッチ処理？）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Freee Integration Test Report」
+                            <ul>
+                                <li>マルチテナント環境での Freee API キー管理方法</li>
+                                <li>テスト結果（複数テナントのデータ取得確認）</li>
+                                <li>エラー時の対応フロー</li>
+                                <li>パフォーマンス最適化案</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        Freee API の仕様や限度については、ドキュメントを確認しながら実装を進めてください。不明な点があれば AI に相談してください。
+                    </div>
+                </div>
+
+                <!-- Task 2.4 -->
+                <div class="task" id="task-2-4">
+                    <div class="task-title">Task 2.4: Firebase Auth 改善</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            Firebase Authentication を改善し、複数のユーザーが同じテナントに属することをサポートする。
+                            パスワードリセット、メール認証、セッション管理などの基本的な機能を実装する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：複数ユーザー登録</span>
+                                テナント管理者が、チームメンバーをテナントに招待・追加する仕組みはどうするか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：Custom Claims の設定</span>
+                                Firebase のカスタムクレイム（custom claims）で「ユーザーのテナント ID」「ロール（管理者/ユーザー）」をどのように設定するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：パスワードリセット</span>
+                                パスワード忘れ時の リセットフロー（メール送信、リセットリンク、新パスワード設定）をどう実装するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：セッション管理</span>
+                                ブラウザ側での認証トークン（ID token）の管理、更新、ログアウト処理はどう実装するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：メール認証</span>
+                                新規登録時のメール認証フロー（確認メール送信、リンククリック検証）を実装する方法は？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Firebase Auth Improvements」
+                            <ul>
+                                <li>複数ユーザー登録フロー（UI＆バックエンド）</li>
+                                <li>Custom Claims 設定スクリプト</li>
+                                <li>パスワードリセット機能</li>
+                                <li>メール認証フロー</li>
+                                <li>セッション管理実装</li>
+                                <li>テスト結果（各フローが正常に動作することを確認）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        Firebase Auth の機能は豊富です。MVP 段階では「基本的な機能」に絞り、複雑な機能（MFA、SSO など）は後の段階に延期してください。
+                    </div>
+                </div>
+
+                <!-- Task 2.5 -->
+                <div class="task" id="task-2-5">
+                    <div class="task-title">Task 2.5: 監査ログ実装</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            システムの重要な操作（ログイン、ログアウト、データ作成・更新・削除）を記録する監査ログ機能を実装する。
+                            コンプライアンス・デバッグ・セキュリティ監視に活用できる状態にする。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：ログ対象の決定</span>
+                                MVP 段階で「必ず記録すべき操作」は何か？（ログイン、ログアウト、予算データの CRUD、AI 入力補助の呼び出しなど）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：ログスキーマ</span>
+                                各ログに記録すべき情報は何か？（タイムスタンプ、ユーザー ID、テナント ID、操作内容、変更前後のデータ、IP アドレスなど）
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：ストレージ</span>
+                                ログをどこに保存するか？（Firestore コレクション？Cloud Logging？）コスト・クエリ性能を考慮して。
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：ログの検索・表示</span>
+                                管理者がログを検索・表示できる UI をどのように提供するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：ログ保持期間</span>
+                                ログをどのくらいの期間保持するか？（30 日？90 日？）削除ポリシーは？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Audit Logging Implementation」
+                            <ul>
+                                <li>ログ対象操作リスト</li>
+                                <li>ログスキーマ設計</li>
+                                <li>ログ記録の実装（バックエンド）</li>
+                                <li>ログ検索・表示 UI</li>
+                                <li>ログ保持・削除ポリシー</li>
+                                <li>テスト結果（各操作がログに記録されていることを確認）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        監査ログは「後付け」するのは難しいため、MVP 段階で基本的なログ機能を備えておくことが重要です。
+                    </div>
+                </div>
+
+                <!-- Task 2.6 -->
+                <div class="task" id="task-2-6">
+                    <div class="task-title">Task 2.6: ドキュメント作成</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            初期ユーザー向けのドキュメント（ユーザーマニュアル、トラブルシューティング、セットアップガイド）を作成する。
+                            内部向けの技術ドキュメント（API 仕様、データモデル、セキュリティ設計）も整備する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：ユーザードキュメント</span>
+                                初期ユーザーが「何ができるのか」「どうやって使うのか」を理解するために、どのようなドキュメントが必要か？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：トラブルシューティング</span>
+                                よくある質問・問題（ログインできない、データが表示されない、AI 入力補助が遅いなど）に対する対処法をどう記載するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：セットアップガイド</span>
+                                新しいテナントが「初日から使い始める」ために必要なセットアップ手順は何か？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：技術ドキュメント</span>
+                                開発チーム向けの API 仕様書、スキーマドキュメント、セキュリティ設計書をどのレベルの詳しさで作成するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：ドキュメント保守</span>
+                                ドキュメントをどこに保存し、更新時にどのように管理するか？（GitHub Wiki？Notion？専用サイト？）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            <ul>
+                                <li>ユーザーマニュアル（主要機能の使い方）</li>
+                                <li>セットアップガイド（新規テナント向け）</li>
+                                <li>トラブルシューティング FAQ</li>
+                                <li>API 仕様書（エンドポイント、リクエスト・レスポンス形式）</li>
+                                <li>Firestore スキーマドキュメント</li>
+                                <li>セキュリティ設計書（Firestore ルール、Auth 設定など）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        ドキュメントは「完璧」である必要はありません。初期ユーザーからのフィードバックを受けて、段階的に改善していきます。
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 PHASE 3: テスト・提供開始
+                 ============================================ -->
+            <div class="phase-section">
+                <div class="phase-header">
+                    <h2>🧪 Phase 3: テスト・提供開始（Week 11-14）</h2>
+                    <p>目標：品質確認、初期ユーザー提供開始、フィードバック収集</p>
+                </div>
+
+                <!-- Task 3.1 -->
+                <div class="task" id="task-3-1">
+                    <div class="task-title">Task 3.1: テスト・検証</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            MVP の品質を確保するため、総合テスト（E2E テスト）、セキュリティテスト、負荷テストを実施する。
+                            本番環境に近い環境で、5～10 の並行ユーザーを想定したテストを行う。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：E2E テストシナリオ</span>
+                                「新しいユーザーがテナントに参加する」「予算データを作成・編集する」「AI 入力補助を使う」といった一連の操作をテストする方法は？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：マルチテナント検証</span>
+                                複数のテナント・複数のユーザーでのテストを実施する際、データ分離が本当に機能しているかをどう確認するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：セキュリティテスト</span>
+                                「権限のないユーザーが他のテナントのデータを見られないか」「CSRF 攻撃への対抗は大丈夫か」などをどう検証するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：負荷テスト</span>
+                                「5～10 ユーザーが同時にシステムを使用する場合のパフォーマンスは？」「データベースのクエリは遅くならない？」をどう測定するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：ブラウザ互換性</span>
+                                Chrome、Safari、Firefox などの主要ブラウザでの動作確認は？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            「Test Completion Report」
+                            <ul>
+                                <li>E2E テスト実行結果（チェックリスト）</li>
+                                <li>マルチテナント検証結果</li>
+                                <li>セキュリティテスト結果（脆弱性なし確認）</li>
+                                <li>負荷テスト結果（応答時間、エラー率）</li>
+                                <li>ブラウザ互換性テスト結果</li>
+                                <li>見つかった問題リスト（優先度付き）</li>
+                                <li>改善作業の記録</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        すべてのテストを「100% 完璧に」こなす必要はありません。「本番環境に悪影響を与えない程度の品質」を目安にしてください。
+                    </div>
+                </div>
+
+                <!-- Task 3.2 -->
+                <div class="task" id="task-3-2">
+                    <div class="task-title">Task 3.2: ユーザーオンボーディング</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            初期ユーザーに対して、システムの利用開始をサポートする。
+                            招待メール送信、アカウント作成ガイド、初期セットアップ（テナント情報登録、Freee 連携など）を実施する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：招待メール</span>
+                                初期ユーザーへの招待メールには、どのような情報・リンクを含めるべきか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：オンボーディング資料</span>
+                                「初日で何をすべきか」を分かりやすく説明する資料（動画？ステップガイド？）をどう提供するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：Freee 連携セットアップ</span>
+                                ユーザーが自分で Freee API キーを取得・設定できるようなガイドが必要か？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：初期データ入力</span>
+                                最初の予算データを入力するまでのサポート（テンプレート提供？入力例？）をどうするか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：初期サポート</span>
+                                「よくある質問」「よくあるエラー」について、迅速に対応できる体制が必要か？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            <ul>
+                                <li>招待メールテンプレート</li>
+                                <li>オンボーディングガイド（PDF またはウェブページ）</li>
+                                <li>Freee 連携セットアップガイド</li>
+                                <li>初期データ入力テンプレート＆サンプル</li>
+                                <li>よくある質問（FAQ）と回答</li>
+                                <li>サポート連絡先（メール、Slack など）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        オンボーディングは「最高のドキュメント」ではなく、「ユーザーが実際に使いながら分かる」形を目指してください。
+                    </div>
+                </div>
+
+                <!-- Task 3.3 -->
+                <div class="task" id="task-3-3">
+                    <div class="task-title">Task 3.3: フィードバック収集システム</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            初期ユーザーから効果的にフィードバックを収集し、次のフェーズでの改善に活かす仕組みを構築する。
+                            「何が良かったか」「何が困ったか」「次に欲しい機能は何か」を体系的に収集する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：フィードバック収集手段</span>
+                                インアプリアンケート、メール、Slack、定期インタビュー、使用ログ分析など、どの方法を組み合わせるか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：アンケート設計</span>
+                                「使いやすさ」「AI 入力補助の質」「Freee 連携」「サポート」などの観点で、何を聞くか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：NPS 測定</span>
+                                「このサービスを友人に勧めるか？」という NPS（Net Promoter Score）をどうやって測定するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：フィードバック管理</span>
+                                収集したフィードバックをどのように整理・優先順位付けして、改善に活かすか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：ユーザーとのコミュニケーション</span>
+                                「ご意見ありがとうございます。このように改善しました」という内容を、ユーザーにどう伝えるか？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            <ul>
+                                <li>インアプリアンケートフォーム</li>
+                                <li>NPS 測定用アンケート</li>
+                                <li>フィードバック管理スプレッドシート（テンプレート）</li>
+                                <li>定期インタビュー用ガイド</li>
+                                <li>使用ログから得られたインサイト（例：「AI 入力補助は○○の場面で よく使われている」）</li>
+                                <li>フィードバック分析レポート（最初の 2～4 週間分）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        フィードバック収集は「継続的」であり、Phase 3 中だけで終わりません。仕組みを整備した後は、定期的に（毎週または隔週）収集・分析を行ってください。
+                    </div>
+                </div>
+
+                <!-- Task 3.4 -->
+                <div class="task" id="task-3-4">
+                    <div class="task-title">Task 3.4: サポート体制構築</div>
+
+                    <div class="task-section">
+                        <h4>目的</h4>
+                        <div class="task-content">
+                            初期ユーザーからのサポート依頼に対応できる体制を整備する。
+                            メール対応、FAQ 拡充、トラブルシューティングの仕組みを構築する。
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>AI に相談する観点</h4>
+                        <div class="task-content">
+                            <div class="perspective">
+                                <span class="perspective-label">観点1：サポートチャネル</span>
+                                メール、Slack、Zoomなど、どのチャネルでサポートを提供するか？各チャネルの対応時間は？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点2：サポート SOP</span>
+                                お問い合わせを受けたときの対応フロー（受け付け → 確認 → 回答 → 解決確認）をどう標準化するか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点3：よくあるトラブル</span>
+                                「ログインできない」「データが同期されない」「AI 入力補助が遅い」といったトラブルの対処方法は？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点4：FAQ 拡充</span>
+                                 初期ユーザーからのご質問をもとに、FAQ をどのように充実させていくか？
+                            </div>
+                            <div class="perspective">
+                                <span class="perspective-label">観点5：内部コミュニケーション</span>
+                                サポート対応の記録・共有（チーム内で「あのユーザーはこういう問題があった」と情報共有）をどのように行うか？
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <h4>期待される成果物</h4>
+                        <div class="deliverable-box">
+                            <span class="deliverable-label">📄 成果物</span>
+                            <ul>
+                                <li>サポート SOP（標準対応手順書）</li>
+                                <li>サポート連絡先と対応時間</li>
+                                <li>よくあるトラブル&対応方法（ドキュメント）</li>
+                                <li>サポート対応ログ（スプレッドシートまたは専用ツール）</li>
+                                <li>FAQ の拡充版</li>
+                                <li>チーム内の情報共有ルール</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-box">
+                        <span class="note-label">⚠️ 注記</span>
+                        MVP 段階では「完璧なサポート」は目指さず、「迅速・丁寧な対応」を心がけてください。ユーザーの信頼を得ることが、次の段階での成功につながります。
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 PHASE 4: AI 機能強化（Claude SDK 統合）
+                 ============================================ -->
+            <div class="phase-section">
+                <div class="phase-header">
+                    <h2>🤖 Phase 4: AI 機能強化 - Claude SDK統合（Month 6～8）</h2>
+                    <p>目標：マルチエージェント構成の実装、AI 分析機能の本格化</p>
+                </div>
+
+                <div class="overview" style="background: #f0f9ff; border-left-color: #2563eb; margin-bottom: 30px;">
+                    <p style="margin-bottom: 10px;">
+                        Phase 1～3 で構築した「信頼できるマルチテナント基盤」の上に、
+                        <strong>Claude SDK を活用したマルチエージェント AI 機能</strong>を追加します。
+                    </p>
+                    <p>
+                        親エージェント（Orchestrator）が複数の子エージェント（入力補助、分析）を統合管理し、
+                        ユーザーのリクエストに応じて適切な AI 機能を提供する高度なシステムへと進化します。
+                    </p>
+                </div>
+
+                <h3 style="color: #2563eb; font-size: 1.3em; margin-bottom: 20px;">Phase 4 で実現すること</h3>
+                <ul style="margin-left: 20px; line-height: 2; font-size: 1.05em;">
+                    <li><strong>🤖 マルチエージェント構成</strong> - 親エージェント（Orchestrator）と複数の子エージェントが協力して動作</li>
+                    <li><strong>💡 入力補助の高度化</strong> - Claude Haiku による軽量で高速な入力支援</li>
+                    <li><strong>📊 分析機能の実装</strong> - Claude Sonnet による支出パターン分析・予測生成</li>
+                    <li><strong>🔄 SDK 自動管理</strong> - エージェント間通信、タイムアウト処理、リトライが自動化される</li>
+                    <li><strong>📈 スケーラビリティ</strong> - 新しいエージェント（レポート生成、予算最適化など）を簡単に追加可能</li>
+                </ul>
+
+                <div style="background: #fff8e1; border-left: 4px solid #ff9800; padding: 20px; margin: 30px 0; border-radius: 6px;">
+                    <p style="margin: 0; color: #e65100;">
+                        <strong>💡 重要：</strong> Phase 4 は「MVP 提供開始後」の段階です。初期ユーザーからのフィードバック、システムの安定性確認を踏まえた上で、計画的に進めてください。
+                    </p>
+                </div>
+
+                <h3 style="color: #2563eb; font-size: 1.3em; margin: 30px 0 20px;">Phase 4 のタスク構成（予定）</h3>
+                <p style="margin-bottom: 20px; color: #666;">
+                    以下は Phase 4 で想定されるタスクです。詳細設計は、Phase 3 完了時点でのユーザーフィードバックを踏まえて策定します。
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.9;">
+                    <li><strong>Task 4.1: Claude SDK 戦略策定</strong> - マルチエージェント構成の詳細設計、API コスト管理、実装優先度決定</li>
+                    <li><strong>Task 4.2: 親エージェント（Orchestrator）実装</strong> - ユーザーリクエスト分析、子エージェント選択ロジック</li>
+                    <li><strong>Task 4.3: 入力補助エージェント強化</strong> - Claude Haiku 統合、プロンプト最適化、レイテンシ改善</li>
+                    <li><strong>Task 4.4: 分析エージェント実装</strong> - Claude Sonnet による支出分析、予測生成、アノマリー検知</li>
+                    <li><strong>Task 4.5: エージェント間連携テスト</strong> - マルチエージェント動作確認、コスト測定、性能最適化</li>
+                </ul>
+
+                <div class="overview" style="background: #f0fdf4; border-left-color: #16a34a; margin-top: 30px;">
+                    <p style="margin: 0;">
+                        <strong>✅ Phase 4 の成功指標</strong><br/>
+                        • マルチエージェント構成が安定動作<br/>
+                        • API コスト が予測範囲内<br/>
+                        • ユーザーが AI 分析機能を活用できる<br/>
+                        • NPS 45 以上（エンタープライズ向け SaaS の目安）
+                    </p>
+                </div>
+            </div>
+
+            <!-- Back to Top -->
+            <div style="text-align: center; margin-top: 60px;">
+                <a href="#task-1-1" class="back-to-top">↑ ページのトップに戻る</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>MVP SaaS化 実装ロードマップ（Phase 1-3）| AI 協働ガイド</p>
+            <p>AI（Claude）と対話しながら MVP を構築するための実装ロードマップです。</p>
+            <p>Phase 1-3 は「信頼できるマルチテナント基盤」の構築に集中し、Claude SDK 統合（AI 機能強化）は Phase 4 以降に実施します。</p>
+            <p>各タスクの「観点」を参考に、AI に質問・相談し、具体的な実装方法を掘り下げていってください。</p>
+        </footer>
+    </div>
+</body>
+</html>

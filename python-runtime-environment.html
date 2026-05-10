@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style="" data-kantu="1"><head><meta charset="utf-8">
+    
+    
+    <title>Pythonアプリの実行環境 完全ガイド</title>
+    
+    
+    <style>
+      :root {
+        --primary: #00897b;
+        --primary-hover: #00796b;
+        --background-color: #f0f7f7;
+        --card-bg: #ffffff;
+        --text-color: #37474f;
+        --heading-color: #00695c;
+        --code-bg: #e0f2f1;
+        --border-radius: 12px;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        max-width: 1000px; /* Slightly wider for the cards */
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: var(--heading-color);
+        font-weight: 700;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #546e7a;
+        margin-bottom: 3rem;
+        font-size: 1.2rem;
+      }
+
+      /* Card Style */
+      .card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e0e0e0;
+      }
+
+      .level-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Tables */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th {
+        background-color: #e0f2f1;
+        color: var(--heading-color);
+        font-weight: bold;
+      }
+
+      td,
+      th {
+        padding: 1rem;
+        border-bottom: 1px solid #eceff1;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: #263238;
+        color: #eceff1;
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'Consolas', 'Monaco', monospace;
+        position: relative;
+      }
+
+      code {
+        font-family: 'Consolas', 'Monaco', monospace;
+        background-color: rgba(0, 137, 123, 0.1);
+        color: #00695c;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+      }
+
+      pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+      }
+
+      /* Visual Diagrams for venv */
+      .diagram-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin: 2rem 0;
+      }
+
+      .diagram-box {
+        flex: 1;
+        min-width: 300px;
+        background-color: #fff;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 1.5rem;
+        position: relative;
+      }
+
+      .diagram-title {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        display: block;
+        font-size: 1.1rem;
+      }
+
+      .diagram-server {
+        background-color: #eceff1;
+        border: 2px dashed #b0bec5;
+        border-radius: 8px;
+        padding: 1rem;
+        position: relative;
+      }
+
+      .diagram-server::before {
+        content: '🖥️ サーバー (Python 3.11)';
+        display: block;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        color: #546e7a;
+      }
+
+      .app-box {
+        background-color: #fff;
+        border: 2px solid var(--primary);
+        border-radius: 6px;
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .app-box.conflict {
+        border-color: #e53935;
+        background-color: #ffebee;
+      }
+
+      .lib-tag {
+        display: inline-block;
+        font-size: 0.8rem;
+        background-color: #e0f2f1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-top: 4px;
+        color: #00695c;
+      }
+
+      .lib-tag.error {
+        background-color: #ffcdd2;
+        color: #c62828;
+        font-weight: bold;
+      }
+
+      .venv-box {
+        border: 2px solid #4db6ac;
+        background-color: #e0f2f1;
+        border-radius: 8px;
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        position: relative;
+      }
+
+      .venv-label {
+        font-size: 0.75rem;
+        color: #00695c;
+        font-weight: bold;
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        background: #fff;
+        padding: 0 5px;
+        border: 1px solid #4db6ac;
+        border-radius: 4px;
+      }
+
+      /* Flowchart */
+      .flowchart {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        font-family: monospace;
+        line-height: 1.4;
+        white-space: pre;
+        overflow-x: auto;
+        color: #333;
+      }
+
+      /* Highlights */
+      .highlight-box {
+        background-color: #fff3e0;
+        border-left: 5px solid #ff9800;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        border-radius: 4px;
+      }
+
+      .step-number {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 28px;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      summary {
+        font-weight: bold;
+        cursor: pointer;
+        color: var(--heading-color);
+      }
+
+      details {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+      }
+    </style>
+  </head>
+  <body style="">
+    <header>
+      <h1>📚 Pythonアプリの実行環境 完全ガイド</h1>
+      <p class="subtitle">〜 規模と用途で選ぶ実行環境のロードマップ 〜</p>
+    </header>
+
+    <main>
+      
+      <section class="card">
+        <h2>🎯 この資料の目的</h2>
+        <p>
+          Pythonで作ったアプリケーションを「自分以外の環境（お客様のサーバーなど）」で動かすとき、どんな準備が必要なのでしょうか？<br>
+          規模や運用方法に応じた選択肢を、ステップバイステップで解説します。
+        </p>
+
+        <h3>📦 まず確認：納品物の「形」は？</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>納品物のタイプ</th>
+              <th>代表例</th>
+              <th>主な利用者</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ノートブック</strong></td>
+              <td><code>.ipynb</code> ファイル</td>
+              <td>分析者・研究者（手動で実行）</td>
+            </tr>
+            <tr>
+              <td><strong>スクリプト/CLI</strong></td>
+              <td><code>.py</code> ファイル + 実行用シェル</td>
+              <td>システム管理者（バッチ処理）</td>
+            </tr>
+            <tr>
+              <td><strong>サービス/API</strong></td>
+              <td>Webアプリ、APIサーバー</td>
+              <td>エンドユーザー（常時稼働）</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      
+      <section class="card">
+        <span class="level-badge">レベル 1</span>
+        <h2>超簡単：Google Colab / Jupyter</h2>
+
+        <p><strong>検証・分析・PoC（概念実証）向け</strong></p>
+        <ul>
+          <li>✅ <strong>メリット：</strong> 環境構築がほぼ不要。URL共有だけで動く。</li>
+          <li>❌ <strong>注意点：</strong> 「人がボタンを押す」運用になるため、自動化には不向き。</li>
+        </ul>
+
+        <div class="highlight-box">
+          <strong>📝 納品セット例</strong><br>
+          <code>analysis.ipynb</code> (本体) + <code>requirements.txt</code> (ライブラリ一覧) + 手順書
+        </div>
+      </section>
+
+      
+      <section class="card" style="border: 2px solid var(--primary)">
+        <span class="level-badge">レベル 2</span>
+        <h2>小〜中規模バッチ：サーバー/PCで定期実行</h2>
+        <p>
+          既存のサーバーやPCを使って、決まった時間に自動でプログラムを動かす方法です。<br>ここで最も重要なのが<strong>「仮想環境 (venv)」</strong>です。
+        </p>
+
+        <hr>
+
+        <h3>🔰 なぜ「仮想環境」が必要なの？</h3>
+        <p>
+          1つのサーバーで複数のPythonアプリを動かすとき、ライブラリのバージョンが喧嘩（競合）してしまうのを防ぐためです。
+        </p>
+
+        <div class="diagram-container">
+          
+          <div class="diagram-box">
+            <span class="diagram-title">❌ 仮想環境なし</span>
+            <div class="diagram-server">
+              <div class="app-box conflict">
+                <strong>既存システムA</strong><br>
+                <span class="lib-tag">pandas 1.5</span>
+              </div>
+              <div class="app-box conflict">
+                <strong>あなたの新作アプリ</strong><br>
+                <span class="lib-tag error">pandas 2.0が必要...入らない！💥</span>
+              </div>
+              <p style="color: #d32f2f; font-size: 0.9rem; margin-top: 10px">
+                ⚠ ライブラリを上書きすると、既存システムが動かなくなる！
+              </p>
+            </div>
+          </div>
+
+          
+          <div class="diagram-box">
+            <span class="diagram-title">✅ 仮想環境あり (venv)</span>
+            <div class="diagram-server">
+              <div class="venv-box">
+                <span class="venv-label">環境 A</span>
+                <strong>既存システムA</strong><br>
+                <span class="lib-tag">pandas 1.5</span>
+              </div>
+              <div class="venv-box" style="border-color: #26a69a; background-color: #e0f7fa">
+                <span class="venv-label">環境 B</span>
+                <strong>あなたの新作アプリ</strong><br>
+                <span class="lib-tag">pandas 2.0</span>
+              </div>
+              <p style="color: #00695c; font-size: 0.9rem; margin-top: 10px">
+                ✨ 箱（環境）が分かれているから、お互い干渉しない！
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <h3>🛠️ 実践！venv の使い方ステップバイステップ</h3>
+        <p>Windows環境を例にした、最も基本的なコマンド手順です。</p>
+
+        <div>
+          <h4><span class="step-number">1</span>仮想環境を作成する</h4>
+          <p>プロジェクトのフォルダに移動して、魔法のコマンドを打ちます。</p>
+          <pre><code>cd my_project
+python -m venv venv</code></pre>
+          <small>※ 最後の <code>venv</code> は作成するフォルダ名です。</small>
+        </div>
+
+        <div style="margin-top: 1.5rem">
+          <h4><span class="step-number">2</span>仮想環境を有効化（Activate）する</h4>
+          <p><strong>これを忘れると意味がありません！</strong></p>
+          <pre><code># Windowsの場合
+venv\Scripts\activate
+
+# Mac/Linuxの場合
+source venv/bin/activate</code></pre>
+          <p>成功すると、コマンドラインの先頭に <code>(venv)</code> と表示されます。</p>
+        </div>
+
+        <div style="margin-top: 1.5rem">
+          <h4><span class="step-number">3</span>ライブラリを入れる＆記録する</h4>
+          <pre><code># 必要なものをインストール
+pip install pandas numpy
+
+# インストールしたリストを保存（納品用）
+pip freeze &gt; requirements.txt</code></pre>
+        </div>
+
+        <div style="margin-top: 1.5rem">
+          <h4><span class="step-number">4</span>使い終わったら無効化</h4>
+          <pre><code>deactivate</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>📦 納品時のテンプレート</h3>
+        <p>
+          お客様に渡すフォルダ構成のイメージです。<strong><code>venv</code> フォルダ自体は渡しません！</strong>（お客様の環境で作ってもらいます）
+        </p>
+
+        <pre><code>📁 my_project/
+├── main.py              # プログラム本体
+├── requirements.txt     # 📜 ライブラリの設計図（必須！）
+├── run.bat              # 🏃‍♂️ 実行用スクリプト
+└── README.md            # 📖 手順書</code></pre>
+
+        <details>
+          <summary>💡 トラブルシューティング（クリックして開く）</summary>
+          <ul>
+            <li>
+              <strong>Q. <code>pip install</code> でエラーが出る</strong><br>
+              A. <code>pip install --upgrade pip</code> でpip自体を更新してみてください。
+            </li>
+            <li>
+              <strong>Q. 実行ポリシーエラー（Windows）</strong><br>
+              A. PowerShellで実行できない場合、コマンドプロンプトを使うか、ポリシー設定を変更する必要があります。
+            </li>
+            <li>
+              <strong>Q. 本番で動かない</strong><br>
+              A. <code>requirements.txt</code> を作り忘れていませんか？開発環境で必ず
+              <code>pip freeze</code> しましょう。
+            </li>
+          </ul>
+        </details>
+      </section>
+
+      
+      <section class="card">
+        <span class="level-badge">レベル 3</span>
+        <h2>ちゃんと運用：ジョブ管理ツール</h2>
+        <p><strong>「Aの処理が終わったらBを実行」「失敗したら通知」</strong>など、複雑な管理が必要な場合。</p>
+        <ul>
+          <li>🤖 <strong>Airflow / Prefect</strong> などのツールを使用。</li>
+          <li>✅ <strong>メリット：</strong> 実行履歴が見える、失敗時のリカバリーが楽。</li>
+          <li>❌ <strong>デメリット：</strong> ツールの学習コストがかかる。</li>
+        </ul>
+      </section>
+
+      
+      <section class="card">
+        <span class="level-badge">レベル 4</span>
+        <h2>本格運用：Docker（ドッカー）</h2>
+        <p><strong>「環境ごと箱詰めして配る」</strong>技術です。</p>
+
+        <div style="background-color: #e3f2fd; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196f3">
+          <p style="margin: 0">
+            <strong>🗣️ 従来：</strong>「Pythonのバージョンが合わなくて動きません…」<br>
+            <strong>🐳 Docker：</strong>「このコンテナ（箱）を起動すれば、私のPCと全く同じ環境で動きます！」
+          </p>
+        </div>
+
+        <ul style="margin-top: 1rem">
+          <li>✅ <strong>最強の再現性：</strong> OSやライブラリの違いによるトラブルが激減。</li>
+          <li>🛠️ <strong>納品物：</strong> <code>Dockerfile</code> + <code>docker-compose.yml</code></li>
+        </ul>
+      </section>
+
+      
+      <section class="card">
+        <span class="level-badge">レベル 5</span>
+        <h2>大規模：Kubernetes（クーベネティス）</h2>
+        <p>
+          大規模なWebサービスや、絶対に止めてはいけないシステム向け。<br>
+          ※初学者のうちは「そういうものがある」と知っておくだけでOKです。
+        </p>
+      </section>
+
+      
+      <section class="card">
+        <h2>🗺️ 迷ったらこれ!選び方フローチャート</h2>
+        
+        <div style="background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 8px; padding: 2rem; margin: 2rem 0; font-family: monospace; line-height: 2;">
+          <div style="font-weight: bold; text-align: center; margin-bottom: 1rem;">開始</div>
+          <div style="text-align: center;">↓</div>
+          <div style="font-weight: bold;">まず動かしたい?</div>
+          <div>├─ <span style="color: #00897b; font-weight: bold;">YES</span> → <span style="background-color: #81c784; color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">レベル1: Google Colab</span></div>
+          <div>└─ NO</div>
+          <div style="text-align: center; margin: 0.5rem 0;">↓</div>
+          <div style="font-weight: bold;">定期実行が必要?</div>
+          <div>├─ <span style="color: #00897b; font-weight: bold;">YES</span> → <span style="background-color: #42a5f5; color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">レベル2: サーバー + venv</span> ★推奨</div>
+          <div>└─ NO</div>
+          <div style="text-align: center; margin: 0.5rem 0;">↓</div>
+          <div style="font-weight: bold;">環境差異を防ぎたい?</div>
+          <div>├─ <span style="color: #00897b; font-weight: bold;">YES</span> → <span style="background-color: #ab47bc; color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">レベル4: Docker</span></div>
+          <div>└─ NO → <span style="background-color: #ef5350; color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">レベル5: Kubernetes</span></div>
+        </div>
+        
+        <p style="text-align: center; color: #78909c; font-size: 0.9rem;">
+          💡 初学者の方は、まず<strong style="color: var(--primary);">レベル2(サーバー + venv)</strong>から始めるのがおすすめです!
+        </p>
+      </section>
+
+      
+      <section class="card">
+        <h3>📊 規模を決める5つの判断軸</h3>
+        <table>
+          <tbody><tr>
+            <th>判断軸</th>
+            <th>小規模（レベル1-2）</th>
+            <th>大規模（レベル4-5）</th>
+          </tr>
+          <tr>
+            <td><strong>実行頻度</strong></td>
+            <td>手動 / 週1回</td>
+            <td>常時稼働 / 毎分</td>
+          </tr>
+          <tr>
+            <td><strong>利用者数</strong></td>
+            <td>自分 / チーム数名</td>
+            <td>全社員 / 外部顧客</td>
+          </tr>
+          <tr>
+            <td><strong>失敗時の影響</strong></td>
+            <td>やり直せばOK</td>
+            <td>業務停止・損害発生</td>
+          </tr>
+          <tr>
+            <td><strong>証跡（ログ）</strong></td>
+            <td>簡易的でOK</td>
+            <td>厳密な監査が必要</td>
+          </tr>
+        </tbody></table>
+      </section>
+
+      
+      <section class="card" style="background-color: #e8f5e9; border-color: #a5d6a7">
+        <h2>🎓 学習ロードマップ &amp; 提案トーク</h2>
+
+        <h3>まずはここから！</h3>
+        <ol>
+          <li><strong>STEP 1 (現在)</strong>：<code>venv</code> を使って自分のPC内で環境を分けられるようになる。</li>
+          <li>
+            <strong>STEP 2 (半年後)</strong>：サーバー上で
+            <code>cron</code> やタスクスケジューラを使った自動実行を覚える。
+          </li>
+          <li><strong>STEP 3 (1年後~)</strong>：Dockerを使って、環境構築を自動化してみる。</li>
+        </ol>
+
+        <hr>
+
+        <h3>🗣️ 実務での提案トーク例</h3>
+        <p>
+          「今回のツールは週1回の集計利用とのことですので、大掛かりなシステムは不要です。<br>
+          コストを抑えるためにも、まずは<strong>【レベル2】の構成（Pythonスクリプト＋仮想環境）</strong>で納品させていただきます。<br>
+          お客様の既存環境に影響を与えないよう、安全な形でお渡ししますね。」
+        </p>
+      </section>
+    </main>
+
+    <footer style="text-align: center; margin-top: 3rem; color: #78909c; font-size: 0.9rem">
+      <p>作成日: 2026年1月 | 対象: プログラミング初学者向け講座資料</p>
+    </footer>
+  
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>

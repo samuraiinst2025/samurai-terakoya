@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker版 - セットアップ詳細ガイド（STEP 0-5）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .breadcrumb a {
+            color: #0ea5e9;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .phase-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid #0ea5e9;
+        }
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f9ff;
+        }
+        .phase-badge {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.3em;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+        }
+        .phase-badge.onetime {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        .phase-info {
+            flex-grow: 1;
+        }
+        .phase-title {
+            font-size: 1.8em;
+            color: #0ea5e9;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .phase-badge.onetime ~ .phase-info .phase-title {
+            color: #f57c00;
+        }
+        .phase-description {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+        .phase-meta {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+        .meta-item {
+            text-align: right;
+        }
+        .meta-label {
+            color: #999;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .meta-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 4px;
+        }
+        .why-box {
+            background: #e0f7ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        .why-title {
+            color: #0369a1;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .why-content {
+            color: #333;
+            line-height: 1.6;
+        }
+        .day-block {
+            background: #f9f9f9;
+            border-left: 5px solid #0ea5e9;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .day-label {
+            background: #0ea5e9;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+        }
+        .day-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            flex-grow: 1;
+        }
+        .day-hours {
+            background: #e0f7ff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #0369a1;
+            font-weight: 500;
+        }
+        .tasks {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        .task {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #fafafa;
+            border-left: 3px solid #06b6d4;
+            border-radius: 4px;
+        }
+        .task:last-child {
+            margin-bottom: 0;
+        }
+        .task-title {
+            font-weight: 600;
+            color: #06b6d4;
+            margin-bottom: 8px;
+        }
+        .task-description {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+        .accordion {
+            margin-top: 10px;
+        }
+        .accordion-button {
+            background: #e0f7ff;
+            border: 1px solid #0ea5e9;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #0ea5e9;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .accordion-button:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+        .accordion-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .accordion-button.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #0ea5e9;
+        }
+        .accordion-content.active {
+            display: block;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        .code-label {
+            color: #06b6d4;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9em;
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .note-title {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .note-content {
+            color: #78350f;
+            font-size: 0.95em;
+        }
+        .checkpoint {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        .checkpoint-title {
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .checkpoint-content {
+            color: #555;
+            font-size: 0.95em;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .tag.onetime {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+        .tag.customer {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            font-size: 1.8em;
+            color: #0ea5e9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0f7ff;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        .nav-button-secondary {
+            background: white;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
+        }
+        .nav-button-secondary:hover {
+            background: #e0f7ff;
+        }
+        .summary-box {
+            background: #e0f7ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        .summary-title {
+            color: #0369a1;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th {
+            background: #e0f7ff;
+            color: #0369a1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0f7ff;
+        }
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            .phase-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .phase-meta {
+                width: 100%;
+                flex-direction: column;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐳 Docker版 セットアップ詳細ガイド</h1>
+            <p>STEP 0（準備）+ STEP 1-5（顧客セットアップ）の完全フロー</p>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">📋 ガイドトップ</a>
+            > <a href="docker-overview.html">Docker版 全体像</a>
+            > <span style="color: #0ea5e9;">セットアップ詳細</span>
+        </div>
+
+        <!-- STEP 0: ワンタイム準備 -->
+        <div class="phase-section">
+            <div class="phase-header">
+                <div class="phase-badge onetime">準備</div>
+                <div class="phase-info">
+                    <div class="phase-title">Phase 0: Docker テンプレート作成</div>
+                    <div class="phase-description">Dockerfile & docker-compose を開発し、複数企業で流用可能なテンプレート化する（初回のみ）</div>
+                </div>
+                <div class="phase-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">実施時期</div>
+                        <div class="meta-value">初回のみ</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">工数</div>
+                        <div class="meta-value">2-3日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-box">
+                <div class="why-title">🎯 なぜこれが必要か？</div>
+                <div class="why-content">
+                    Dockerfile と docker-compose を一度作成すると、<strong>2社目以降の顧客セットアップが大幅に高速化</strong>されます。
+                    毎回ゼロから作成する必要がなく、テンプレートを少し修正するだけで、
+                    異なる顧客環境にも同じコンテナを展開できます。つまり、初回の投資が後々の効率化に繋がります。
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">STEP 0-1</div>
+                    <div class="day-title">Dockerfile & docker-compose テンプレート開発</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-title">✓ Firebase アプリケーション構造確認</div>
+                        <div class="task-description">
+                            package.json、環境変数、依存関係を確認し、Docker 化に必要な情報を整理
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ Dockerfile 作成・テスト</div>
+                        <div class="task-description">
+                            Node.js ベースイメージ選択、依存パッケージインストール、ビルドプロセスを定義
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-button" onclick="toggleAccordion(event)">
+                                <span class="accordion-icon">▼</span>
+                                実装例を見る（詳細）
+                            </button>
+                            <div class="accordion-content">
+                                <div class="code-block">
+<span class="code-label">Dockerfile 例</span>
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:5000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+CMD ["npm", "run", "dev"]</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ docker-compose テンプレート作成</div>
+                        <div class="task-description">
+                            開発環境・本番環境の両方の docker-compose ファイルを作成・テスト
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-button" onclick="toggleAccordion(event)">
+                                <span class="accordion-icon">▼</span>
+                                実装例を見る（詳細）
+                            </button>
+                            <div class="accordion-content">
+                                <div class="code-block">
+<span class="code-label">docker-compose.yml テンプレート</span>
+version: '3.8'
+services:
+  firebase-app:
+    build: .
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/firebase-key.json
+      FREEE_API_TOKEN: ${FREEE_API_TOKEN}
+    volumes:
+      - ${FIREBASE_KEY_PATH}:/app/secrets/firebase-key.json:ro
+    ports:
+      - "5000:5000"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="task-title">✓ .env.example・ドキュメント作成</div>
+                        <div class="task-description">
+                            必要な環境変数、セットアップ手順を文書化
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkpoint">
+                    <div class="checkpoint-title">✅ STEP 0 チェックポイント</div>
+                    <div class="checkpoint-content">
+                        • Dockerfile がローカルで正常にビルドできている<br>
+                        • docker-compose up で開発環境・本番環境が起動する<br>
+                        • .env.example に必要なすべての変数が記載されている<br>
+                        • Dockerfile & docker-compose がテンプレート化され、顧客ごとの変数が明確<br>
+                        • セットアップドキュメントが完成している
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1-5: 顧客ごとの作業 -->
+        <div class="phase-section">
+            <div class="phase-header">
+                <div class="phase-badge">実装</div>
+                <div class="phase-info">
+                    <div class="phase-title">Phase 1-5: 顧客環境への Docker 構築・テスト</div>
+                    <div class="phase-description">テンプレートを顧客環境に適用し、構築・テストする（毎顧客実施）</div>
+                </div>
+                <div class="phase-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">実施時期</div>
+                        <div class="meta-value">顧客ごと</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">工数</div>
+                        <div class="meta-value">5日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-box">
+                <div class="why-title">🎯 なぜこれが必要か？</div>
+                <div class="why-content">
+                    各顧客が独立したサーバー環境を持つため、Docker コンテナを展開・テストする必要があります。
+                    テンプレートを使いながらも、各顧客固有の要件（ポート番号、ログ設定等）に合わせた微調整を行い、
+                    本番で安定稼働することを確認するフェーズです。
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">STEP 1</div>
+                    <div class="day-title">本番サーバー準備・Docker セットアップ</div>
+                    <div class="day-hours">1-2日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Docker & Docker Compose インストール確認</div>
+                        <div class="task-description">
+                            顧客サーバーに Docker がインストールされているか、バージョンが適切か確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ .env ファイル作成・シークレット配置</div>
+                        <div class="task-description">
+                            テンプレートの .env.example から .env を生成、Firebase キーと Freee API トークンを安全に配置
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Docker イメージビルド</div>
+                        <div class="task-description">
+                            docker build で顧客環境用のイメージを作成
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ docker-compose up で起動・基本確認</div>
+                        <div class="task-description">
+                            コンテナが正常に起動し、ヘルスチェックが通るか確認
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">STEP 2-3</div>
+                    <div class="day-title">統合テスト・パフォーマンス検証</div>
+                    <div class="day-hours">2-3日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ Freee API 連携テスト</div>
+                        <div class="task-description">
+                            Firebase コンテナから Freee API へアクセスでき、データ取得・書き込みが成功するか確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ ログ出力確認</div>
+                        <div class="task-description">
+                            docker-compose logs で正常なログが出力され、エラーがないか確認
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ リソース使用量監視</div>
+                        <div class="task-description">
+                            docker stats でメモリ・CPU 使用率を確認し、ボトルネックがないか検証
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ 障害復旧テスト</div>
+                        <div class="task-description">
+                            コンテナクラッシュ時の自動再起動、ネットワーク復旧時の動作確認
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-label">STEP 4-5</div>
+                    <div class="day-title">ドキュメント・運用引き継ぎ</div>
+                    <div class="day-hours">2日</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ セットアップ記録ドキュメント作成</div>
+                        <div class="task-description">
+                            実際に使用した .env の値、カスタマイズ内容、ポート設定等を記録
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ 運用ガイド・トラブルシューティング作成</div>
+                        <div class="task-description">
+                            顧客向けの日次・週次チェック項目、よくあるエラーと対処法を記載
+                        </div>
+                    </div>
+                    <div class="task">
+                        <span class="tag customer">顧客ごと</span>
+                        <div class="task-title">✓ 運用スタッフ向けトレーニング</div>
+                        <div class="task-description">
+                            docker-compose コマンド、ログ確認方法、問題発生時の連絡フローを説明
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkpoint">
+                    <div class="checkpoint-title">✅ STEP 1-5 チェックポイント</div>
+                    <div class="checkpoint-content">
+                        • Docker コンテナが顧客環境で安定稼働している<br>
+                        • Freee API との連携が正常に機能している<br>
+                        • すべての統合テストが成功している<br>
+                        • 自動再起動とヘルスチェック機能が動作している<br>
+                        • 顧客向けドキュメント・トレーニングが完了している
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スケーラビリティの効果 -->
+        <div class="section">
+            <h2>📈 Docker テンプレートによる効率化</h2>
+
+            <div class="summary-box">
+                <div class="summary-title">2社目以降の優位性</div>
+                <table>
+                    <tr>
+                        <th>パターン</th>
+                        <th>初回（1社目）</th>
+                        <th>2社目以降</th>
+                        <th>効率化率</th>
+                    </tr>
+                    <tr>
+                        <td><strong>STEP 0 準備</strong></td>
+                        <td>2-3日</td>
+                        <td>0日（不要）</td>
+                        <td>100%削減</td>
+                    </tr>
+                    <tr>
+                        <td><strong>STEP 1-5 実装</strong></td>
+                        <td>5日</td>
+                        <td>4-5日（テストが簡略化）</td>
+                        <td>10-20%削減</td>
+                    </tr>
+                    <tr>
+                        <td><strong>合計工数</strong></td>
+                        <td>7-8日</td>
+                        <td>4-5日</td>
+                        <td>35-45%削減</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p style="color: #666; margin-top: 20px;">
+                Docker テンプレートが完成すれば、2社目以降は「.env を変えて docker-compose up」するだけで環境構築が完了します。
+                GCP版より低い初期投資で、2社目以降の効率化が実現できます。
+            </p>
+        </div>
+
+        <!-- ベストプラクティス -->
+        <div class="section">
+            <h2>💡 Docker 運用のベストプラクティス</h2>
+
+            <h3>イメージのバージョン管理</h3>
+            <p>Docker イメージにはバージョンタグを付け（v1.0.0 など）、更新履歴を明確にします。</p>
+
+            <h3>機密情報の安全管理</h3>
+            <p>
+                .env ファイルは Git に含めず、.gitignore に追加します。
+                本番環境ではファイルパーミッション（chmod 600）で保護します。
+            </p>
+
+            <h3>ログの一元管理</h3>
+            <p>
+                Docker は stdout/stderr へのログ出力を基本とし、json-file ドライバーでローテーション設定を行います。
+            </p>
+
+            <h3>定期的なイメージ更新</h3>
+            <p>
+                Node.js やライブラリのセキュリティパッチが公開されたら、イメージを再ビルドして新しいバージョンを配布します。
+            </p>
+        </div>
+
+        <!-- 次のステップ -->
+        <div class="section">
+            <h2>📚 次のステップ</h2>
+
+            <div class="nav-buttons">
+                <a href="docker-dockerfile.html" class="nav-button">🐳 Dockerfile & docker-compose 実装ガイド</a>
+                <a href="docker-troubleshooting.html" class="nav-button nav-button-secondary">🔧 トラブルシューティング</a>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="docker-overview.html" class="nav-button nav-button-secondary">← Docker版 全体像に戻る</a>
+                <a href="index.html" class="nav-button nav-button-secondary">📋 ガイドトップに戻る</a>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0f7ff; color: #666;">
+            <p>このガイドは Samurai Terakoya の教材です。</p>
+            <p style="font-size: 0.9em;">最終更新: 2026年4月 | Version: 2.0</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(event) {
+            event.preventDefault();
+            const button = event.target.closest('.accordion-button');
+            const content = button.nextElementSibling;
+
+            button.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

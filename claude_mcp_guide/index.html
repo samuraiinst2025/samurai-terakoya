@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code MCP 実践活用ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #475569;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alert strong { display: block; margin-bottom: 8px; font-size: 1.1em; }
+        
+        .alert-tip { background-color: #f5f3ff; border-left: 4px solid #8b5cf6; }
+        .alert-tip strong { color: #5b21b6; }
+        
+        .alert-note { background-color: #eff6ff; border-left: 4px solid #3b82f6; }
+        .alert-note strong { color: #1e3a8a; }
+
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 24px 0;
+        }
+
+        code {
+            background-color: #f1f5f9;
+            color: #ef4444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Claude Code MCP 実践活用ガイド</h1>
+        <p>外部ツールとデータを Claude Code に統合するための究極のバイブル</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 第1章: 導入 -->
+        <div class="card">
+            <h2>1. MCP (Model Context Protocol) とは？</h2>
+            <p>MCP は、Claude Code が外部のデータベース、API、ツールとシームレスに連携するための標準プロトコルです。これにより、Claude は単なる「コード書き」を超えて、実社会のデータやワークフローを操作できる「万能エージェント」へと進化します。</p>
+
+            <div class="alert alert-tip">
+                <strong>🌟 MCP で広がる可能性</strong>
+                <ul>
+                    <li>JIRA の課題を確認し、実装して PR を作成する</li>
+                    <li>Sentry のエラーログを解析し、修正案を提示する</li>
+                    <li>Notion や Slack の情報に基づいてドキュメントを更新する</li>
+                    <li>データベース (PostgreSQL 等) から直接データをクエリする</li>
+                </ul>
+            </div>
+
+            <h3>アーキテクチャの仕組み</h3>
+            <div class="mermaid">
+            graph LR
+                CC["Claude Code"] -- "LSP / MCP Protocol" --> Server["MCP Server"]
+                Server -- "Read/Write" --> Data[("外部データ・ツール<br>(GitHub, Jira, DB, etc)")]
+                
+                style CC fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px
+                style Server fill:#fff,stroke:#333,stroke-width:2px
+                style Data fill:#e2e8f0,stroke:#64748b,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 第2章: インストール -->
+        <div class="card">
+            <h2>2. MCP サーバーの追加方法</h2>
+            <p>Claude Code に MCP サーバーを追加するには、<code>claude mcp add</code> コマンドを使用します。通信方式（トランスポート）に合わせて3つのオプションがあります。</p>
+
+            <h3>オプション 1: リモート HTTP サーバー</h3>
+            <p>Notion 等のリモートで稼働しているサーバーに接続します。</p>
+            <pre><code>claude mcp add --transport http notion https://mcp.notion.com/mcp</code></pre>
+
+            <h3>オプション 2: リモート SSE サーバー</h3>
+            <p>Server-Sent Events を使用したストリーミング接続に対応します。</p>
+            <pre><code>claude mcp add --transport sse asana https://mcp.asana.com/sse</code></pre>
+
+            <h3>オプション 3: ローカル stdio サーバー (最も一般的)</h3>
+            <p>ローカルでプログラムを起動して通信します。npm や python を直接叩く場合に使います。</p>
+            <pre><code>claude mcp add --transport stdio --env API_KEY=xxx my-tool -- npx -y @some/mcp-server</code></pre>
+
+            <div class="alert alert-note">
+                <strong>🔧 サーバーの管理コマンド</strong>
+                <ul>
+                    <li><code>claude mcp list</code> : 設定済みのサーバー一覧を表示</li>
+                    <li><code>claude mcp get &lt;name&gt;</code> : 特定のサーバーの詳細を確認</li>
+                    <li><code>claude mcp remove &lt;name&gt;</code> : サーバーを削除</li>
+                    <li><code>/mcp</code> : (チャット内) ステータス確認と認証の実行</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 第3章: スコープ -->
+        <div class="card">
+            <h2>3. MCP 設定のスコープ</h2>
+            <p>設定を保存する場所を <code>--scope</code> フラグで制御できます。誰と、どこでツールを共有したいかによって使い分けます。</p>
+
+            <table>
+                <tr>
+                    <th>スコープ</th>
+                    <th>保存場所</th>
+                    <th>主なユースケース</th>
+                </tr>
+                <tr>
+                    <td><strong>local</strong> (デフォルト)</td>
+                    <td><code>.claude/settings.local.json</code></td>
+                    <td>個人用、実験的、秘密鍵を含む設定</td>
+                </tr>
+                <tr>
+                    <td><strong>project</strong></td>
+                    <td><code>.mcp.json</code></td>
+                    <td>チーム共有、プロジェクト固有の共有ツール</td>
+                </tr>
+                <tr>
+                    <td><strong>user</strong></td>
+                    <td><code>~/.claude.json</code></td>
+                    <td>全プロジェクトで共通して使う自分の道具箱</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 第4章: 実践例 -->
+        <div class="card">
+            <h2>4. 実践的な活用シナリオ</h2>
+            
+            <h3>GitHub 連携でのコードレビュー</h3>
+            <p>Copilot 経由の MCP サーバーを接続すると、PR の高度なレビューが可能になります。</p>
+            <pre><code>claude mcp add --transport http github https://api.githubcopilot.com/mcp/</code></pre>
+            <div class="alert-tip alert">
+                <strong>Prompt:</strong> 「PR #456 をレビューして改善を提案してください」
+            </div>
+
+            <h3>Sentry 連携でのエラー修正</h3>
+            <pre><code>claude mcp add --transport http sentry https://mcp.sentry.dev/mcp</code></pre>
+            <div class="alert-tip alert">
+                <strong>Prompt:</strong> 「過去24時間で発生した最も致命的なエラーのスタックトレースを解析して修正案を作って」
+            </div>
+
+            <h3>データベースの直接操作</h3>
+            <p>PostgreSQL サーバーを接続すれば、スキーマの確認からクエリ実行まで Claude が代行します。</p>
+            <div class="alert-tip alert">
+                <strong>Prompt:</strong> 「ENG-4521 機能を試したユーザーのリストを DB から抽出して」
+            </div>
+        </div>
+
+        <!-- 最後に -->
+        <div class="card">
+            <h2>まとめ: MCP で Claude Code を自分色に染める</h2>
+            <p>MCP は Claude Code の限界を突破する魔法のプロトコルです。適切なサーバーを追加し、さらに <code>CLAUDE.md</code> に「必要に応じてこれらのツールを使いなさい」と指示を書いておくことで、真の自律型開発環境が手に入ります。</p>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>セキュリティ設定 | GCP版ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px dotted white;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #4285f4;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34a853;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .subsection {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #4285f4;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            background: #333;
+            color: #4285f4;
+            padding: 8px 12px;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: -20px -20px 15px -20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .security-card {
+            background: linear-gradient(135deg, #fff8f0 0%, #f0f7ff 100%);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .security-card h4 {
+            color: #c62828;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .security-card ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .security-card li {
+            margin-bottom: 8px;
+        }
+
+        .checklist {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .checklist h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .checklist-item:before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.2em;
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        .note strong {
+            color: #1976d2;
+        }
+
+        .warning {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong {
+            color: #c62828;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .good {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .bad {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+
+        .good h4 {
+            color: #2e7d32;
+        }
+
+        .bad h4 {
+            color: #c62828;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background: #4285f4;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:before {
+            content: "← ";
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-radius: 8px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #34a853;
+        }
+
+        .nav-button.prev:before {
+            content: "← ";
+        }
+
+        .nav-button.next:after {
+            content: " →";
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .code-block {
+                font-size: 0.8em;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="breadcrumb">
+                <a href="index.html">📊 展開ガイド</a> > <a href="gcp-overview.html">GCP版</a> > セキュリティ設定
+            </div>
+            <h1>🔐 セキュリティ設定ガイド</h1>
+            <p>Firestore、Cloud Functions、Secret Manager のセキュリティ設定</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="gcp-overview.html" class="back-link">GCP版ガイドに戻る</a>
+
+        <!-- セキュリティ概要 -->
+        <div class="section">
+            <h2>🎯 セキュリティの3層</h2>
+
+            <p>GCP での予算管理システムのセキュリティは、以下の3層で構成されます：</p>
+
+            <div class="subsection">
+                <h4>1️⃣ 認証層（Authentication）</h4>
+                <p>「ユーザーは本当に本人か？」を確認</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Firebase Authentication でユーザー確認</li>
+                    <li>JWT トークンによる API 認証</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h4>2️⃣ 認可層（Authorization）</h4>
+                <p>「このユーザーは何ができるか？」を制御</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Firestore セキュリティルール</li>
+                    <li>GCP IAM ロール</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h4>3️⃣ データ暗号化層</h4>
+                <p>「データを安全に保つ」</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Secret Manager で秘密情報管理</li>
+                    <li>通信の HTTPS 暗号化</li>
+                    <li>保存時の自動暗号化</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Firestore セキュリティルール -->
+        <div class="section">
+            <h2>📚 Firestore セキュリティルール</h2>
+
+            <p>Firestore データへのアクセスを制御する最も重要な設定です。</p>
+
+            <h3>基本的なルール構造</h3>
+            <div class="code-block">
+                <div class="code-label">firestore.rules</div>
+                <pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ここにルールを記述
+  }
+}</pre>
+            </div>
+
+            <h3>企業ごとのデータ分離（推奨パターン）</h3>
+            <div class="code-block">
+                <div class="code-label">firestore.rules - テナント分離</div>
+                <pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 企業ドキュメント
+    match /companies/{companyId} {
+      // 自分の企業データのみアクセス可能
+      allow read, write: if request.auth.uid != null
+        && getUserCompany(request.auth.uid) == companyId;
+
+      // 予算データ
+      match /budgets/{budgetId} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid != null
+          && isAdmin(request.auth.uid);
+      }
+
+      // 実績データ
+      match /actuals/{actualId} {
+        allow read: if request.auth.uid != null;
+        allow write: if false; // 読み取り専用
+      }
+    }
+  }
+
+  // ヘルパー関数
+  function getUserCompany(uid) {
+    return get(/databases/$(database)/documents/users/$(uid)).data.company_id;
+  }
+
+  function isAdmin(uid) {
+    return get(/databases/$(database)/documents/users/$(uid)).data.role == 'admin';
+  }
+}</pre>
+            </div>
+
+            <div class="security-card">
+                <h4>🔒 セキュリティのポイント</h4>
+                <ul>
+                    <li>✓ 企業 ID で必ずデータ分離</li>
+                    <li>✓ 読み取り・書き込みを明確に分ける</li>
+                    <li>✓ 管理者のみが書き込める操作を制限</li>
+                    <li>✓ Firestore Simulator で事前テスト</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Secret Manager -->
+        <div class="section">
+            <h2>🔑 Secret Manager での秘密情報管理</h2>
+
+            <p>Freee API トークン、Google API キーなどの秘密情報は <strong>Secret Manager</strong> で管理します。</p>
+
+            <h3>❌ やってはいけないこと</h3>
+            <div class="comparison">
+                <div class="bad">
+                    <h4>❌ NG: terraform.tfvars に記載</h4>
+                    <div class="code-block">
+                        <pre>freee_api_token = "xxxxx"
+# ↑ Git にコミットされる
+#   リポジトリ履歴から削除不可</pre>
+                    </div>
+                </div>
+                <div class="bad">
+                    <h4>❌ NG: ソースコードに埋め込み</h4>
+                    <div class="code-block">
+                        <pre>const FREEE_TOKEN = "xxxxx";
+// ↑ コード履歴に永続化</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>✅ やるべきこと</h3>
+            <div class="comparison">
+                <div class="good">
+                    <h4>✅ OK: Secret Manager</h4>
+                    <div class="code-block">
+                        <pre>// Terraform で管理
+resource "google_secret_manager_secret" "freee_token" {
+  secret_id = "freee-api-token"
+}
+
+resource "google_secret_manager_secret_version" "freee_token" {
+  secret      = google_secret_manager_secret.freee_token.id
+  secret_data = var.freee_api_token
+}</pre>
+                    </div>
+                </div>
+                <div class="good">
+                    <h4>✅ OK: 環境変数</h4>
+                    <div class="code-block">
+                        <pre>export TF_VAR_freee_api_token="xxxxx"
+# ↑ ターミナルセッション内でのみ有効
+#   .bash_history にも記録されない設定可</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Cloud Functions での Secret Manager 利用</h3>
+            <div class="code-block">
+                <div class="code-label">Cloud Functions - Secret Manager 参照</div>
+                <pre>const secretmanager = require('@google-cloud/secret-manager');
+
+async function getFreeeToken() {
+  const client = new secretmanager.SecretManagerServiceClient();
+  const name = client.secretVersionPath(
+    process.env.GCP_PROJECT_ID,
+    'freee-api-token',
+    'latest'
+  );
+
+  const [version] = await client.accessSecretVersion({name});
+  return version.payload.data.toString();
+}</pre>
+            </div>
+        </div>
+
+        <!-- IAM ロール設定 -->
+        <div class="section">
+            <h2>👥 GCP IAM ロール設定</h2>
+
+            <p>Cloud Functions やその他のサービスに最小限の権限を付与します。</p>
+
+            <h3>推奨される IAM ロール割り当て</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>サービス</th>
+                        <th>ロール</th>
+                        <th>説明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cloud Functions</td>
+                        <td>Cloud Datastore User</td>
+                        <td>Firestore 読み書き権限</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Functions</td>
+                        <td>Secret Accessor</td>
+                        <td>Secret Manager の秘密にアクセス</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Functions</td>
+                        <td>Logs Writer</td>
+                        <td>ログ出力権限</td>
+                    </tr>
+                    <tr>
+                        <td>Firebase プロジェクト</td>
+                        <td>Firebase Viewer</td>
+                        <td>Firebase リソースの参照権限</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Terraform での IAM ロール設定</h3>
+            <div class="code-block">
+                <div class="code-label">Terraform - IAM</div>
+                <pre>resource "google_service_account" "cloud_functions" {
+  account_id   = "budget-app-functions"
+  display_name = "Budget App Cloud Functions"
+}
+
+# Firestore 読み書き権限
+resource "google_project_iam_member" "cloud_functions_datastore" {
+  project = var.project_id
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.cloud_functions.email}"
+}
+
+# Secret Manager アクセス権限
+resource "google_project_iam_member" "cloud_functions_secret" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.cloud_functions.email}"
+}</pre>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ 重要：最小権限の原則</strong><br>
+                必要な権限のみを付与してください。Editor や Owner 権限は避けましょう。
+            </div>
+        </div>
+
+        <!-- 監査・ログ -->
+        <div class="section">
+            <h2>📋 監査・ロギング設定</h2>
+
+            <h3>Cloud Logging の有効化</h3>
+            <p>Cloud Functions と Firestore のアクティビティをログに記録し、問題発生時の追跡を可能に。</p>
+
+            <div class="code-block">
+                <div class="code-label">Cloud Functions - ログ出力例</div>
+                <pre>const functions = require('@google-cloud/functions-framework');
+const logger = require('@google-cloud/logging').v2.LoggingServiceV2Client;
+
+functions.http('syncFreeeData', (req, res) => {
+  console.log('Freee sync started at ' + new Date());
+
+  try {
+    // 処理
+    console.log('Successfully synced data');
+    res.status(200).send('Sync completed');
+  } catch (error) {
+    console.error('Error during sync:', error);
+    res.status(500).send('Sync failed');
+  }
+});</pre>
+            </div>
+
+            <h3>アラート設定</h3>
+            <p>エラーが発生した際、管理者に通知するアラートを設定します。</p>
+
+            <div class="checklist">
+                <h4>推奨されるアラート</h4>
+                <div class="checklist-item">Cloud Functions のエラーレート が 5% 以上</div>
+                <div class="checklist-item">Firestore の過度なデータ消費</div>
+                <div class="checklist-item">Secret Manager へのアクセス失敗</div>
+                <div class="checklist-item">セキュリティルール違反による拒否</div>
+            </div>
+        </div>
+
+        <!-- セキュリティチェックリスト -->
+        <div class="section">
+            <h2>✅ 本番環境デプロイ前のセキュリティチェックリスト</h2>
+
+            <div class="checklist">
+                <h4>認証・認可</h4>
+                <div class="checklist-item">Firebase Authentication が有効</div>
+                <div class="checklist-item">Firestore セキュリティルールが設定済み</div>
+                <div class="checklist-item">企業ごとのデータ分離が実装済み</div>
+                <div class="checklist-item">IAM ロールが最小権限に設定</div>
+            </div>
+
+            <div class="checklist">
+                <h4>秘密情報管理</h4>
+                <div class="checklist-item">Freee API トークンが Secret Manager に格納</div>
+                <div class="checklist-item">terraform.tfvars に秘密情報を記載していない</div>
+                <div class="checklist-item">.gitignore で tfvars ファイルを除外</div>
+                <div class="checklist-item">GitHub Secrets で Firebase トークン管理</div>
+            </div>
+
+            <div class="checklist">
+                <h4>通信・データ</h4>
+                <div class="checklist-item">HTTPS のみで通信（Firebase Hosting 自動対応）</div>
+                <div class="checklist-item">Firestore のテストモード→本番モードに切り替え</div>
+                <div class="checklist-item">ログ・監視アラート設定完了</div>
+            </div>
+
+            <div class="checklist">
+                <h4>運用</h4>
+                <div class="checklist-item">セキュリティルール変更時のテスト（Emulator Suite）</div>
+                <div class="checklist-item">定期的なセキュリティレビュー（月1回以上）</div>
+                <div class="checklist-item">インシデント対応計画の準備</div>
+                <div class="checklist-item">バックアップ・復旧テスト完了</div>
+            </div>
+        </div>
+
+        <!-- ナビゲーション -->
+        <div class="nav-buttons">
+            <a href="gcp-terraform.html" class="nav-button prev">前: Terraform ガイド</a>
+            <a href="gcp-troubleshooting.html" class="nav-button next">次: トラブルシューティング</a>
+        </div>
+
+        <div class="footer">
+            <p>GCP版 セキュリティ設定ガイド | Samurai Terakoya 2026</p>
+        </div>
+    </div>
+</body>
+</html>

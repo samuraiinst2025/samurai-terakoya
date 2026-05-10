@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予算管理システム展開ガイド | Samurai Terakoya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .intro {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pattern-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .pattern-header {
+            padding: 20px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .pattern-header.gcp {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        }
+
+        .pattern-header.docker {
+            background: linear-gradient(135deg, #2496ed 0%, #0d9eff 100%);
+        }
+
+        .pattern-header.saas {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .pattern-content {
+            padding: 25px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .metric-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .difficulty.low {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty.high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .comparison-table .row-header {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .guide-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .guide-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .guide-section h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .checklist {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .roadmap {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .roadmap-phase {
+            margin: 20px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .roadmap-phase:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .roadmap-phase h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .decision-flow {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .decision-flow strong {
+            color: #667eea;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-radius: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge.work-hours {
+            background: #e7f3ff;
+            color: #004085;
+        }
+
+        .badge.support {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge.risk {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .detail-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .detail-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+        }
+
+        .detail-button.docker {
+            background: linear-gradient(135deg, #2496ed 0%, #0d9eff 100%);
+        }
+
+        .detail-button.docker:hover {
+            box-shadow: 0 4px 12px rgba(36, 150, 237, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .patterns {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 0.9em;
+            }
+
+            .comparison-table th, .comparison-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 予算管理システム展開ガイド</h1>
+        <p>Freee連携の予算管理システムを複数企業へ展開する方法</p>
+    </div>
+
+    <div class="container">
+        <!-- イントロダクション -->
+        <div class="intro">
+            <h2>🎯 このガイドについて</h2>
+            <p>Firebase × Claude Code で構築した予算管理システムを、他企業に展開する方法を3つのパターンで解説します。</p>
+            <p style="margin-top: 15px;">各パターンの具体的な作業内容、工数、難度、金額を整理しているので、あなたの状況に最適な展開方法を選択できます。</p>
+        </div>
+
+        <!-- 3つのパターン -->
+        <h2 style="margin-bottom: 30px; color: #333;">📋 3つの展開パターン</h2>
+
+        <div class="patterns">
+            <!-- GCP版 -->
+            <div class="pattern-card">
+                <div class="pattern-header gcp">
+                    🚀 パターン1: GCP版
+                </div>
+                <div class="pattern-content">
+                    <p style="color: #666; margin-bottom: 15px;"><strong>スケーラビリティ重視</strong></p>
+                    <p style="font-size: 0.95em; color: #888; margin-bottom: 20px;">IT知識がある企業、中～大規模向け</p>
+
+                    <div class="metric">
+                        <span class="metric-label">初期構築</span>
+                        <span class="metric-value"><span class="badge work-hours">7-10日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">初回セットアップ</span>
+                        <span class="metric-value"><span class="badge support">1-2日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">月額保守</span>
+                        <span class="metric-value"><span class="badge support">2-3日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">スケーラビリティ</span>
+                        <span class="metric-value">⭐⭐⭐</span>
+                    </div>
+
+                    <div class="difficulty high">
+                        <span class="stars">★★★</span>難度：高い
+                    </div>
+
+                    <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                        ✓ Firebase プロジェクトを顧客の GCP アカウントに構築<br>
+                        ✓ Terraform で自動セットアップ<br>
+                        ✓ クラウドネイティブな運用
+                    </p>
+
+                    <a href="gcp-overview.html" class="detail-button">詳細ガイドを見る →</a>
+                </div>
+            </div>
+
+            <!-- Docker版 -->
+            <div class="pattern-card">
+                <div class="pattern-header docker">
+                    📦 パターン2: Docker版
+                </div>
+                <div class="pattern-content">
+                    <p style="color: #666; margin-bottom: 15px;"><strong>シンプル・高速展開重視</strong></p>
+                    <p style="font-size: 0.95em; color: #888; margin-bottom: 20px;">IT知識が少ない企業、小～中規模向け</p>
+
+                    <div class="metric">
+                        <span class="metric-label">初期構築</span>
+                        <span class="metric-value"><span class="badge work-hours">5-7日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">初回セットアップ</span>
+                        <span class="metric-value"><span class="badge support">0.5-1日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">月額保守</span>
+                        <span class="metric-value"><span class="badge support">2-3日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">スケーラビリティ</span>
+                        <span class="metric-value">⭐⭐☆</span>
+                    </div>
+
+                    <div class="difficulty medium">
+                        <span class="stars">★★☆</span>難度：中程度
+                    </div>
+
+                    <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                        ✓ Docker コンテナ化で簡単デプロイ<br>
+                        ✓ オンプレミス対応<br>
+                        ✓ 最短1-2週間で事業化可能
+                    </p>
+
+                    <a href="docker-overview.html" class="detail-button docker">詳細ガイドを見る →</a>
+                </div>
+            </div>
+
+            <!-- SaaS版 -->
+            <div class="pattern-card">
+                <div class="pattern-header saas">
+                    ☁️ パターン3: SaaS版
+                </div>
+                <div class="pattern-content">
+                    <p style="color: #666; margin-bottom: 15px;"><strong>長期的事業成長</strong></p>
+                    <p style="font-size: 0.95em; color: #888; margin-bottom: 20px;">多数の企業に一括提供したい場合</p>
+
+                    <div class="metric">
+                        <span class="metric-label">初期構築</span>
+                        <span class="metric-value"><span class="badge work-hours">15-20日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">顧客セットアップ</span>
+                        <span class="metric-value"><span class="badge support">ほぼ0日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">月額保守</span>
+                        <span class="metric-value"><span class="badge support">3-5日</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">スケーラビリティ</span>
+                        <span class="metric-value">⭐⭐⭐</span>
+                    </div>
+
+                    <div class="difficulty high">
+                        <span class="stars">★★★</span>難度：高い
+                    </div>
+
+                    <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                        ✓ マルチテナント対応<br>
+                        ✓ Web でサインアップ即座に利用開始<br>
+                        ✓ 数百社規模の展開に対応
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 比較表 -->
+        <div class="guide-section">
+            <h2>📊 パターン比較表</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>GCP版</th>
+                        <th>Docker版</th>
+                        <th>SaaS版</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">自社開発工数</td>
+                        <td>7-10日</td>
+                        <td>5-7日</td>
+                        <td>15-20日</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">初回顧客セットアップ</td>
+                        <td>1-2日</td>
+                        <td>0.5-1日</td>
+                        <td>ほぼ0日</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">月額保守工数</td>
+                        <td>2-3日</td>
+                        <td>2-3日</td>
+                        <td>3-5日</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">難度</td>
+                        <td>★★★</td>
+                        <td>★★☆</td>
+                        <td>★★★</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">顧客IT知識</td>
+                        <td>中～高</td>
+                        <td>低～中</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">スケーラビリティ</td>
+                        <td>⭐⭐⭐</td>
+                        <td>⭐⭐☆</td>
+                        <td>⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">セキュリティ</td>
+                        <td>GCP側が担当</td>
+                        <td>顧客に依存</td>
+                        <td>自社が責任</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">顧客インフラ費用</td>
+                        <td>数千～万円/月+</td>
+                        <td>数千円/月</td>
+                        <td>月額料金に含む</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 補足資料 -->
+        <div class="guide-section" style="background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%); border-left: 5px solid #667eea;">
+            <h2>📚 補足資料：Firebase から Docker への変換について</h2>
+            <p style="margin-bottom: 20px; color: #666;">「Firebase で構築した画面や機能が、本当に Docker で動かせるのか？」という疑問をお持ちですか？</p>
+
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 style="color: #667eea; margin-bottom: 10px;">🔄 Firebase アプリを Docker で提供する仕組み</h3>
+                <p style="color: #666; margin-bottom: 15px;">
+                    このガイドでは、Firebase で構築したアプリケーション（React UI + Cloud Functions）がどのように Docker コンテナに変換されるのかを、わかりやすく解説しています。
+                </p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>React の UI コード → そのまま使える</li>
+                    <li>Cloud Functions → Express.js に変換</li>
+                    <li>Firestore データベース → クラウドのまま継続利用</li>
+                    <li>全体を Docker で容易にデプロイ</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    <a href="firebase-to-docker-guide.html" style="display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.95em; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        📖 Firebase から Docker への変換ガイドを読む →
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- 選択ガイド -->
+        <div class="guide-section">
+            <h2>🎯 どのパターンを選ぶ？</h2>
+
+            <h3>✅ GCP版を選ぶべき場合</h3>
+            <div class="checklist">
+                <ul>
+                    <li>顧客は IT リテラシーがある</li>
+                    <li>スケーラビリティを重視したい</li>
+                    <li>クラウド環境を推奨したい</li>
+                    <li>顧客数は 5-20社以上を想定</li>
+                    <li>長期的なサポート体制を整える余裕がある</li>
+                </ul>
+            </div>
+
+            <h3>✅ Docker版を選ぶべき場合</h3>
+            <div class="checklist">
+                <ul>
+                    <li>今すぐ事業化したい</li>
+                    <li>顧客はIT知識がない企業が多い</li>
+                    <li>オンプレミス/VPS での運用を希望</li>
+                    <li>初期投資を最小限にしたい</li>
+                    <li>顧客数は 1-5社程度を想定</li>
+                </ul>
+            </div>
+
+            <h3>✅ SaaS版を選ぶべき場合</h3>
+            <div class="checklist">
+                <ul>
+                    <li>多数の企業に一気に提供したい</li>
+                    <li>長期的に事業成長させたい</li>
+                    <li>顧客サポート工数を最小化したい</li>
+                    <li>十分な初期開発リソースがある</li>
+                    <li>運用・監視体制を整える余裕がある</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 推奨ロードマップ -->
+        <div class="guide-section">
+            <h2>🗺️ 推奨ロードマップ</h2>
+
+            <div class="roadmap">
+                <div class="roadmap-phase">
+                    <h4>フェーズ1: 最初の顧客獲得</h4>
+                    <p><strong>Docker版</strong>で最初の 2-3 社を獲得</p>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>開発期間：1-2週間</li>
+                        <li>顧客対応：月 1-2日程度</li>
+                        <li>目標：事業化の実績作り + フィードバック収集</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-phase">
+                    <h4>フェーズ2: スケーリング検討（3-6ヶ月後）</h4>
+                    <p><strong>GCP版</strong への拡張を検討</p>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>フェーズ1 のフィードバックを反映</li>
+                        <li>GCP版の開発を並行実施</li>
+                        <li>目標：スケーラビリティの確保</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-phase">
+                    <h4>フェーズ3: SaaS化検討（1年以上後）</h4>
+                    <p><strong>SaaS版</strong への進化を検討</p>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>顧客数 20社以上での評価</li>
+                        <li>運用実績の蓄積</li>
+                        <li>目標：スケーラブルなビジネスモデル化</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 判断チェックリスト -->
+        <div class="guide-section">
+            <h2>✅ あなたの状況をチェック</h2>
+
+            <div class="decision-flow">
+                <h3 style="color: #333; margin-bottom: 15px;">質問1: 現在の人員・時間リソースは？</h3>
+                <p>→ <strong>1人で1-2週間なら OK</strong> = <span style="background: #d4edda; padding: 2px 8px; border-radius: 4px; color: #155724;">Docker版が現実的</span></p>
+                <p style="margin-top: 10px;">→ <strong>2-3人で1ヶ月かけられる</strong> = <span style="background: #fff3cd; padding: 2px 8px; border-radius: 4px; color: #856404;">GCP版も視野</span></p>
+                <p style="margin-top: 10px;">→ <strong>チーム体制で2ヶ月以上</strong> = <span style="background: #f8d7da; padding: 2px 8px; border-radius: 4px; color: #721c24;">SaaS版も可能</span></p>
+            </div>
+
+            <div class="decision-flow">
+                <h3 style="color: #333; margin-bottom: 15px;">質問2: 想定顧客のIT レベルは？</h3>
+                <p>→ <strong>ほぼ非技術企業</strong> = <span style="background: #d4edda; padding: 2px 8px; border-radius: 4px; color: #155724;">Docker版が楽</span></p>
+                <p style="margin-top: 10px;">→ <strong>中程度の技術力</strong> = <span style="background: #fff3cd; padding: 2px 8px; border-radius: 4px; color: #856404;">GCP版が向く</span></p>
+                <p style="margin-top: 10px;">→ <strong>ばらばら</strong> = <span style="background: #d4edda; padding: 2px 8px; border-radius: 4px; color: #155724;">Docker版から開始がお勧め</span></p>
+            </div>
+
+            <div class="decision-flow">
+                <h3 style="color: #333; margin-bottom: 15px;">質問3: 今後の事業規模は？</h3>
+                <p>→ <strong>5-10社程度のニッチビジネス</strong> = <span style="background: #d4edda; padding: 2px 8px; border-radius: 4px; color: #155724;">Docker版でOK</span></p>
+                <p style="margin-top: 10px;">→ <strong>20-50社規模</strong> = <span style="background: #fff3cd; padding: 2px 8px; border-radius: 4px; color: #856404;">GCP版で対応</span></p>
+                <p style="margin-top: 10px;">→ <strong>数百社規模を目指す</strong> = <span style="background: #f8d7da; padding: 2px 8px; border-radius: 4px; color: #721c24;">SaaS版検討</span></p>
+            </div>
+        </div>
+
+        <!-- 次のステップ -->
+        <div class="guide-section">
+            <h2>📝 次のステップ</h2>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li>このガイドを読んで、どのパターンが自社に向きそうか検討</li>
+                <li>1つパターンを選んで、詳細な実装設計に進む</li>
+                <li>簡単なプロトタイプで試してみる</li>
+                <li>最初の顧客との試験導入</li>
+                <li>フィードバック反映 → 本格展開</li>
+            </ol>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <p>予算管理システム展開ガイド | Samurai Terakoya 2026</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">作成日：2026-04-27</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAS vs Firebase：使い分けと境界線の完全ガイド</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gas-main: #F9AB00;
+            --gas-light: #FFF9C4;
+            --firebase-main: #FFA000;
+            --firebase-light: #FFDB85;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--firebase-main);
+            display: inline-block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tag-gas { background: var(--gas-light); color: #856404; }
+        .tag-firebase { background: var(--firebase-light); color: #855d00; }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card h3 {
+            margin-bottom: 15px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Checklist */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .check-item {
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            border-left: 5px solid var(--firebase-main);
+        }
+
+        .check-item strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        /* Mermaid */
+        .mermaid-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .mermaid {
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .mermaid-section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container" style="padding-bottom: 0;">
+        <h1>GAS Webアプリ vs Firebase</h1>
+        <p class="subtitle">使い分けと境界線の完全ガイド。Googleの「手軽な自動化」から「本格的な基盤」へのステップアップを理解しよう。</p>
+        <a href="index.html" class="btn-back">← ページ一覧へ戻る</a>
+    </div>
+</header>
+
+<div class="container">
+    <section>
+        <h2>1. ひと目でわかる比較表</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>特徴</th>
+                        <th>GAS Webアプリ</th>
+                        <th>Firebase (Hosting+Firestore)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>主なターゲット</strong></td>
+                        <td><span class="tag tag-gas">社内・身内ツール</span><br><small>（数十人まで）</small></td>
+                        <td><span class="tag tag-firebase">不特定多数のユーザー</span><br><small>（数千人〜無制限）</small></td>
+                    </tr>
+                    <tr>
+                        <td><strong>URL/ドメイン</strong></td>
+                        <td><code>script.google.com/...</code> (固定)</td>
+                        <td><code>〇〇.web.app</code> (独自ドメイン可)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>データベース</strong></td>
+                        <td>スプレッドシート (低速)</td>
+                        <td>Firestore (超高速・リアルタイム)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ログイン認証</strong></td>
+                        <td>Googleアカウントのみ</td>
+                        <td>メール、SNS、匿名、電話など自由</td>
+                    </tr>
+                    <tr>
+                        <td><strong>実行時間の壁</strong></td>
+                        <td><strong>1回 6分以内</strong></td>
+                        <td>設定により大規模処理も可能</td>
+                    </tr>
+                    <tr>
+                        <td><strong>開発環境</strong></td>
+                        <td>ブラウザ完結 (手軽)</td>
+                        <td>PCでの開発 (Node.js/CLI) が必要</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Firebaseが必要になる「境界線」</h2>
+        <p style="margin-bottom: 20px; color: var(--text-muted);">GASで頑張るのが「苦しくなってきた」時がFirebaseへの移行サインです。</p>
+        <div class="grid">
+            <div class="card item-card">
+                <h3>🌏 独自のURLを使いたい</h3>
+                <p>GASのURLは長くて複雑。自分のドメイン（myapp.comなど）をブランドとして使いたいならFirebase一択です。</p>
+            </div>
+            <div class="card item-card">
+                <h3>🔑 多彩なログイン方式</h3>
+                <p>LINEログインやメール・パスワード認証など、Google以外のアカウントで管理したい場合に強力な力を発揮します。</p>
+            </div>
+            <div class="card item-card">
+                <h3>🚀 データの爆速表示</h3>
+                <p>スプレッドシートは数千行で重くなります。Firestoreなら10万行あっても一瞬。大規模なデータ管理には必須です。</p>
+            </div>
+            <div class="card item-card">
+                <h3>🔄 リアルタイム同期</h3>
+                <p>誰かが書き込まれたら瞬時に全員の画面が変わる。チャットや同時編集にはFirebaseのリアルタイムDBが最適です。</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. 選択のためのチェックリスト</h2>
+        <div class="checklist-grid">
+            <div class="check-item">
+                <strong>✅ 境界線A：ユーザー数は？</strong>
+                <p>同じ部署やプロジェクトの30人程度までならGAS。不特定多数、あるいは100人を超えるならFirebase。</p>
+            </div>
+            <div class="check-item">
+                <strong>✅ 境界線B：データ量と種類は？</strong>
+                <p>シンプルな数値や報告はGAS。画像アップロード、大量のコメント、複雑な検索が必要ならFirebase。</p>
+            </div>
+            <div class="check-item">
+                <strong>✅ 境界線C：運用の「賞味期限」は？</strong>
+                <p>「今日中に動くものが欲しい」ならGAS。1年以上かけて機能拡張していく本格アプリならFirebase。</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. ビジュアル・比較マップ</h2>
+        <div class="card mermaid-section">
+            <div class="mermaid">
+                graph TD
+                    GAS["【 GAS 】<br>社内・小規模用<br>Sheetの操作が得意"]
+                    
+                    Firebase["【 Firebase 】<br>一般・大規模用<br>高速DB・高機能"]
+
+                    GAS --- VS[" VS "]
+                    VS --- Firebase
+
+                    style GAS fill:#ffffcc,stroke:#fbc02d,stroke-width:2px,color:#000,font-size:13px
+                    style Firebase fill:#ffdb85,stroke:#b87900,stroke-width:2px,color:#000,font-size:13px
+                    style VS fill:#f9f9f9,stroke:#333,font-size:12px
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. 意思決定フロー診断</h2>
+        <div class="card mermaid-section">
+            <div class="mermaid">
+                graph TD
+                    Start["スタート：Webアプリ開発"] --> Q1{"ユーザーは<br>身内だけ？"}
+                    
+                    Q1 -- "Yes (限定的)" --> Q2{"Sheet連携が<br>メイン？"}
+                    Q1 -- "No (一般公開)" --> Firebase2["🔥 Firebase推奨"]
+                    
+                    Q2 -- "Yes" --> GAS2["🟩 GASを選択"]
+                    Q2 -- "No" --> Q3{"将来100人以上<br>増える？"}
+                    
+                    Q3 -- "No" --> GAS2
+                    Q3 -- "Yes" --> Firebase2
+
+                    style Start fill:#f9f9f9,stroke:#333,font-size:13px
+                    style GAS2 fill:#d4ff9c,stroke:#2a5a00,stroke-width:2px,color:#000,font-size:13px
+                    style Firebase2 fill:#ffdb85,stroke:#b87900,stroke-width:2px,color:#000,font-size:13px
+                    style Q1 font-size:13px
+                    style Q2 font-size:13px
+                    style Q3 font-size:13px
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2026 Samurai Terakoya - Knowledge Hub</p>
+</footer>
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+            lineColor: '#555555',
+            edgeLabelBackground: '#ffffff',
+            primaryTextColor: '#333333'
+        }
+    });
+</script>
+
+</body>
+</html>
