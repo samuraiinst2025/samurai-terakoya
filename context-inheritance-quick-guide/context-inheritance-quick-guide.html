@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code/Cowork コンテキスト引き継ぎ クイックガイド</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #ffffff;
+            --bg-alt: #f9fafb;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1f2937;
+                --bg-alt: #111827;
+                --text: #f3f4f6;
+                --text-light: #d1d5db;
+                --border: #374151;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--bg);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--bg-alt);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--text);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge.success {
+            background: var(--success);
+        }
+
+        .badge.warning {
+            background: var(--warning);
+        }
+
+        .badge.danger {
+            background: var(--danger);
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .checklist li:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .checklist input {
+            margin-right: 0.75rem;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checklist li.checked {
+            background: var(--success);
+            color: white;
+            opacity: 0.8;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .before, .after {
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .before {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger);
+        }
+
+        .after {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+        }
+
+        .before h4, .after h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .before h4 {
+            color: var(--danger);
+        }
+
+        .after h4 {
+            color: var(--success);
+        }
+
+        .before ul, .after ul {
+            margin-left: 1.5rem;
+        }
+
+        .before li, .after li {
+            margin: 0.5rem 0;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .faq {
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .faq-item strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item p {
+            color: var(--text-light);
+            margin: 0.5rem 0;
+        }
+
+        .highlight {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        code {
+            background: var(--bg-alt);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 0.9em;
+            color: #e94b3c;
+        }
+
+        .print-checklist {
+            page-break-inside: avoid;
+            padding: 2rem;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            margin: 2rem 0;
+            background: var(--bg);
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+
+            .print-checklist {
+                border: 1px solid var(--border);
+            }
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .toc {
+            background: var(--bg-alt);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .toc h3 {
+            margin-bottom: 1rem;
+        }
+
+        .toc ol {
+            margin-left: 1.5rem;
+        }
+
+        .toc li {
+            margin: 0.5rem 0;
+        }
+
+        .toc a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Claude Code/Cowork コンテキスト引き継ぎ ガイド</h1>
+            <p class="subtitle">長期開発を成功させるための実践的クイックガイド</p>
+        </header>
+
+        <div class="toc">
+            <h3>📖 目次</h3>
+            <ol>
+                <li><a href="#section-intro">導入：なぜコンテキスト管理が必要か</a></li>
+                <li><a href="#section-problem">課題シーン：何が起きているのか</a></li>
+                <li><a href="#section-framework">解決策フレームワーク：5つの引き継ぎ方法＋自動化</a></li>
+                <li><a href="#section-practice">実践パターン：予算管理システムの例</a></li>
+                <li><a href="#section-checklist">セッション開始時チェックリスト</a></li>
+                <li><a href="#section-faq">よくある質問</a></li>
+            </ol>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <div class="section" id="section-intro">
+            <h2>📌 Section 1: 導入 - なぜコンテキスト管理が必要か</h2>
+
+            <h3>🤔 「コンテキストウィンドウ」とは何か？</h3>
+            <p>Claude Code では、AI（Claude）が「前のやりとりを覚えておける容量」が決まっています。これを<span class="highlight">コンテキストウィンドウ</span>と呼びます。</p>
+
+            <p style="margin-top: 1rem;"><strong>イメージ：</strong>会話できる容量の目安</p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li><strong>トークン数（単位）</strong>で測定（おおよそ英単語 1～2 語 = 1 トークン）</li>
+                <li>Claude の最新モデルは 200,000 トークンまで覚えられる</li>
+                <li>つまり、<span class="highlight">かなり長い会話履歴を保持できる</span></li>
+            </ul>
+
+            <h3>⚠️ なぜ「前のセッションが忘れられる」のか？</h3>
+            <p style="margin-top: 1rem;">新しいセッションが始まると、AI には「前のセッション」の情報が一切ありません。</p>
+
+            <div class="mermaid">
+                graph TD
+                    A["セッション 1<br/>前のやりとり"];
+                    B["セッション終了"];
+                    C["セッション 2<br/>新しい開始"];
+                    D["❌ 前のセッションの<br/>情報が消えている"];
+
+                    A --> B --> C --> D;
+                    style A fill:#e3f2fd
+                    style D fill:#ffebee
+            </div>
+
+            <p style="margin-top: 1rem;"><strong>結果：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>「この機能のアーキテクチャをどうするか」が決まった → 次セッションで「決まった内容」を忘れられる</li>
+                <li>「前回なぜこの方針にしたのか」の理由が不明になる</li>
+                <li>毎セッション、一から説明し直さねばならない ⏰ 時間ロス</li>
+            </ul>
+
+            <p style="margin-top: 1.5rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); border-radius: 6px;"><strong>💡 クイックガイドの目的：</strong>この「情報喪失」を防ぎ、セッション間で<span class="highlight">スムーズにコンテキストを引き継ぐ</span>ための実践的な手法を学ぶ</p>
+        </div>
+
+        <!-- Section 2: Problem Scene -->
+        <div class="section" id="section-problem">
+            <h2>❌ Section 2: 課題シーン - Web アプリの複数機能開発で何が起きたか</h2>
+
+            <h3>実例：複数機能開発時のコンテキスト喪失</h3>
+
+            <p>「ユーザー認証機能」を完成させた後、別セッションで「プロフィール編集機能」を開発する場合を例に。</p>
+
+            <div class="mermaid">
+                timeline
+                    title セッション間でのコンテキスト喪失（複数機能開発）
+                    section セッション 1
+                        ユーザー認証機能を実装 : パスワードルール・バリデーション決定 : メール確認の仕様決定 : エラーハンドリング設計完了
+                    section 情報喪失
+                        ❌ セッション終了 : 新しいセッション開始 : （前の仕様が消える）
+                    section セッション 2
+                        プロフィール編集機能を開発開始 : 「パスワード変更時のルールなんだっけ？」 : メール確認の流れを忘れてた : 設計の不整合が発生
+            </div>
+
+            <div class="before-after">
+                <div class="before">
+                    <h4>❌ 問題ある状態（Before）</h4>
+                    <ul>
+                        <li>セッション 1 の「ユーザー認証機能の仕様書」がない</li>
+                        <li>パスワードのバリデーションルール（8文字以上など）をメモしていない</li>
+                        <li>メール確認フローの詳細が文書化されていない</li>
+                        <li>エラーメッセージのフォーマットが決まったことを記録していない</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>セッション 2 での問題：</strong></p>
+                    <ul>
+                        <li>「プロフィール編集でパスワード変更できるようにしよう」 → パスワードの仕様を忘れてた</li>
+                        <li>前回と異なるバリデーションを実装 → データの不整合</li>
+                        <li>後からバグを発見 → 修正に時間がかかる 😤</li>
+                    </ul>
+                </div>
+                <div class="after">
+                    <h4>✅ 改善後（After）</h4>
+                    <ul>
+                        <li>CLAUDE.md に「完成した機能と仕様」を記載</li>
+                        <li>メモリに「ユーザー認証仕様書」を作成（バリデーション・フロー・エラー処理）</li>
+                        <li>Git コミット：<code>feat: implement user authentication with email verification</code><br/>詳細に仕様を記載</li>
+                        <li>セッション開始時に「前セッションで完成した機能と、今回実装する機能の関連性」を述べる</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>セッション 2 での成果：</strong></p>
+                    <ul>
+                        <li>プロフィール編集機能から「前回の認証仕様」をすぐに参照できる</li>
+                        <li>一貫性のあるバリデーション・エラー処理を実装</li>
+                        <li>設計の整合性が保たれ、効率的に進む 😊</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Framework -->
+        <div class="section" id="section-framework">
+            <h2>🔧 Section 3: 解決策フレームワーク - 5つの引き継ぎ方法</h2>
+
+            <p>コンテキスト引き継ぎを成功させるには、<span class="highlight">複数の層（レイヤー）</span>で情報を保存・共有する必要があります。</p>
+
+            <div style="padding: 1.5rem; background: rgba(239, 68, 68, 0.15); border-left: 4px solid var(--danger); border-radius: 6px; margin: 1.5rem 0;">
+                <p style="margin: 0 0 1rem 0; font-weight: 600; color: var(--danger);">⚠️ 重要：CLAUDE.md と Auto memory の圧縮時の動作</p>
+                <p style="margin: 0.5rem 0; color: var(--text);">
+                    公式ドキュメントでは「CLAUDE.md と Auto memory は圧縮後に<strong>再注入される</strong>」と説明されていますが、
+                    これは「<strong>ディスク上に保存されている現在の内容が</strong>再注入される」という意味です。
+                </p>
+                <p style="margin: 1rem 0 0 0; color: var(--text);">
+                    <strong>つまり：</strong>セッション中に CLAUDE.md やメモリを更新しても、<strong>圧縮前にディスクに書き込んでおかないと</strong>、
+                    圧縮後は古い情報が戻ってきます。
+                </p>
+                <p style="margin: 1rem 0 0 0; color: var(--text);">
+                    <strong>✅ 解決策：</strong>これが「圧縮直前自動化パターン」の役割です。
+                    セッション終了時に自動で CLAUDE.md・メモリ・Git に情報を書き込んでから圧縮させることで、
+                    次セッションで確実に引き継ぐことができます。
+                </p>
+            </div>
+
+            <h3>優先度順の 5 つの引き継ぎ方法</h3></thinking>
+</invoke>
+
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: 6px;">
+                <p style="margin: 0; color: var(--text);"><strong>📚 公式リファレンス：</strong></p>
+                <p style="margin: 0.5rem 0 0 0; color: var(--text-light); font-size: 0.95rem;">
+                    Claude Code の公式メモリシステムは <strong><a href="https://code.claude.com/docs/en/memory" style="color: var(--primary); text-decoration: underline;">CLAUDE.md ファイル</a></strong>（ユーザー記述）と <strong>Auto memory</strong>（Claude 自動記録）の 2 つです。
+                    本ガイドは、これらをベースに「コンテキスト継承」をより包括的にまとめています。
+                </p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h4>1️⃣ CLAUDE.md（最重要）</h4>
+                    <span class="badge danger">最優先</span>
+                    <p>プロジェクトの「現在のステータス・次にすべきこと」を記載。セッション開始時に最初に読むべき。</p>
+                    <p style="margin-top: 0.5rem;"><strong>内容例：</strong></p>
+                    <code style="display: block; margin-top: 0.3rem;">## 現在のステータス
+設計フェーズ完了・実装準備中
+次のタスク：ユーザー認証機能の実装</code>
+                </div>
+                <div class="card">
+                    <h4>2️⃣ メモリシステム</h4>
+                    <span class="badge warning">高優先</span>
+                    <p>プロジェクト進捗・決定事項・理由を記録。セッション間で参照。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong>budget_management_architecture_decision.md</p>
+                </div>
+                <div class="card">
+                    <h4>3️⃣ セッション開始時プリアンブル</h4>
+                    <span class="badge">中優先</span>
+                    <p>セッション開始時に「前セッションの状態」を AI に伝える。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong>「前回バックエンドを Node.js + Express で実装することを決定した。フロントエンド実装を続ける」</p>
+                    <p style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: 4px; font-size: 0.85rem; color: var(--text-light);">
+                        <strong>※ 公式ドキュメントには明示的な記載がないユーザーの工夫です。CLAUDE.md や Auto memory と異なり、毎セッション手動で説明する必要があります。
+                    </p>
+                </div>
+                <div class="card">
+                    <h4>4️⃣ Git コミット</h4>
+                    <span class="badge">中優先</span>
+                    <p>重要な決定・マイルストーンをコミットメッセージに記録。</p>
+                    <p style="margin-top: 0.5rem;"><code>feat(auth): implement user authentication with JWT</code></p>
+                    <p style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: 4px; font-size: 0.85rem; color: var(--text-light);">
+                        <strong>※ 公式では operational な機能として説明（Claude が自動的に git 履歴を読んでコンテキストを理解）。メモリシステムとしての位置付けはコミュニティの実践的なアプローチです。
+                    </p>
+                </div>
+                <div class="card">
+                    <h4>5️⃣ ドキュメント（README/DESIGN）</h4>
+                    <span class="badge">低優先</span>
+                    <p>詳細な設計書・説明書をプロジェクト内に保存。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong>ARCHITECTURE.md, DESIGN_DECISIONS.md</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">📊 役割分担表：何を、どこに、いつ保存するか</h3>
+
+            <p style="margin: 1rem 0; color: var(--text-light);">
+                5つの方法は、<span class="highlight">「保存する情報の粒度」「読み書きのタイミング」「セッション間での役割」</span>が異なります。
+                それぞれが補完し合うことで、初めて「完全なコンテキスト引き継ぎ」が実現します。
+            </p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: var(--bg); font-size: 0.9rem;">
+                <thead style="background: var(--bg-alt);">
+                    <tr>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border); width: 15%;">方法</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border); width: 20%;">保存する情報</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border); width: 18%;">いつ読む</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border); width: 18%;">いつ書く</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border); width: 29%;">セッション間での役割</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: var(--bg);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border); font-weight: 600; color: var(--primary);">1️⃣ CLAUDE.md</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>「今ここ」を素早く把握</strong><br>現在のステータス・次のタスク（3-5行の概要）</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">セッション開始時に<strong>最初に</strong>読む</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">圧縮直前に自動更新</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">「何が起きたか」の<strong>高速リマインダー</strong></td>
+                    </tr>
+                    <tr style="background: rgba(59, 130, 246, 0.05);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border); font-weight: 600; color: var(--warning);">2️⃣ メモリ</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>「なぜそうした」を記録</strong><br>決定事項・判断理由・懸念事項</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">実装時に迷った時・判断の背景を確認する時</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">セッション中に手動記録（重要な決定時）</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>前の判断の理由</strong>を次セッションで思い出す</td>
+                    </tr>
+                    <tr style="background: var(--bg);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border); font-weight: 600; color: var(--primary);">3️⃣ プリアンブル</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>AI へのコンテキスト</strong><br>会話形式で「状況」を説明</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">セッション開始時に読み込み</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">圧縮直前に自動生成</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">Claude に「前セッションの状態」を<strong>自動で説明</strong>（ユーザーの手間削減）</td>
+                    </tr>
+                    <tr style="background: rgba(16, 185, 129, 0.05);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border); font-weight: 600; color: var(--success);">4️⃣ Git コミット</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>実装の「ラベル」</strong><br>変更内容の1行タイトル＋要約</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">コード差分を見る時・履歴を遡る時</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">コード変更時（都度）/ 圧縮直前に自動</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">「何のコード変更がいつ行われたか」の<strong>時系列記録</strong></td>
+                    </tr>
+                    <tr style="background: var(--bg);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border); font-weight: 600; color: var(--text);">5️⃣ ドキュメント</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>「設計の詳細」</strong><br>API 仕様・ディレクトリ構成・環境変数など</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">次セッションで仕様を思い出す時・新しい機能追加時</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">圧縮直前に更新判定・必要なら自動更新</td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">「全体の構造」を<strong>常に最新に保つ</strong>（設計変更を逃さない）</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: 6px; margin: 1.5rem 0;">
+                <p><strong>💡 重要な違い：</strong></p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>CLAUDE.md：</strong> ファイル全体で「最新の状態」を示す（圧縮直前に常に更新）</li>
+                    <li><strong>メモリ：</strong> セッション間で蓄積される（追記型・削除しない）</li>
+                    <li><strong>プリアンブル：</strong> Claude が セッション開始時 に読むための「説明」</li>
+                    <li><strong>Git：</strong> コード変更の記録（ドキュメント変更ではなくコード履歴）</li>
+                    <li><strong>ドキュメント：</strong> セッション間で変わらない「設計仕様」（参考用）</li>
+                </ul>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; margin: 1.5rem 0;">
+                <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: var(--primary);">📌 公式ドキュメントとの関係</p>
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 0.75rem;">
+                    <tr style="background: var(--bg-alt);">
+                        <th style="padding: 0.75rem; text-align: left; border: 1px solid var(--border); font-weight: 600;">方法</th>
+                        <th style="padding: 0.75rem; text-align: left; border: 1px solid var(--border); font-weight: 600;">公式ドキュメント</th>
+                        <th style="padding: 0.75rem; text-align: left; border: 1px solid var(--border); font-weight: 600;">位置付け</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>1. CLAUDE.md</strong></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><span style="color: var(--success); font-weight: 600;">✅ 明示的に記載</span></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">公式推奨のメモリメカニズム</td>
+                    </tr>
+                    <tr style="background: var(--bg-alt);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>2. メモリ</strong></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><span style="color: var(--success); font-weight: 600;">✅ 明示的に記載</span></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">Auto memory（公式推奨）</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>3. プリアンブル</strong></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><span style="color: var(--text-light);">記載なし</span></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">ユーザーの工夫（手動）</td>
+                    </tr>
+                    <tr style="background: var(--bg-alt);">
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>4. Git コミット</strong></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><span style="color: var(--text-light);">Operational な機能のみ</span></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">コミュニティの実践的アプローチ</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><strong>5. ドキュメント</strong></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);"><span style="color: var(--text-light);">言及なし</span></td>
+                        <td style="padding: 0.75rem; border: 1px solid var(--border);">参考資料（メモリではない）</td>
+                    </tr>
+                </table>
+                <p style="margin: 1rem 0 0 0; color: var(--text-light); font-size: 0.85rem;">
+                    💡 <strong>このガイドの役割：</strong> 公式ドキュメントの CLAUDE.md + Auto memory をベースに、
+                    実践的なコミュニティのアプローチと組み合わせた、より包括的な「コンテキスト継承」フレームワークを提供しています。
+                </p>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(239, 68, 68, 0.15); border-left: 4px solid var(--danger); border-radius: 6px; margin: 1.5rem 0;">
+                <p style="margin: 0; font-weight: 600; color: var(--danger); margin-bottom: 1rem;">🔒 ⚠️ セキュリティに関する重要な注意</p>
+                <p style="margin: 0.5rem 0; color: var(--text);"><strong>CLAUDE.md・メモリ・コミットメッセージに記録してはいけない情報：</strong></p>
+                <ul style="margin: 0.5rem 0 0 1.5rem; color: var(--text);">
+                    <li>API キー・トークン・シークレット（.env で管理）</li>
+                    <li>パスワード・パスフレーズ</li>
+                    <li>クレジットカード・銀行口座情報</li>
+                    <li>顧客データ・個人情報（SSN、パスポート番号など）</li>
+                    <li>社外秘の設計・ビジネス戦略</li>
+                </ul>
+                <p style="margin: 1rem 0 0 0; color: var(--text);"><strong>✅ 正しい取扱い：</strong> これらはすべて <span class="highlight">.env・.gitignore・ローカル設定ファイル</span>で管理し、Git にコミットしないでください。</p>
+
+                <p style="margin: 1rem 0 0 0; color: var(--text);"><strong>📋 セットアップ手順：</strong></p>
+                <div style="margin: 0.75rem 0; padding: 0.75rem; background: var(--bg); border-radius: 6px; font-family: monospace; font-size: 0.8rem;">
+<pre># 1. .env ファイルを作成（機密情報はここに）
+GOOGLE_API_KEY=your-api-key-here
+OPENAI_API_KEY=your-api-key-here
+DATABASE_PASSWORD=your-password
+
+# 2. .gitignore に .env を追加
+echo ".env" >> .gitignore
+echo ".env.local" >> .gitignore
+
+# 3. Git に追加しないことを確認
+git status  # .env が表示されていないことを確認
+
+# 4. CI/CD では環境変数を設定
+# GitHub Actions の場合: Settings → Secrets → Add repository secret</pre>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">🔥 5. 圧縮直前自動化パターン（手動を自動化する）</h3>
+
+            <p style="margin-top: 1rem;">上記の「5つの引き継ぎ方法」のうち、<span class="highlight">1・2・3・4・5（すべて）を自動化</span>できます。セッション圧縮が起こる<span class="highlight">直前の瞬間</span>に、これら 5つに情報を自動で保存・生成する仕組みを構築できます。</p>
+
+            <p style="margin-top: 1rem;"><strong>💡 メリット：</strong> 開発者の手動作業がほぼ 0 → 「記録し忘れ」がなくなる</p>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: 6px;">
+                <strong>📌 自動化の対象範囲</strong>
+                <table style="margin-top: 0.75rem; width: 100%; border-collapse: collapse;">
+                    <tr style="background: var(--bg-alt);">
+                        <th style="padding: 0.5rem; text-align: left; border: 1px solid var(--border);">方法</th>
+                        <th style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">自動化</th>
+                        <th style="padding: 0.5rem; text-align: left; border: 1px solid var(--border);">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border);">1. CLAUDE.md</td>
+                        <td style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">✅ 自動</td>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border); font-size: 0.9rem;">シェルスクリプトで自動追記</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border);">2. メモリシステム</td>
+                        <td style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">✅ 自動</td>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border); font-size: 0.9rem;">シェルスクリプトで自動記録</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border);">3. セッション開始時プリアンブル</td>
+                        <td style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">✅ 自動</td>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border); font-size: 0.9rem;">圧縮直前に自動生成（次セッション開始時に読込）</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border);">4. Git コミット</td>
+                        <td style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">✅ 自動</td>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border); font-size: 0.9rem;">シェルスクリプトで自動コミット</td>
+                    </tr>
+                    <tr style="background: var(--bg-alt);">
+                        <td style="padding: 0.5rem; border: 1px solid var(--border);">5. ドキュメント</td>
+                        <td style="padding: 0.5rem; text-align: center; border: 1px solid var(--border);">✅ 自動</td>
+                        <td style="padding: 0.5rem; border: 1px solid var(--border); font-size: 0.9rem;">圧縮直前に更新判定・必要なら自動更新</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h4 style="margin-top: 1.5rem; color: var(--primary);">圧縮直前のフロー</h4>
+
+            <div class="mermaid">
+                graph LR
+                    A["セッション進行<br/>会話が長くなる"] --> B["コンテキスト満杯<br/>が近づく"]
+                    B --> C["⚠️ 圧縮直前<br/>（自動実行ここ）"]
+                    C --> D["🔄 自動実行"]
+                    D --> E["✅ CLAUDE.md<br/>自動更新"]
+                    D --> F["✅ メモリ<br/>自動記録"]
+                    D --> G["✅ プリアンブル<br/>自動生成"]
+                    D --> H["✅ ドキュメント<br/>自動更新"]
+                    D --> I["✅ Git<br/>コミット"]
+                    D --> J["✅ 次セッション<br/>開始ガイド生成"]
+                    E --> K["🛡️ 圧縮実行<br/>安全"]
+                    F --> K
+                    G --> K
+                    H --> K
+                    I --> K
+                    J --> K
+
+                    style C fill:#ffebee
+                    style D fill:#fff3e0
+                    style K fill:#e8f5e9
+            </div>
+
+            <h3 style="margin-top: 2rem;">💡 自動化により実現できること：次セッション開始時ガイドの自動生成</h3>
+
+            <p style="margin: 1rem 0;">
+                圧縮直前に以下の 3つを自動化することで、<span class="highlight">新セッション開始時にすべきことが一目瞭然</span>になります。
+            </p>
+
+            <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: 6px; margin: 1rem 0;">
+                <strong>自動生成される: <code style="color: var(--primary);">.claude/next-session-guide.md</code></strong>
+                <div style="margin: 1rem 0; padding: 1rem; background: var(--bg); border-radius: 6px; font-family: monospace; font-size: 0.85rem;">
+<pre"># 次セッション開始ガイド
+
+## ✅ 前回の完了内容
+- ユーザー認証機能（JWT）実装完了
+- テストカバレッジ 75% を達成
+
+## 📝 このセッションで実装する機能
+- プロフィール編集機能
+
+## 💡 前回の重要な決定
+- バックエンド：Node.js + Express
+- 認証方式：JWT ベース
+- ORM：Prisma
+
+## 📋 セッション開始時のチェックリスト
+- [ ] CLAUDE.md の「現在のステータス」を確認
+- [ ] 上記の「重要な決定」が変わっていないか確認
+- [ ] 前回の最後のコミットを確認: feat(auth): implement user authentication
+- [ ] プリアンブルをユーザー（またはプロンプト）に述べる
+
+## ⚠️ 懸念・メモ
+- テストカバレッジが 75% → 次回 85% 以上を目指す
+- API ドキュメントは docs/API.md に同期されています</pre>
+                </div>
+            </div>
+
+            <p style="margin: 1rem 0; color: var(--text-light);">
+                このガイドが自動生成されることで、ユーザーは「何を最初にすべきか」を迷わずに作業開始できます。
+            </p>
+
+            <h3 style="margin-top: 2rem;">💬 セッション開始時：ユーザーが Claude に伝えるべきこと</h3>
+
+            <p style="margin: 1rem 0;">
+                実は、セッション開始時にユーザーが Claude に伝えるべき情報は、<span class="highlight">すべて「次セッション開始ガイド」に書いてあります</span>。
+                ガイドをそのまま読み上げるだけで、前セッションのコンテキストが完全に引き継ぎされます：
+            </p>
+
+            <div style="padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border: 2px solid var(--primary); border-radius: 8px; margin: 1.5rem 0;">
+                <p style="margin: 0; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">📖 セッション開始時にユーザーが言うべきこと：</p>
+
+                <div style="background: var(--bg); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+<pre>「こんにちは。前回のセッションでは以下を完了しました：
+
+【前回の完了内容】
+- ユーザー認証機能（JWT ベース）の実装
+- テストカバレッジを 75% まで達成
+
+【このセッションで実装したい機能】
+- プロフィール編集機能
+
+【前回の重要な決定】
+- バックエンド：Node.js + Express
+- 認証方式：JWT ベース
+- ORM：Prisma
+
+【懸念・メモ】
+- テストカバレッジが 75% → 次回 85% 以上を目指す
+
+よろしくお願いします。」</pre>
+                </div>
+
+                <p style="margin: 1rem 0 0 0; color: var(--text-light); font-size: 0.95rem;">
+                    ※ 上記は「次セッション開始ガイド（.claude/next-session-guide.md）」をそのまま読み上げるだけです。
+                </p>
+            </div>
+
+            <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: 6px; margin: 1.5rem 0;">
+                <p><strong>✅ メリット：</strong></p>
+                <ul style="margin: 0.5rem 0 0 1.5rem;">
+                    <li>CLAUDE.md・メモリ・Git・プリアンブル・ドキュメント → すべて自動で引き継ぎ</li>
+                    <li>ユーザーが何か特別なことをする必要がない → ガイドを読み上げるだけ</li>
+                    <li>セッション開始時の時間が 5-10 分から 1 分に短縮</li>
+                </ul>
+            </div>
+
+
+            <h4 style="margin-top: 2rem; color: var(--primary);">実装方法（推奨：テンプレート型）</h4>
+
+            <p style="margin-top: 1rem; color: var(--text);"><strong>重要：</strong> シェルスクリプト内で「<span class="highlight">何を CLAUDE.md に書き込むか</span>」を明示的に定義する必要があります。</p>
+
+            <p style="margin: 1rem 0; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: 6px;">
+                <strong>✅ 初心者向けはテンプレート型を推奨します</strong><br>
+                シンプルで確実に動作します。複雑な自動化は次の「応用編」を参照してください。
+            </p>
+
+            <div class="card-grid" style="margin-top: 1.5rem;">
+                <!-- Method 1: Template -->
+                <div class="card" style="border: 2px solid var(--primary);">
+                    <h4>⭐ 方法 1: テンプレート型（推奨）</h4>
+                    <span class="badge success">初心者向け・推奨</span>
+                    <p>CLAUDE.md に固定テンプレートを事前定義。圧縮直前にシェルスクリプトが日時を埋め込むだけ。</p>
+
+                    <p style="margin-top: 1.5rem;"><strong>準備：CLAUDE.md にテンプレートを定義</strong></p>
+                    <p style="margin: 0.5rem 0; padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); border-radius: 6px; font-size: 0.9rem;">
+                        ⚠️ <strong>テンプレートの内容・セクションをどう定義するか：</strong><br>
+                        プロジェクト特性に応じて、CLAUDE.md のセクション構成を決めることが重要です。
+                    </p>
+                    <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.75rem; overflow-x: auto;">
+<pre># プロジェクト名
+
+## 🎯 現在のステータス
+[圧縮直前に自動更新]
+- 最後に更新：[日時]
+- フェーズ：
+- 完了したタスク：
+- 次のステップ：
+
+## 📋 セッション履歴
+[ここに圧縮直前の情報が追記される]</pre>
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>ステップ 1:</strong> シェルスクリプト作成（3つの記録を自動実行）</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">ファイル: <code>.claude/hooks/on-pre-compact.sh</code></p>
+                    <p style="margin: 0.5rem 0; padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); border-radius: 6px; font-size: 0.9rem;">
+                        ⚠️ <strong>メモリ・Git コミット内容の決定方法</strong><br>
+                        「何をメモリに記録するか」「コミットメッセージに何を含めるか」はプロジェクトごとに決定してください。一般的には、メモリには「決定の背景・理由」を、Git コミットには「実装内容」を記録します。
+                    </p>
+                    <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.65rem; overflow-x: auto;">
+<pre>#!/bin/bash
+SESSION_DATA=$(cat)
+SESSION_ID=$(echo "$SESSION_DATA" | jq -r '.session_id')
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 1️⃣ CLAUDE.md に追記
+cat >> CLAUDE.md << EOF
+
+### Session: $SESSION_ID
+- 実行日時：$TIMESTAMP
+- 状態：圧縮実行
+EOF
+
+# 2️⃣ メモリに記録（.claude/memory/session-log.md）
+mkdir -p .claude/memory
+cat >> .claude/memory/session-log.md << EOF
+
+## Session $SESSION_ID
+- 日時：$TIMESTAMP
+- ステータス：圧縮実行前に状態保存
+EOF
+
+# 3️⃣ Git コミット
+git add -A
+git commit -m "docs: auto-save session state before compression
+
+Session: $SESSION_ID
+Timestamp: $TIMESTAMP
+Reason: PreCompact hook auto-execution" 2>/dev/null || true
+
+exit 0</pre>
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>ステップ 2:</strong> settings.json に hooks を設定</p>
+                    <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.75rem; overflow-x: auto;">
+<pre>{
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/on-pre-compact.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>メリット：</strong> シンプルで確実に動作。テンプレートを定義すれば自動で更新。<br>
+                    <strong>デメリット：</strong> 「何を記録するか」は事前定義のため、融通がきかない。</p>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: 6px;">
+                <strong>💡 テンプレート型で十分な場合が多いです</strong>
+                <p style="margin-top: 0.5rem;">開発初期段階・シンプルなプロジェクト向け。実装が簡単で確実に動作します。</p>
+            </div>
+
+            <h4 style="margin-top: 3rem; color: var(--primary);">📚 応用編：AI分析型（上級者向け）</h4>
+
+            <p style="margin-top: 1rem; color: var(--text-light);">セッション内容を Claude が自動分析して「重要な決定」を JSON で出力し、それを CLAUDE.md に自動記載する高度な方法です。テンプレート型では対応できない複雑なプロジェクト向けです。</p>
+
+            <div class="card-grid" style="margin-top: 1.5rem;">
+                <div class="card" style="border: 2px solid var(--warning);">
+                    <h4>⭐⭐⭐ 方法 3: AI分析型（上級向け）</h4>
+                    <span class="badge warning">中級者向け・応用編</span>
+                    <p>Claude が会話を分析して「重要な決定」を JSON で出力 → シェルスクリプトが整形して CLAUDE.md に記載。</p>
+
+                    <p style="margin-top: 1.5rem;"><strong>ステップ 1:</strong> Claude 分析スキルを作成</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">セッション圧縮直前に、Claude が会話を分析するプロンプト</p>
+                    <p style="margin: 0.5rem 0; padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); border-radius: 6px; font-size: 0.9rem;">
+                        ⚠️ <strong>「重要な決定」をどうやって判定するか？</strong><br>
+                        Claude が自動分析するか、セッション開始時に「テーマ」を指定するか、など複数の方法があります
+                    </p>
+                    <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.7rem; overflow-x: auto;">
+<pre>## セッション分析プロンプト
+本セッションの内容を JSON 形式で分析：
+{
+  "session_date": "日付",
+  "key_decisions": ["決定事項1", "決定事項2"],
+  "completed_tasks": ["完了タスク"],
+  "pending_items": ["未完了項目"],
+  "technical_notes": ["技術的メモ"]
+}
+
+形式で JSON だけを出力してください。</pre>
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>ステップ 2:</strong> シェルスクリプト（JSON を受け取り、3つの自動記録）</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">ファイル: <code>.claude/hooks/on-pre-compact-ai.sh</code></p>
+                    <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.65rem; overflow-x: auto;">
+<pre>#!/bin/bash
+SESSION_DATA=$(cat)
+SESSION_ID=$(echo "$SESSION_DATA" | jq -r '.session_id')
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+# Claude からの分析 JSON を受け取る
+ANALYSIS_JSON=$(echo "$SESSION_DATA" | jq -r '.analysis_json')
+
+# JSON を解析
+DECISIONS=$(echo "$ANALYSIS_JSON" | jq -r '.key_decisions[]')
+COMPLETED=$(echo "$ANALYSIS_JSON" | jq -r '.completed_tasks[]')
+PENDING=$(echo "$ANALYSIS_JSON" | jq -r '.pending_items[]')
+
+# 1️⃣ CLAUDE.md に追記
+cat >> CLAUDE.md << 'EOF'
+
+## 🎯 現在のステータス（自動更新）
+EOF
+
+echo "- 更新時刻：$TIMESTAMP" >> CLAUDE.md
+echo "- **完了したタスク：**" >> CLAUDE.md
+echo "$COMPLETED" | sed 's/^/  - /' >> CLAUDE.md
+echo "- **次のステップ：**" >> CLAUDE.md
+echo "$PENDING" | sed 's/^/  - /' >> CLAUDE.md
+
+# 2️⃣ メモリに詳細記録（.claude/memory/session-analysis.md）
+mkdir -p .claude/memory
+cat >> .claude/memory/session-analysis.md << EOF
+
+## Session Analysis: $SESSION_ID
+- 分析日時：$TIMESTAMP
+- **重要な決定事項：**
+EOF
+echo "$DECISIONS" | sed 's/^/  - /' >> .claude/memory/session-analysis.md
+
+# 3️⃣ Git コミット（JSON 形式で）
+git add -A
+COMMIT_MSG="docs: ai-analyzed session summary ($SESSION_ID)
+
+Completed tasks:
+$(echo "$COMPLETED" | sed 's/^/- /')
+
+Next steps:
+$(echo "$PENDING" | sed 's/^/- /')
+
+Key decisions:
+$(echo "$DECISIONS" | sed 's/^/- /')
+
+Timestamp: $TIMESTAMP"
+
+git commit -m "$COMMIT_MSG" 2>/dev/null || true
+
+exit 0</pre>
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>メリット：</strong> 「重要な決定」を動的に抽出。会話の内容に応じて柔軟に対応。<br>
+                    <strong>デメリット：</strong> Claude API 呼び出しが必要で、実装がやや複雑。</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); border-radius: 6px;">
+                <strong>⚠️ 応用編を検討する場合</strong>
+                <p style="margin-top: 0.5rem;">方法3（AI分析型）は複雑な決定が多い大型プロジェクト・高度な自動化を目指す場合に適しています。ただし Claude API 呼び出しが必要で、実装がやや複雑です。</p>
+                <p style="margin-top: 0.5rem;">まずはテンプレート型で始めることをお勧めします。</p>
+            </div>
+
+        </div>
+
+        <!-- Section 4: Practice -->
+        <div class="section" id="section-practice">
+            <h2>💼 Section 4: 実践パターン - 予算管理システムでの実装</h2>
+
+            <h3>Before: 手動記録による問題</h3>
+            <div class="before" style="background: rgba(239, 68, 68, 0.15); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                <p><strong>📁 ファイル構成：</strong></p>
+                <ul style="margin-left: 1.5rem;">
+                    <li><code>budget-management/</code> （CLAUDE.md がない ❌）</li>
+                    <li><code>.git/logs/</code> （コミットメッセージが曖昧）</li>
+                    <li>メモリ： なし ❌</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>セッション終了時の課題：</strong></p>
+                <ul style="margin-left: 1.5rem;">
+                    <li>手動で CLAUDE.md に書き込む → 記録し忘れることがある</li>
+                    <li>手動でメモリに記録する → 形式が統一されない</li>
+                    <li>コミットメッセージを意識的に書く → 実装中は後回しになりやすい</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>セッション 2 の開始時：</strong>「あれ、前回の結論は何だったっけ？」→ CLAUDE.md がない → 一から確認が必要</p>
+            </div>
+
+            <h3>After: 圧縮直前自動化で自動記録</h3>
+            <div class="after" style="background: rgba(16, 185, 129, 0.15); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                <p><strong>📁 セットアップ（1回だけ）：</strong></p>
+                <ul style="margin-left: 1.5rem;">
+                    <li><code>CLAUDE.md</code> ✅ - テンプレート定義</li>
+                    <li><code>.claude/hooks/on-pre-compact.sh</code> ✅ - 圧縮直前自動記録スクリプト</li>
+                    <li><code>.claude/hooks.json</code> ✅ - PreCompact hooks 設定</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>セッション進行時：</strong></p>
+                <ul style="margin-left: 1.5rem;">
+                    <li>開発者は「記録」を意識しない</li>
+                    <li>圧縮直前に自動で 3つの記録が実行される</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>セッション 2 の開始時：</strong>CLAUDE.md・メモリ・Git コミットに自動記録されているので、すぐに続きから開始できる</p>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">具体的な実装内容（方法 1：テンプレート型）</h3>
+
+            <div style="margin-top: 1rem;">
+                <h4 style="color: var(--primary); margin: 1rem 0;">ステップ 1: CLAUDE.md にテンプレートを定義</h4>
+                <div style="background: var(--bg); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--primary); margin: 0.5rem 0; font-family: 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto;">
+<pre># E-コマースサイト再設計
+
+## 🎯 現在のステータス
+[圧縮直前に自動更新]
+- 最後に更新：[日時]
+- **フェーズ：** 実装フェーズ
+- **完了：** ユーザー認証機能（JWT ベース）
+- **次のタスク：** プロフィール編集機能の実装
+
+## 📋 セッション履歴
+[ここに圧縮直前のセッション情報が追記される]</pre>
+                </div>
+
+                <h4 style="color: var(--primary); margin: 1rem 0;">ステップ 2: シェルスクリプト作成</h4>
+                <p style="font-size: 0.9rem; color: var(--text-light);">ファイル: <code>.claude/hooks/on-pre-compact.sh</code></p>
+                <p style="margin: 0.5rem 0; padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); border-radius: 6px; font-size: 0.9rem;">
+                    ⚠️ <strong>メモリ・Git コミント内容の決定：</strong><br>
+                    「何をメモリに記録するか」「コミットメッセージに何を含めるか」はプロジェクトごとに決定してください。
+                </p>
+                <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.75rem; overflow-x: auto;">
+<pre>#!/bin/bash
+SESSION_DATA=$(cat)
+SESSION_ID=$(echo "$SESSION_DATA" | jq -r '.session_id')
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 1️⃣ CLAUDE.md にセッション情報を追記
+cat >> CLAUDE.md << EOF
+
+### Session: $SESSION_ID
+- 実行日時：$TIMESTAMP
+- 状態：圧縮実行前に状態保存
+EOF
+
+# 2️⃣ メモリに記録
+mkdir -p .claude/memory
+cat >> .claude/memory/session-log.md << EOF
+
+## Session $SESSION_ID
+- 日時：$TIMESTAMP
+EOF
+
+# 3️⃣ Git コミット
+git add -A
+git commit -m "docs: auto-save before compression ($SESSION_ID)
+
+Timestamp: $TIMESTAMP" 2>/dev/null || true
+
+exit 0</pre>
+                </div>
+
+                <h4 style="color: var(--primary); margin: 1rem 0;">ステップ 3: settings.json に hooks を設定</h4>
+                <div style="background: var(--bg); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; overflow-x: auto;">
+<pre>{
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/on-pre-compact.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+                </div>
+
+                <h4 style="color: var(--primary); margin: 1rem 0;">ステップ 4: セッション開始時は確認するだけ</h4>
+                <p>セッション 2 の開始時：</p>
+                <div style="background: var(--bg); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--success); margin: 0.5rem 0; color: var(--text-light); font-style: italic;">
+                    「CLAUDE.md を見ると、前回のセッション情報がすでに記録されている。メモリも Git コミットも自動で保存されてるから、ここから続きを開発できる。」
+                </div>
+
+                <p style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: 6px;">
+                    <strong>✅ 効果：</strong> 開発者は「記録」を意識する必要がない → 圧縮直前に自動で CLAUDE.md・メモリ・Git に保存される → セッション 2 ですぐに続きから開発開始
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 5: FAQ -->
+        <div class="section" id="section-faq">
+            <h2>❓ Section 5: よくある質問</h2>
+
+            <div class="faq">
+                <div class="faq-item">
+                    <strong>Q: メモリを「圧縮」したら、古い内容は失われるのですか？</strong>
+                    <p>A: いいえ、失われません。Claude Code のメモリはマージ・統合しても、古い情報は MEMORY.md で参照可能です。ただし、<span class="highlight">古いメモリが「重要な決定」を含む場合は、CLAUDE.md に昇格</span>させましょう。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong> 「GCP 版採用決定」 → メモリで管理 → セッションを跨いだら → CLAUDE.md に「現在のステータス：GCP 版採用済み」と書く</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: CLAUDE.md が肥大化しないですか？</strong>
+                    <p>A: CLAUDE.md は「現在のステータス」だけに絞りましょう。詳細は別ファイル（ARCHITECTURE.md, DESIGN.md）に分離します。</p>
+                    <p style="margin-top: 0.5rem;"><strong>CLAUDE.md の理想サイズ：</strong> 1-2 ページ（500-1000 字程度）</p>
+                    <p style="margin-top: 0.75rem;"><strong>✅ CLAUDE.md に書く内容：</strong></p>
+                    <ul style="margin: 0.25rem 0 0 1.5rem; font-size: 0.95rem;">
+                        <li>現在のフェーズ（企画 / 設計 / 実装 / テスト / デプロイ）</li>
+                        <li>このセッションの目標（3-5行）</li>
+                        <li>前回完了したタスク（3-5個）</li>
+                        <li>次のステップ（3-5個）</li>
+                        <li>重要な決定・方針（3-5個）</li>
+                    </ul>
+                    <p style="margin-top: 0.75rem;"><strong>❌ CLAUDE.md に書かない内容：</strong></p>
+                    <ul style="margin: 0.25rem 0 0 1.5rem; font-size: 0.95rem;">
+                        <li>細かい実装の詳細 → ARCHITECTURE.md へ</li>
+                        <li>セッション 1-10 の全履歴 → メモリ・別ファイルへ</li>
+                        <li>エラーログ・デバッグ情報 → ローカルメモへ</li>
+                        <li>完了済みの古い決定 → メモリへ昇格、CLAUDE.md から削除</li>
+                    </ul>
+                    <p style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); border-radius: 6px; font-size: 0.95rem;">
+                        💡 <strong>肥大化を防ぐコツ：</strong> 毎セッション終了時に「古い情報を削除」することが重要です。CLAUDE.md は常に「次のセッション開始時に読むべき情報」だけを保持しましょう。
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: セッション数が多いとき（10 回以上）はどうしますか？</strong>
+                    <p>A: 大型プロジェクトは<span class="highlight">マイルストーン単位でセッションサマリー</span>を作成しましょう。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong> session_summary_2026-05-09.md に「セッション 1-3 の内容・決定事項・次の進め方」をまとめる</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: 複数の AI（Claude + Gemini など）で開発する場合は？</strong>
+                    <p>A: <strong>CLAUDE.md は AI 非依存の「プロジェクト言語」で書きます。</strong> AI の種類に関わらず読めるようにしましょう。</p>
+                    <p style="margin-top: 0.5rem;"><strong>例：</strong> 「GCP 版を採用した」「Terraform で IaC 化する」（AI 種類を指定しない）</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: コンテキストウィンドウが「満杯」になったら？</strong>
+                    <p>A: Claude Code が自動で「古い会話を削除」してくれます。ただし、<span class="highlight">セッション終了時に重要な決定をコミット・メモリに保存</span>しておくことが重要です。</p>
+                    <p style="margin-top: 0.5rem;"><strong>チェック：</strong> セッション終了前に「今日の決定はメモリ・コミット・CLAUDE.md に記録したか？」</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: 「セッション開始時プリアンブル」は毎回必要ですか？</strong>
+                    <p>A: <strong>短いプロジェクト：</strong> 不要（CLAUDE.md だけで十分）<br><strong>長いプロジェクト・複雑な設計：</strong> 必須（1-2 文で前回の状態を述べる）</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: 圧縮直前自動化で、メモリに「何を記録するか」はどうやって決めるのか？</strong>
+                    <p>A: <strong>方法 1（テンプレート型）：</strong> CLAUDE.md のテンプレートで事前に「セクション」を定義。シェルスクリプトはそれに従うだけ。<br>
+                    <strong>方法 3（AI分析型）：</strong> Claude が会話を分析して「重要な決定」を抽出します。ただし、以下の 3つの実装方法があります：
+                    </p>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                        <li><strong>A. セッション開始時にテーマ指定型：</strong>「今回のテーマ：ユーザー認証完成」と指定 → Claude がテーマに対する達成度を分析</li>
+                        <li><strong>B. 会話自動分析型：</strong>Claude が会話全体から「重要な決定」を自動抽出（判定基準は AI に依存）</li>
+                        <li><strong>C. 手動指定型：</strong>セッション終了時にユーザーが「重要な決定」を手動で指定</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>選択基準：</strong> プロジェクトの規模・セッション数・複雑度に応じて方法 1 または 3 を選択してください。</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: Git コミットメッセージ自動化で、何を含めるべきですか？</strong>
+                    <p>A: 最低限以下を含めることをお勧めします：</p>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                        <li>セッション ID・実行日時</li>
+                        <li>完了したタスク（簡潔に）</li>
+                        <li>次のステップ・未完了項目</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>役割分担：</strong> 一般的には、メモリには「決定の背景・理由」を、Git コミットには「実装内容」を記録します。</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 2rem; background: var(--bg-alt); border-radius: 12px; border: 1px solid var(--border);">
+            <h3 style="color: var(--primary); margin-top: 0;">📚 参考リンク・公式ドキュメント</h3>
+            <p style="color: var(--text-light); margin: 0.5rem 0 1rem 0;">本ガイドは以下の公式 Claude Code ドキュメントをベースにしています：</p>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+                <li style="margin: 0.75rem 0;"><strong>Claude Code Memory</strong> — <a href="https://code.claude.com/docs/en/memory" style="color: var(--primary); text-decoration: underline;">https://code.claude.com/docs/en/memory</a><br>
+                    <span style="font-size: 0.9rem; color: var(--text-light);">CLAUDE.md ファイル、Auto memory、ルール管理について詳細に説明</span>
+                </li>
+                <li style="margin: 0.75rem 0;"><strong>Claude Code Features Overview</strong> — <a href="https://code.claude.com/docs/" style="color: var(--primary); text-decoration: underline;">https://code.claude.com/docs/</a><br>
+                    <span style="font-size: 0.9rem; color: var(--text-light);">Claude Code の全機能・セットアップガイド</span>
+                </li>
+            </ul>
+            <p style="margin-top: 1.5rem; color: var(--text-light); font-size: 0.85rem;">
+                💡 <strong>本ガイドとの関係：</strong> Claude Code 公式ドキュメントでは「メモリ」（CLAUDE.md + Auto memory）を中心に説明していますが、
+                本ガイドは「コンテキスト継承」をより広義に捉え、Git・セッション開始時プリアンブル・ドキュメントなど、
+                複数のレイヤーでの情報保存・共有方法を体系化しています。
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>🚀 Claude Code/Cowork コンテキスト引き継ぎ クイックガイド v2.1</p>
+            <p>初版：2026年5月9日 | v2.1 更新：2026年5月11日 | 形式：HTML（ダークモード対応・印刷可能）</p>
+            <p style="margin-top: 1rem; font-size: 0.85rem;">このガイドは、 Claude Code で長期開発をする皆さんのために作成されました。</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">v2.1 変更点：セキュリティ警告追加、AI分析型を応用編に分離、CLAUDE.md 肥大化防止ガイド強化、公式ドキュメントへのリンク追加</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', logLevel: 'silent' });
+
+        // Checklist interactivity
+        document.querySelectorAll('.checklist input').forEach((checkbox, index) => {
+            checkbox.addEventListener('change', function() {
+                const li = this.parentElement;
+                if (this.checked) {
+                    li.classList.add('checked');
+                } else {
+                    li.classList.remove('checked');
+                }
+                // 保存（localStorage）
+                localStorage.setItem(`checklist_${index}`, this.checked);
+            });
+
+            // 読み込み
+            const saved = localStorage.getItem(`checklist_${index}`);
+            if (saved === 'true') {
+                checkbox.checked = true;
+                checkbox.parentElement.classList.add('checked');
+            }
+        });
+
+        // Dark mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.style.colorScheme = 'dark';
+        }
+    </script>
+</body>
+</html>
