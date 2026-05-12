@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Cowork 総務部向け活用ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .version-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            border-left: 4px solid #333;
+            padding-left: 15px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: #222;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        table th, table td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table td {
+            background-color: #fafafa;
+        }
+
+        .case-study {
+            background-color: #f9f9f9;
+            border-left: 3px solid #666;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .case-study strong {
+            display: block;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .scenario-box {
+            background-color: #f9f9f9;
+            border-left: 3px solid #cc9900;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .scenario-box strong {
+            display: block;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tool-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+
+        .tool-card h3 {
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            margin-bottom: 15px;
+        }
+
+        .feature-list strong {
+            color: #006600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .benefit-list {
+            margin-bottom: 15px;
+        }
+
+        .benefit-list strong {
+            color: #006600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .recommendation {
+            background-color: #fff9e6;
+            border: 1px solid #cc9900;
+            border-left: 4px solid #cc9900;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: normal;
+        }
+
+        .recommendation-title {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .workflow-box {
+            background-color: #f0f8ff;
+            border: 1px solid #0066cc;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .workflow-box strong {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .workflow-box ul {
+            margin-left: 20px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+
+        footer {
+            border-top: 2px solid #333;
+            margin-top: 50px;
+            padding-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .footnote {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .illustration {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+        }
+
+        .illustration img, .illustration svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .step-list {
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .step-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .faq-item {
+            border: 1px solid #ccc;
+            margin: 15px 0;
+        }
+
+        .faq-question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .faq-question:hover {
+            background-color: #eeeeee;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            background-color: #fafafa;
+            display: none;
+            font-size: 13px;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .toc {
+            background-color: #f0f8ff;
+            border: 1px solid #0066cc;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #0066cc;
+            padding-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin-left: 0;
+        }
+
+        .toc li {
+            padding: 5px 0;
+            margin: 0;
+        }
+
+        .toc a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Claude Cowork</h1>
+            <p class="subtitle">総務部長向け業務効率化ガイド - 実装戦略と活用シーン</p>
+            <div class="version-info">
+                <strong>ガイド版：2026年5月版</strong>
+                <br/>総務部の実務を前提とした、電子印・書類チェック・ファイル整理の自動化に特化
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="toc">
+                <h3>📑 このガイドの内容</h3>
+                <ul>
+                    <li><a href="#overview">1. Claude Coworkとは</a></li>
+                    <li><a href="#why-general-affairs">2. 総務部に必要な理由</a></li>
+                    <li><a href="#main-features">3. 主な機能と特徴</a></li>
+                    <li><a href="#use-cases">4. 実践的な活用シーン</a></li>
+                    <li><a href="#getting-started">5. 導入・活用ガイド</a></li>
+                    <li><a href="#faq">6. よくある質問</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="overview">
+            <h2>1. Claude Coworkとは</h2>
+            <p>Claude Coworkは、Anthropic社が開発したAI駆動型の業務自動化プラットフォームです。複雑な業務プロセスをAIが理解・実行し、人的ミスを削減しながらチーム全体の生産性を向上させます。</p>
+            <p><span class="highlight">Cowork = AI+ファイル管理+自動化スキル</span>の統合プラットフォーム</p>
+
+            <h3>基本構成</h3>
+            <div class="case-study">
+                <strong>🤖 Claude AI エンジン</strong>
+                自然言語で指示すると、複雑な業務を理解し実行。「〇〇の書類をチェックして」という日本語指示で動作します。
+            </div>
+
+            <div class="case-study">
+                <strong>📁 ローカルファイル管理</strong>
+                PCのフォルダに直接アクセス。Word、Excel、PDFなどのドキュメント生成・編集・抽出を自動化します。
+            </div>
+
+            <div class="case-study">
+                <strong>🔧 カスタムスキル</strong>
+                よく使う業務プロセスをスキルとして保存し、何度も再利用できます。チーム全体で共有・標準化が可能。
+            </div>
+
+            <div class="illustration">
+                <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <!-- Claude AI -->
+                    <rect x="50" y="30" width="140" height="100" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+                    <text x="120" y="60" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">Claude AI</text>
+                    <text x="120" y="85" font-size="12" text-anchor="middle" font-family="'Courier New'">自然言語理解</text>
+                    <text x="120" y="105" font-size="12" text-anchor="middle" font-family="'Courier New'">業務実行</text>
+
+                    <!-- ファイル管理 -->
+                    <rect x="230" y="30" width="140" height="100" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+                    <text x="300" y="60" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">ファイル管理</text>
+                    <text x="300" y="85" font-size="12" text-anchor="middle" font-family="'Courier New'">Word/Excel/PDF</text>
+                    <text x="300" y="105" font-size="12" text-anchor="middle" font-family="'Courier New'">自動処理</text>
+
+                    <!-- スキル -->
+                    <rect x="410" y="30" width="140" height="100" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+                    <text x="480" y="60" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">カスタムスキル</text>
+                    <text x="480" y="85" font-size="12" text-anchor="middle" font-family="'Courier New'">再利用可能な</text>
+                    <text x="480" y="105" font-size="12" text-anchor="middle" font-family="'Courier New'">業務フロー</text>
+
+                    <!-- 矢印と相互作用 -->
+                    <path d="M 190 80 L 230 80" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    <path d="M 370 80 L 410 80" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <!-- 成果 -->
+                    <rect x="100" y="180" width="400" height="100" fill="#ffffcc" stroke="#cc9900" stroke-width="2"/>
+                    <text x="300" y="205" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">💡 実現できること</text>
+                    <text x="300" y="230" font-size="12" text-anchor="middle" font-family="'Courier New'">業務時間を70-90%削減 | ヒューマンエラー0化 | 承認フロー自動化</text>
+                    <text x="300" y="250" font-size="12" text-anchor="middle" font-family="'Courier New'">書類チェック自動化 | ファイル自動整理・分類</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+
+        <div class="section" id="why-general-affairs">
+            <h2>2. 総務部に必要な理由</h2>
+            <p>総務部の業務は<span class="highlight">定型的で繰り返し発生するものが大多数</span>です。これらはAI自動化に最適です。</p>
+
+            <h3>総務部の課題と改善</h3>
+            <table>
+                <tr>
+                    <th>課題</th>
+                    <th>具体例</th>
+                    <th>Cowork導入後</th>
+                </tr>
+                <tr>
+                    <td>⏰ 時間がかかる</td>
+                    <td>月次レポート作成、書類チェック</td>
+                    <td>作業時間を1/3～1/5に削減</td>
+                </tr>
+                <tr>
+                    <td>❌ ヒューマンエラー</td>
+                    <td>データ入力ミス、記入漏れ確認</td>
+                    <td>チェック漏れ防止、99%の精度向上</td>
+                </tr>
+                <tr>
+                    <td>👥 属人化</td>
+                    <td>特定の人しか処理できない</td>
+                    <td>スキル化で誰でも実行可能に</td>
+                </tr>
+                <tr>
+                    <td>📋 書類管理</td>
+                    <td>ファイル検索に時間がかかる</td>
+                    <td>自動分類・タグ付けで即座検索</td>
+                </tr>
+            </table>
+
+            <div class="recommendation">
+                <span class="recommendation-title">💡 総務部での活用の価値</span>
+                スタッフは単純作業から解放され、人間にしかできない判断、経営サポート、戦略的業務に時間を使えるようになります。
+            </div>
+        </div>
+
+        <div class="section" id="main-features">
+            <h2>3. 主な機能と特徴</h2>
+
+            <h3>総務部で最も活用する4つのコア機能</h3>
+
+            <div class="scenario-box">
+                <strong>📄 ドキュメント処理・自動生成</strong>
+                Word、Excel、PDFを自動生成・編集・抽出。月次レポート、テンプレート文書、統計資料などを一括作成できます。
+            </div>
+
+            <div class="scenario-box">
+                <strong>✅ 書類チェック・品質検証</strong>
+                申請書類の記入漏れ、誤字、ルール違反を自動検出。人が確認するのは例外ケースのみになります。
+            </div>
+
+            <div class="scenario-box">
+                <strong>🗂️ ファイル整理・自動分類</strong>
+                膨大なファイルを種類別・部門別・年度別に自動分類・移動・タグ付け。検索性が劇的に向上します。
+            </div>
+
+            <div class="scenario-box">
+                <strong>🖊️ 電子印・承認フロー管理</strong>
+                承認フローの自動化、進捗追跡、期限管理、履歴記録をすべて自動で実行します。
+            </div>
+
+            <h3>Coworkを支える2つの重要な基盤機能</h3>
+
+            <div class="recommendation">
+                <span class="recommendation-title">💻 Computer Use（コンピューターユース）</span>
+                <p>Claude Cowork最大の特徴は、<span class="highlight">ユーザーのPC上で直接アクション可能</span>という点です。</p>
+                <ul>
+                    <li><strong>ローカルファイルへのアクセス</strong>：PCのフォルダ内のファイルを直接読み込み・編集</li>
+                    <li><strong>自動ファイル操作</strong>：Word、Excel、PDFの生成・修正・移動・削除を自動実行</li>
+                    <li><strong>スクリーン認識</strong>：画面上のテキスト・レイアウトを理解し、複雑な業務を実行</li>
+                    <li><strong>プロセス自動化</strong>：複数ステップの業務を一連の流れで自動化</li>
+                </ul>
+                <p style="margin-top: 10px; font-size: 12px; color: #666;">これにより、総務部が毎日手作業で行っている「ファイルを開く → 確認 → 編集 → 保存 → 移動」といった一連の作業全体を自動化できます。</p>
+            </div>
+
+            <div class="recommendation">
+                <span class="recommendation-title">🔄 Human in the Loop（ヒューマン・イン・ザ・ループ）</span>
+                <p>AIの判断に<span class="highlight">人間が介入・確認できる仕組み</span>。完全自動化ではなく「人間+AI」の最適な協働を実現します。</p>
+                <ul>
+                    <li><strong>判断のポイントで停止</strong>：重要な判断箇所でAIが一旦停止し、人間の確認を待つ</li>
+                    <li><strong>例外対応</strong>：99%はAIが処理し、残り1%の例外や判断が必要な箇所のみ人間が対応</li>
+                    <li><strong>段階的確信度</strong>：AIが「確信度80%」のような数値も提示し、判断の根拠を明確に</li>
+                    <li><strong>監査・承認対応</strong>：すべての処理ログが記録され、コンプライアンス対応が強化</li>
+                </ul>
+                <p style="margin-top: 10px; font-size: 12px; color: #666;">総務部では「完全に機械任せ」ではなく「機械が9割、人間が最終判定」という安心できる運用が可能になります。</p>
+            </div>
+
+            <div class="illustration">
+                <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <!-- Computer Use -->
+                    <rect x="20" y="10" width="250" height="150" fill="#f0f8ff" stroke="#0066cc" stroke-width="2"/>
+                    <text x="145" y="35" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">💻 Computer Use</text>
+
+                    <circle cx="60" cy="70" r="20" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+                    <text x="60" y="77" font-size="11" text-anchor="middle" font-family="'Courier New'">PC</text>
+
+                    <path d="M 80 70 L 120 70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <circle cx="160" cy="70" r="20" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+                    <text x="160" y="75" font-size="11" text-anchor="middle" font-family="'Courier New'">AI</text>
+
+                    <path d="M 180 70 L 220 70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <rect x="220" y="55" width="40" height="45" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+                    <text x="240" y="72" font-size="11" text-anchor="middle" font-family="'Courier New'">自動</text>
+                    <text x="240" y="88" font-size="11" text-anchor="middle" font-family="'Courier New'">処理</text>
+
+                    <text x="145" y="120" font-size="12" text-anchor="middle" font-family="'Courier New'" font-weight="bold">ファイル直接操作</text>
+                    <text x="145" y="140" font-size="11" text-anchor="middle" font-family="'Courier New'">Word/Excel/PDF自動生成</text>
+                    <text x="145" y="155" font-size="11" text-anchor="middle" font-family="'Courier New'">フォルダ自動整理</text>
+
+                    <!-- Human in the Loop -->
+                    <rect x="330" y="10" width="250" height="150" fill="#fff9e6" stroke="#cc9900" stroke-width="2"/>
+                    <text x="455" y="35" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">🔄 Human in the Loop</text>
+
+                    <circle cx="370" cy="70" r="20" fill="#ffe6cc" stroke="#333" stroke-width="1"/>
+                    <text x="370" y="75" font-size="11" text-anchor="middle" font-family="'Courier New'">AI</text>
+
+                    <path d="M 390 70 L 430 70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <circle cx="510" cy="70" r="20" fill="#ffe6cc" stroke="#333" stroke-width="1"/>
+                    <text x="510" y="75" font-size="11" text-anchor="middle" font-family="'Courier New'">👤</text>
+
+                    <path d="M 430 85 L 510 85" stroke="#cc0000" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead-red)"/>
+                    <text x="470" y="102" font-size="10" text-anchor="middle" font-family="'Courier New'">確認</text>
+
+                    <text x="455" y="120" font-size="12" text-anchor="middle" font-family="'Courier New'" font-weight="bold">AIと人間の協働</text>
+                    <text x="455" y="140" font-size="11" text-anchor="middle" font-family="'Courier New'">99% AI処理 / 1% 人間判定</text>
+                    <text x="455" y="155" font-size="11" text-anchor="middle" font-family="'Courier New'">安心できる完全な監査対応</text>
+
+                    <!-- 下部：実現できること -->
+                    <rect x="30" y="180" width="540" height="150" fill="#e6ffe6" stroke="#006600" stroke-width="2"/>
+                    <text x="300" y="205" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">✅ この2つの機能が実現できること</text>
+
+                    <text x="50" y="235" font-size="12" font-family="'Courier New'" font-weight="bold">1️⃣ 自動化範囲の最大化</text>
+                    <text x="50" y="250" font-size="11" font-family="'Courier New'">単純作業から複雑な業務まで、AIが直接PC上で実行</text>
+
+                    <text x="50" y="275" font-size="12" font-family="'Courier New'" font-weight="bold">2️⃣ 安心と信頼の両立</text>
+                    <text x="50" y="290" font-size="11" font-family="'Courier New'">人間が最終判定するため、コンプライアンス・監査に完全対応</text>
+
+                    <text x="50" y="315" font-size="12" font-family="'Courier New'" font-weight="bold">3️⃣ 業務時間の大幅削減</text>
+                    <text x="50" y="330" font-size="11" font-family="'Courier New'">繰り返し業務が「数日」から「数分」に。年間数千時間の削減も可能</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                        <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#cc0000"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>その他の便利な機能</h3>
+            <ul>
+                <li><strong>定期実行</strong>：毎日・毎週・毎月など、自動的に繰り返し実行可能</li>
+                <li><strong>通知・配信</strong>：処理完了時に自動通知、レポート配信を実現</li>
+                <li><strong>ツール連携</strong>：Slack、メールなど他システムとの連携</li>
+                <li><strong>チーム共有</strong>：スキルをチーム全体で共有・再利用可能</li>
+            </ul>
+        </div>
+
+        <div class="section" id="use-cases">
+            <h2>4. 実践的な活用シーン</h2>
+
+            <div class="illustration">
+                <svg viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <!-- Before/After 比較 -->
+                    <!-- Before -->
+                    <rect x="30" y="20" width="250" height="200" fill="#ffe6e6" stroke="#999" stroke-width="1"/>
+                    <text x="155" y="45" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">❌ 従来の方法</text>
+
+                    <text x="40" y="75" font-size="12" font-family="'Courier New'">□ 手作業でファイル確認</text>
+                    <text x="40" y="95" font-size="12" font-family="'Courier New'">□ データを手入力</text>
+                    <text x="40" y="115" font-size="12" font-family="'Courier New'">□ ミスをチェック</text>
+                    <text x="40" y="135" font-size="12" font-family="'Courier New'">□ 修正指示・対応</text>
+                    <text x="40" y="155" font-size="12" font-family="'Courier New'">□ 承認者に回送</text>
+
+                    <text x="155" y="190" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">⏱ 3～6時間/日</text>
+
+                    <!-- After -->
+                    <rect x="320" y="20" width="250" height="200" fill="#e6ffe6" stroke="#999" stroke-width="1"/>
+                    <text x="445" y="45" font-size="14" font-weight="bold" text-anchor="middle" font-family="'Courier New'">✅ Cowork活用後</text>
+
+                    <text x="330" y="75" font-size="12" font-family="'Courier New'">✓ AI が自動確認</text>
+                    <text x="330" y="95" font-size="12" font-family="'Courier New'">✓ AI が自動入力</text>
+                    <text x="330" y="115" font-size="12" font-family="'Courier New'">✓ AI がエラー検出</text>
+                    <text x="330" y="135" font-size="12" font-family="'Courier New'">✓ 承認フロー自動化</text>
+                    <text x="330" y="155" font-size="12" font-family="'Courier New'">✓ 履歴を自動記録</text>
+
+                    <text x="445" y="190" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">⏱ 30分/日</text>
+
+                    <!-- 削減量 -->
+                    <text x="300" y="230" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#cc0000">↓ 作業時間 75～95%削減</text>
+                </svg>
+            </div>
+
+            <h3>シーン①：月次レポートの自動作成</h3>
+            <div class="scenario-box">
+                <strong>従来</strong>：データ手入力 → Excelで集計 → グラフ作成 → レポート手作成（5-6時間）
+            </div>
+
+            <div class="scenario-box">
+                <strong>Cowork後</strong>：データ指定 → AI自動集計・可視化 → レポート自動生成（30分）
+            </div>
+
+            <p><span class="highlight">効果：90%時間削減 | 毎月自動実行 | ヒューマンエラー0化</span></p>
+
+            <div class="illustration">
+                <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <!-- フロー -->
+                    <text x="350" y="25" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">月次レポート作成フロー</text>
+
+                    <!-- ステップ1 -->
+                    <rect x="30" y="50" width="100" height="60" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+                    <text x="80" y="75" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">1️⃣</text>
+                    <text x="80" y="95" font-size="11" text-anchor="middle" font-family="'Courier New'">データ</text>
+                    <text x="80" y="110" font-size="11" text-anchor="middle" font-family="'Courier New'">読み込み</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 130 80 L 160 80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- ステップ2 -->
+                    <rect x="160" y="50" width="100" height="60" fill="#e6ffe6" stroke="#333" stroke-width="1"/>
+                    <text x="210" y="75" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">2️⃣</text>
+                    <text x="210" y="95" font-size="11" text-anchor="middle" font-family="'Courier New'">AI</text>
+                    <text x="210" y="110" font-size="11" text-anchor="middle" font-family="'Courier New'">自動集計</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 260 80 L 290 80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- ステップ3 -->
+                    <rect x="290" y="50" width="100" height="60" fill="#e6ffe6" stroke="#333" stroke-width="1"/>
+                    <text x="340" y="75" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">3️⃣</text>
+                    <text x="340" y="95" font-size="11" text-anchor="middle" font-family="'Courier New'">グラフ</text>
+                    <text x="340" y="110" font-size="11" text-anchor="middle" font-family="'Courier New'">自動作成</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 390 80 L 420 80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- ステップ4 -->
+                    <rect x="420" y="50" width="100" height="60" fill="#e6ffe6" stroke="#333" stroke-width="1"/>
+                    <text x="470" y="75" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">4️⃣</text>
+                    <text x="470" y="95" font-size="11" text-anchor="middle" font-family="'Courier New'">レポート</text>
+                    <text x="470" y="110" font-size="11" text-anchor="middle" font-family="'Courier New'">生成</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 520 80 L 550 80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- ステップ5 -->
+                    <rect x="550" y="50" width="120" height="60" fill="#fffacd" stroke="#333" stroke-width="1"/>
+                    <text x="610" y="75" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">5️⃣</text>
+                    <text x="610" y="95" font-size="11" text-anchor="middle" font-family="'Courier New'">自動配信</text>
+                    <text x="610" y="110" font-size="11" text-anchor="middle" font-family="'Courier New'">（メール）</text>
+
+                    <!-- 時間表示 -->
+                    <text x="350" y="155" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#006600">⏱ 所要時間：30分（自動実行可能）</text>
+
+                    <!-- 削減比較 -->
+                    <rect x="50" y="180" width="600" height="80" fill="#f9f9f9" stroke="#999" stroke-width="1"/>
+                    <text x="70" y="200" font-size="11" font-family="'Courier New'" font-weight="bold">従来（5-6時間）:</text>
+                    <text x="70" y="220" font-size="11" font-family="'Courier New'">部長 → データ収集 → 手入力 → Excelで集計 → グラフ → Word作成 → メール送信</text>
+
+                    <text x="70" y="245" font-size="11" font-family="'Courier New'" font-weight="bold" fill="#006600">✅ Cowork後（30分自動）:</text>
+                    <text x="70" y="265" font-size="11" font-family="'Courier New'">毎月25日17時 自動実行 → AI処理 → 自動配信 完了</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>シーン②：申請書類のチェック自動化</h3>
+            <div class="scenario-box">
+                <strong>従来</strong>：目視で一件ずつ確認 → 記入漏れ・誤字指摘 → 修正待ち → 再確認（3時間/日）
+            </div>
+
+            <div class="scenario-box">
+                <strong>Cowork後</strong>：AI自動チェック → エラーのみリスト化 → 人が最終確認（30分/日）
+            </div>
+
+            <p><span class="highlight">効果：75%時間削減 | チェック漏れ防止 | スピード化</span></p>
+
+            <div class="illustration">
+                <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <text x="350" y="20" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">申請書類チェック：従来 vs Cowork</text>
+
+                    <!-- 従来の方法 -->
+                    <rect x="30" y="40" width="280" height="200" fill="#ffe6e6" stroke="#999" stroke-width="1"/>
+                    <text x="170" y="65" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">❌ 従来の方法</text>
+
+                    <circle cx="60" cy="100" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="60" y="105" font-size="10" text-anchor="middle" font-family="'Courier New'">1</text>
+                    <text x="80" y="105" font-size="11" font-family="'Courier New'">申請書受付</text>
+
+                    <circle cx="60" cy="140" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="60" y="145" font-size="10" text-anchor="middle" font-family="'Courier New'">2</text>
+                    <text x="80" y="145" font-size="11" font-family="'Courier New'">目視で細かくチェック</text>
+
+                    <circle cx="60" cy="180" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="60" y="185" font-size="10" text-anchor="middle" font-family="'Courier New'">3</text>
+                    <text x="80" y="185" font-size="11" font-family="'Courier New'">修正指示を申請者に</text>
+
+                    <circle cx="60" cy="220" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="60" y="225" font-size="10" text-anchor="middle" font-family="'Courier New'">4</text>
+                    <text x="80" y="225" font-size="11" font-family="'Courier New'">修正版を再確認</text>
+
+                    <text x="170" y="250" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#cc0000">⏱ 3時間/日</text>
+
+                    <!-- Cowork後 -->
+                    <rect x="390" y="40" width="280" height="200" fill="#e6ffe6" stroke="#999" stroke-width="1"/>
+                    <text x="530" y="65" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">✅ Cowork活用</text>
+
+                    <circle cx="420" cy="100" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="420" y="105" font-size="10" text-anchor="middle" font-family="'Courier New'">1</text>
+                    <text x="440" y="105" font-size="11" font-family="'Courier New'">申請書受付</text>
+
+                    <circle cx="420" cy="140" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="420" y="145" font-size="10" text-anchor="middle" font-family="'Courier New'">2</text>
+                    <text x="440" y="145" font-size="11" font-family="'Courier New'">AI自動チェック</text>
+
+                    <circle cx="420" cy="180" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="420" y="185" font-size="10" text-anchor="middle" font-family="'Courier New'">3</text>
+                    <text x="440" y="185" font-size="11" font-family="'Courier New'">エラーリスト表示</text>
+
+                    <circle cx="420" cy="220" r="12" fill="none" stroke="#333" stroke-width="1"/>
+                    <text x="420" y="225" font-size="10" text-anchor="middle" font-family="'Courier New'">4</text>
+                    <text x="440" y="225" font-size="11" font-family="'Courier New'">人が確認・承認</text>
+
+                    <text x="530" y="250" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#006600">⏱ 30分/日</text>
+
+                    <!-- 効果 -->
+                    <rect x="50" y="265" width="600" height="30" fill="#ffffcc" stroke="#cc9900" stroke-width="1"/>
+                    <text x="350" y="287" font-size="12" text-anchor="middle" font-family="'Courier New'" font-weight="bold">💡 削減時間：2.5時間/日 × 20営業日 = 月50時間削減（年間600時間！）</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>シーン③：ファイル整理・分類</h3>
+            <div class="scenario-box">
+                <strong>従来</strong>：画像・請求書・資料が混在したフォルダを手動で分類（2-3時間）
+            </div>
+
+            <div class="scenario-box">
+                <strong>Cowork後</strong>：フォルダ指定 → AI自動判別・分類・移動・タグ付け（5分）
+            </div>
+
+            <p><span class="highlight">効果：95%時間削減 | 検索性向上 | 圧倒的な時短</span></p>
+
+            <div class="illustration">
+                <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <text x="350" y="20" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">ファイル分類：従来 vs Cowork</text>
+
+                    <!-- 従来：混在ファイル -->
+                    <rect x="30" y="40" width="150" height="180" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="60" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">❌ 混在フォルダ</text>
+
+                    <rect x="45" y="75" width="120" height="20" fill="#fff3cd" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="88" font-size="10" text-anchor="middle" font-family="'Courier New'">📷 image_001.jpg</text>
+
+                    <rect x="45" y="100" width="120" height="20" fill="#d1ecf1" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="113" font-size="10" text-anchor="middle" font-family="'Courier New'">📄 invoice_May.pdf</text>
+
+                    <rect x="45" y="125" width="120" height="20" fill="#d4edda" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="138" font-size="10" text-anchor="middle" font-family="'Courier New'">📋 report_draft.docx</text>
+
+                    <rect x="45" y="150" width="120" height="20" fill="#fff3cd" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="163" font-size="10" text-anchor="middle" font-family="'Courier New'">📷 photo_2026.jpg</text>
+
+                    <rect x="45" y="175" width="120" height="20" fill="#d1ecf1" stroke="#999" stroke-width="1"/>
+                    <text x="105" y="188" font-size="10" text-anchor="middle" font-family="'Courier New'">📄 receipt.pdf</text>
+
+                    <text x="105" y="210" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#cc0000">⏱ 2-3時間</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 190 130 L 240 130" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <text x="215" y="115" font-size="10" text-anchor="middle" font-family="'Courier New'">AI処理</text>
+
+                    <!-- Cowork後：整理済みフォルダ -->
+                    <g id="organized">
+                        <!-- 画像フォルダ -->
+                        <rect x="250" y="40" width="80" height="60" fill="#fff3cd" stroke="#999" stroke-width="1"/>
+                        <text x="290" y="60" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📸</text>
+                        <text x="290" y="78" font-size="10" text-anchor="middle" font-family="'Courier New'">Images</text>
+                        <text x="290" y="95" font-size="9" text-anchor="middle" font-family="'Courier New'">（2ファイル）</text>
+
+                        <!-- 請求書フォルダ -->
+                        <rect x="350" y="40" width="80" height="60" fill="#d1ecf1" stroke="#999" stroke-width="1"/>
+                        <text x="390" y="60" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📑</text>
+                        <text x="390" y="78" font-size="10" text-anchor="middle" font-family="'Courier New'">Invoices</text>
+                        <text x="390" y="95" font-size="9" text-anchor="middle" font-family="'Courier New'">（2ファイル）</text>
+
+                        <!-- 報告書フォルダ -->
+                        <rect x="450" y="40" width="80" height="60" fill="#d4edda" stroke="#999" stroke-width="1"/>
+                        <text x="490" y="60" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📝</text>
+                        <text x="490" y="78" font-size="10" text-anchor="middle" font-family="'Courier New'">Reports</text>
+                        <text x="490" y="95" font-size="9" text-anchor="middle" font-family="'Courier New'">（1ファイル）</text>
+
+                        <!-- タグ情報 -->
+                        <text x="350" y="115" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📌 自動タグ付け</text>
+
+                        <rect x="280" y="145" width="140" height="50" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+                        <text x="350" y="160" font-size="9" font-family="'Courier New'">image_001.jpg</text>
+                        <text x="350" y="175" font-size="8" font-family="'Courier New'">[ 2026年5月 ][ 営業部 ]</text>
+                        <text x="350" y="188" font-size="8" font-family="'Courier New'">[ パッケージ製品 ]</text>
+
+                        <text x="350" y="210" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'" fill="#006600">⏱ 5分自動</text>
+                    </g>
+
+                    <!-- 追加効果 -->
+                    <rect x="250" y="125" width="280" height="200" fill="#e6ffe6" stroke="#006600" stroke-width="1"/>
+                    <text x="390" y="145" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">✅ Coworkの処理</text>
+
+                    <text x="265" y="165" font-size="10" font-family="'Courier New'">① ファイル種別を自動判定</text>
+                    <text x="265" y="180" font-size="10" font-family="'Courier New'">② カテゴリー別フォルダへ移動</text>
+                    <text x="265" y="195" font-size="10" font-family="'Courier New'">③ メタデータ自動抽出</text>
+                    <text x="265" y="220" font-size="10" font-family="'Courier New'">④ 検索用タグ自動付与</text>
+
+                    <text x="390" y="295" font-size="10" font-family="'Courier New'" text-anchor="middle" font-weight="bold" fill="#006600">📊 検索時間も1/100に短縮可能</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>シーン④：電子印・承認フロー</h3>
+            <div class="scenario-box">
+                <strong>従来</strong>：書類手配 → メール送信 → 承認追跡 → 履歴手記（30分/件）
+            </div>
+
+            <div class="scenario-box">
+                <strong>Cowork後</strong>：AI がフロー実行 → 進捗自動通知 → 履歴自動記録（2分/件）
+            </div>
+
+            <p><span class="highlight">効果：93%時間削減 | 承認漏れ防止 | 監査対応力向上</span></p>
+
+            <div class="illustration">
+                <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+                    <text x="350" y="20" font-size="13" font-weight="bold" text-anchor="middle" font-family="'Courier New'">電子印・承認フロー：Coworkによる自動化</text>
+
+                    <!-- 申請書受理 -->
+                    <rect x="40" y="50" width="90" height="50" fill="#e6f3ff" stroke="#333" stroke-width="1"/>
+                    <text x="85" y="75" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📝 申請書</text>
+                    <text x="85" y="92" font-size="10" text-anchor="middle" font-family="'Courier New'">提出</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 130 75 L 160 75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- AI振り分け -->
+                    <rect x="160" y="50" width="90" height="50" fill="#e6ffe6" stroke="#333" stroke-width="1"/>
+                    <text x="205" y="75" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">🤖 AI</text>
+                    <text x="205" y="92" font-size="10" text-anchor="middle" font-family="'Courier New'">自動振り分け</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 250 75 L 280 75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- 承認者1 -->
+                    <rect x="280" y="50" width="90" height="50" fill="#fff9e6" stroke="#333" stroke-width="1"/>
+                    <text x="325" y="75" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">👤 承認者1</text>
+                    <text x="325" y="92" font-size="9" text-anchor="middle" font-family="'Courier New'">（部長）</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 370 75 L 400 75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- 承認者2 -->
+                    <rect x="400" y="50" width="90" height="50" fill="#fff9e6" stroke="#333" stroke-width="1"/>
+                    <text x="445" y="75" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">👤 承認者2</text>
+                    <text x="445" y="92" font-size="9" text-anchor="middle" font-family="'Courier New'">（役員）</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 490 75 L 520 75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- 承認完了 -->
+                    <rect x="520" y="50" width="90" height="50" fill="#d4edda" stroke="#333" stroke-width="1"/>
+                    <text x="565" y="75" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">✅ 承認</text>
+                    <text x="565" y="92" font-size="10" text-anchor="middle" font-family="'Courier New'">完了</text>
+
+                    <!-- 矢印 -->
+                    <path d="M 610 75 L 640 75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- アーカイブ -->
+                    <rect x="640" y="50" width="50" height="50" fill="#f0f0f0" stroke="#333" stroke-width="1"/>
+                    <text x="665" y="80" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">📦</text>
+
+                    <!-- 並行処理：通知・リマインダー -->
+                    <text x="350" y="140" font-size="12" font-weight="bold" text-anchor="middle" font-family="'Courier New'">⚙️ AI の並行処理</text>
+
+                    <rect x="60" y="160" width="580" height="25" fill="#e6ffe6" stroke="#006600" stroke-width="1"/>
+                    <text x="350" y="177" font-size="11" text-anchor="middle" font-family="'Courier New'">📧 進捗通知: 申請者に「部長から承認待ち中」「承認完了」などを自動通知</text>
+
+                    <rect x="60" y="195" width="580" height="25" fill="#e6ffe6" stroke="#006600" stroke-width="1"/>
+                    <text x="350" y="212" font-size="11" text-anchor="middle" font-family="'Courier New'">⏰ 期限管理: 承認期限を監視し、3日経過したら「承認待ちリマインダー」を自動送信</text>
+
+                    <rect x="60" y="230" width="580" height="25" fill="#e6ffe6" stroke="#006600" stroke-width="1"/>
+                    <text x="350" y="247" font-size="11" text-anchor="middle" font-family="'Courier New'">📋 履歴記録: 承認日時、承認者、修正内容などを自動ログ（監査対応）</text>
+
+                    <!-- 効果 -->
+                    <rect x="80" y="270" width="540" height="45" fill="#ffffcc" stroke="#cc9900" stroke-width="1"/>
+                    <text x="350" y="288" font-size="11" font-weight="bold" text-anchor="middle" font-family="'Courier New'">💡 削減効果：1件30分 → 2分（93%削減）/ 月100件処理なら 月48時間削減！</text>
+                    <text x="350" y="305" font-size="10" text-anchor="middle" font-family="'Courier New'">＋ 承認漏れ0 / 期限超過0 / 完全な監査ログ = 経営リスク大幅低減</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+
+        <div class="section" id="getting-started">
+            <h2>5. 導入・活用ガイド</h2>
+
+            <h3>導入の3ステップ</h3>
+
+            <div class="step-list">
+                <div class="step-title">ステップ① インストール・初期設定</div>
+                <p>Claude Cowork アプリケーションをダウンロード → インストール → PCフォルダへのアクセス許可を設定</p>
+            </div>
+
+            <div class="step-list">
+                <div class="step-title">ステップ② 自動化業務の選定</div>
+                <p>総務部で最も時間がかかっている業務から優先順位をつけます。最初は1-2個から始めるのが成功のコツです。</p>
+            </div>
+
+            <div class="step-list">
+                <div class="step-title">ステップ③ スキル作成・テスト</div>
+                <p>Claudeに日本語で「〇〇をチェックして」と指示 → スキル自動生成 → テスト実行 → チーム共有</p>
+            </div>
+
+            <h3>推奨される実装順序</h3>
+
+            <div class="workflow-box">
+                <strong>📊 Phase 1（1ヶ月目）：ファイル整理から開始</strong>
+                <p>ファイル整理・分類から始めることをお勧めします。ここで基本操作を学べます。</p>
+            </div>
+
+            <div class="workflow-box">
+                <strong>📈 Phase 2（2ヶ月目）：定期レポート作成へ</strong>
+                <p>月次レポートなど定期的な業務の自動化に進みます。効果を数値で実感できます。</p>
+            </div>
+
+            <div class="workflow-box">
+                <strong>🖊️ Phase 3（3ヶ月目以降）：複雑な業務フロー</strong>
+                <p>電子印・承認フローなど複雑な業務を自動化。組織的な標準化が進みます。</p>
+            </div>
+
+            <h3>成功のコツ</h3>
+            <ul>
+                <li><strong>明確な目標</strong>：「毎月〇時間削減」など、具体的な目標数値を立てる</li>
+                <li><strong>チーム共有</strong>：一人で進めず、スキルをチーム全体で共有・改善</li>
+                <li><strong>継続改善</strong>：運用開始後も定期的に見直し・最適化する</li>
+                <li><strong>学習姿勢</strong>：新しい機能や使い方を積極的に習得</li>
+            </ul>
+        </div>
+
+        <div class="section" id="faq">
+            <h2>6. よくある質問（FAQ）</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>💻 Claude Coworkはどのような環境で動作しますか？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Windows、Mac、Linuxのいずれでも動作します。インターネット接続環境があれば、どこからでも利用可能です。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>🔒 セキュリティ・機密情報の取り扱いは大丈夫？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Anthropic社による厳格なセキュリティ基準を適用。個人情報などの敏感なデータは暗号化され、安全に保管されます。企業の情報セキュリティポリシーに合わせたカスタマイズも可能です。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>💰 導入コスト・料金はどのくらい？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    複数のプランがあり、組織の規模や利用方法に応じて選択できます。無料トライアルも用意されているので、まずは試してみることをお勧めします。詳細な料金は営業チームまでお問い合わせください。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>👥 複数のユーザーで利用できる？チーム機能は？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    はい、複数ユーザーでの利用を想定して設計されています。スキルの共有、権限管理、監査ログなどが可能。大規模な組織での導入にも対応しています。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>🆘 サポート体制は？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    充実したサポート体制があります。オンラインドキュメント、ビデオチュートリアル、定期ウェビナー、メールサポートが提供されます。導入支援チームが初期設定からご利用開始まで丁寧にサポートします。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>📊 導入効果をどのように測定する？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    推奨KPI：①時間削減（業務にかかる時間）、②エラー削減（チェックミス件数）、③処理スピード（1件あたりの時間）、④スタッフ満足度。最初の3ヶ月間で測定開始をお勧めします。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>❓ スキルを自分で作成するのは難しくない？</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    いいえ、難しくありません。「〇〇という書類をチェックして、エラーを見つけて」という日本語で指示するだけです。Claudeが自動的にスキルを生成します。特別なプログラミング知識は不要です。
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <span class="recommendation-title">🚀 次のステップ</span>
+            総務部のみなさまの業務負担を大きく軽減し、より戦略的で価値のある仕事にリソースをシフトさせましょう。まずは無料デモまたはトライアルをお試しください。お気軽にお問い合わせください。
+        </div>
+
+        <footer>
+            <p>このガイドは総務部長向けの活用ガイドです。最新の機能については公式ドキュメントをご確認ください。</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">© 2026 Claude Cowork Guide | Last Updated: May 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // FAQ アコーディオン機能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
