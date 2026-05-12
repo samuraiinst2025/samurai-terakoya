@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dify × LiteLLM コスト最適化ガイド【初心者向け】</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .version-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            border-left: 4px solid #333;
+            padding-left: 15px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: #222;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        table th, table td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table td {
+            background-color: #fafafa;
+        }
+
+        .case-study {
+            background-color: #f9f9f9;
+            border-left: 3px solid #666;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .case-study strong {
+            display: block;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .tip-box {
+            background-color: #f0f8ff;
+            border-left: 3px solid #0066cc;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .tip-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #0066cc;
+        }
+
+        .warning {
+            background-color: #ffe6e6;
+            border: 1px solid #cc0000;
+            border-left: 4px solid #cc0000;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background-color: #fff9e6;
+            border: 1px solid #cc9900;
+            border-left: 4px solid #cc9900;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+
+        .recommendation-title {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+
+        .diagram-box {
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .step-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #009900;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .step-box strong {
+            color: #009900;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .comparison-box {
+            background-color: #fff5e6;
+            border-left: 3px solid #ff9900;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        footer {
+            border-top: 2px solid #333;
+            margin-top: 50px;
+            padding-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .footnote {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+        }
+
+        .emoji {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dify × LiteLLM</h1>
+            <p class="subtitle">コスト最適化ガイド【初心者向け・図解版】</p>
+            <div class="version-info">
+                <strong>初心者向けバージョンについて：</strong> 技術的な言葉を避け、図形と具体例で説明したガイドです
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>はじめに</h2>
+            <p>Difyを使ってAIチャットボットを作った時、<span class="highlight">「どのAIモデルを使うか」という設定が複数のワークフローに分散</span>してしまい、後になって「もっと安いモデルに変えたい」となった時に、全部書き直さないといけない…そんな悩みはありませんか？</p>
+            <p>本ガイドは、その問題を<span class="highlight">「仲介役」を使って解決する方法</span>をわかりやすく説明しています。</p>
+            <p>難しい技術用語は避け、図形を使いながら、「なぜこういう設計が必要か」「どうやって実装するか」を段階的に学べます。</p>
+        </div>
+
+        <div class="section">
+            <h2>問題：AIモデルの変更が大変</h2>
+            <p>まず、Difyを使う時の現在の問題を理解しましょう。</p>
+
+            <h3>通常のやり方（変更に弱い）</h3>
+            <div class="diagram-box">
+【Difyワークフロー A：顧客チャットボット】<br/>
+　　使用モデル → GPT-4o-mini（直接設定）<br/>
+<br/>
+【Difyワークフロー B：提案書自動生成】<br/>
+　　使用モデル → GPT-4o-mini（直接設定）<br/>
+<br/>
+【Difyワークフロー C：FAQ自動応答】<br/>
+　　使用モデル → GPT-4o-mini（直接設定）<br/>
+<br/>
+━━━━━━━━━━━━━━━━━━━━━<br/>
+<br/>
+【ある日、こんなことが起こった】<br/>
+<br/>
+OpenAI が「GPT-4o-mini はサポート終了します」と発表<br/>
+　　　　　　　　　　↓<br/>
+「すぐに GPT-5-mini に変更してください」と言われた<br/>
+　　　　　　　　　　↓<br/>
+【やるべきこと】<br/>
+<br/>
+ワークフロー A を開く → GPT-4o-mini → GPT-5-mini に変更<br/>
+ワークフロー B を開く → GPT-4o-mini → GPT-5-mini に変更<br/>
+ワークフロー C を開く → GPT-4o-mini → GPT-5-mini に変更<br/>
+　　　　　　　　　　↓<br/>
+テスト実行（A, B, C 全て）<br/>
+　　　　　　　　　　↓<br/>
+時間がかかる... 3時間くらい... 😞<br/>
+書き忘れのリスク... 😞
+            </div>
+
+            <p><span class="highlight">「ChatGPTから自動的に別のモデルに切り替わる仕組み」があれば、Difyのワークフロー側には一切影響が出ません。</span></p>
+        </div>
+
+        <div class="section">
+            <h2>解決策：「仲介役」を使う</h2>
+            <p>その「仲介役」がLiteLLMです。</p>
+
+            <h3>仲介役を使った新しいやり方（変更に強い）</h3>
+            <div class="diagram-box">
+【Difyワークフロー A：顧客チャットボット】<br/>
+　　使用モデル → "standard-chat"（仲介役に聞く）<br/>
+<br/>
+【Difyワークフロー B：提案書自動生成】<br/>
+　　使用モデル → "standard-chat"（仲介役に聞く）<br/>
+<br/>
+【Difyワークフロー C：FAQ自動応答】<br/>
+　　使用モデル → "standard-chat"（仲介役に聞く）<br/>
+<br/>
+　　　　　　　　　　　↓ ↓ ↓<br/>
+　　　　　（LiteLLM が振り分け）<br/>
+　　　　　　　　　　　↓<br/>
+<br/>
+【LiteLLMの設定（1箇所だけ）】<br/>
+　　"standard-chat" → GPT-4o-mini を使う<br/>
+<br/>
+━━━━━━━━━━━━━━━━━━━━━<br/>
+<br/>
+【モデル廃止が発生した場合】<br/>
+<br/>
+OpenAI が「GPT-4o-mini はサポート終了」と発表<br/>
+　　　　　　　　　　↓<br/>
+「GPT-5-mini に変更してください」と言われた<br/>
+　　　　　　　　　　↓<br/>
+【やるべきこと】<br/>
+　　LiteLLMの設定を1箇所だけ変更：<br/>
+　　　"standard-chat" → GPT-5-mini に変更<br/>
+　　　　　　　　　　↓<br/>
+完了！ Difyのワークフローは何も変わらない！<br/>
+　　　　　　　　　　↓<br/>
+テスト不要！ 5分で完了！ 🎉
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 重要ポイント</strong>
+                「standard-chat」という<span class="highlight">「呼び名」</span>をDifyで使っておけば、その裏で何を使うかは、後から何度でも変更できます。Difyを修正する必要がありません。
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>LiteLLM（仲介役）とは？</h2>
+            <p>LiteLLMは、ChatGPT、Claude、Geminiなど、様々なAIモデルを<span class="highlight">「同じ操作方法」で使えるように統一</span>してくれるツールです。</p>
+
+            <h3>LiteLLMが出来ることの例</h3>
+            <table>
+                <tr>
+                    <th>出来ることの例</th>
+                    <th>説明</th>
+                </tr>
+                <tr>
+                    <td>モデルの一元管理</td>
+                    <td>ChatGPT、Claude、Geminiなど複数のAIを同じ方法で使う</td>
+                </tr>
+                <tr>
+                    <td>使用料の計算</td>
+                    <td>どのモデルをどのくらい使ったか、自動で計算・記録</td>
+                </tr>
+                <tr>
+                    <td>予算管理</td>
+                    <td>「営業チーム月¥5,000まで」のような予算を設定して管理</td>
+                </tr>
+                <tr>
+                    <td>自動振り替え</td>
+                    <td>「標準は ChatGPT だけど、ChatGPT が止まったら Claude に自動で切り替え」</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>全体の流れを図で理解しよう</h2>
+
+            <h3>システム全体の構成（シンプル版）</h3>
+            <div class="diagram-box">
+┏━━━━━━━━━━━━━━━━━┓<br/>
+┃  Difyワークフロー  ┃<br/>
+┃ "standard-chat"    ┃<br/>
+┃  を使ってください  ┃<br/>
+┗━━━┬━━━━━━━━━━┛<br/>
+　　　│<br/>
+　　　↓<br/>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓<br/>
+┃  LiteLLM（仲介役）            ┃<br/>
+┃                              ┃<br/>
+┃ 「standard-chat ですね」     ┃<br/>
+┃ 「現在の設定：               ┃<br/>
+┃   standard-chat →           ┃<br/>
+┃     GPT-4o-mini を使う」     ┃<br/>
+┗━━━┬━━━━━━━━━━━━━━━━┛<br/>
+　　　│<br/>
+　　　↓<br/>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓<br/>
+┃   実際のAIモデル群           ┃<br/>
+┃ ├─ GPT-4o-mini              ┃<br/>
+┃ ├─ GPT-5-mini               ┃<br/>
+┃ ├─ Claude-3.5               ┃<br/>
+┃ ├─ Gemini-2.0               ┃<br/>
+┃ └─ その他...                ┃<br/>
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛<br/>
+<br/>
+<br/>
+【モデル統廃合が発生した場合の変更手順】<br/>
+<br/>
+Before:　 standard-chat → GPT-4o-mini<br/>
+　　　　 （GPT-4o-mini がサポート終了）<br/>
+<br/>
+After:　  standard-chat → GPT-5-mini<br/>
+　　　　 （LiteLLMの設定1箇所だけ変更）<br/>
+<br/>
+Result:　 Difyのワークフローは変更なし！ 🎉
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>具体例：こんな場面で役に立つ</h2>
+
+            <h3>例1：モデルの廃止と切り替え</h3>
+            <div class="case-study">
+                <strong>シナリオ：</strong> 3ヶ月前から「GPT-4o-mini」を使っていた。今月、OpenAI が「GPT-4o-mini は3ヶ月後にサポート終了」と発表。代わりに「GPT-5-mini」を使うよう推奨
+                <br/>
+                <strong>通常のやり方（かなり大変）：</strong>
+                <br/>・Difyの全ワークフローを開く（5個ある）
+                <br/>・ワークフロー A の LLM設定を「GPT-4o-mini」→「GPT-5-mini」に変更
+                <br/>・ワークフロー B の LLM設定を「GPT-4o-mini」→「GPT-5-mini」に変更
+                <br/>・ワークフロー C, D, E も同じように変更
+                <br/>・各々でテスト実施（5個全て）
+                <br/>・書き忘れがないか確認
+                <br/>・時間: 3～4時間、ミスのリスク高い
+                <br/>
+                <strong>LiteLLMを使った場合（とても簡単）：</strong>
+                <br/>・LiteLLMの設定を1箇所だけ変更：
+                <br/>　　「standard-chat → GPT-4o-mini」
+                <br/>　　　　　　　　　　　↓（変更）
+                <br/>　　「standard-chat → GPT-5-mini」
+                <br/>・5分で完了
+                <br/>・Difyは何も変わらないのでテスト不要
+                <br/>・ミスのリスクゼロ
+            </div>
+
+            <h3>例2：AIサービスが障害で止まった場合</h3>
+            <div class="case-study">
+                <strong>シナリオ：</strong> 朝8時、OpenAI の「GPT-4o-mini」がサービス障害で使えない。顧客チャットボットが動かなくなった。すぐに「Claude-3.5」に切り替えたい
+                <br/>
+                <strong>通常のやり方（焦ることになる）：</strong>
+                <br/>・Difyのワークフロー A（顧客チャットボット）を開く
+                <br/>・LLM を「GPT-4o-mini」→「Claude-3.5」に変更
+                <br/>・ワークフロー B（提案書生成）も開いて変更
+                <br/>・ワークフロー C, D, E も同じように...
+                <br/>・緊急対応なので焦りながら作業
+                <br/>・書き忘れたら、その機能が止まったまま
+                <br/>・顧客クレーム増加... 😢
+                <br/>
+                <strong>LiteLLMを使った場合（冷静に対応）：</strong>
+                <br/>・LiteLLMの設定を1箇所変更：
+                <br/>　　「standard-chat → GPT-4o-mini」
+                <br/>　　　　　　　　　　　↓（変更）
+                <br/>　　「standard-chat → Claude-3.5」
+                <br/>・30秒で切り替わる
+                <br/>・全ワークフロー（A, B, C, D, E）が一気に Claude に切り替わる
+                <br/>・ユーザーは気づかない！
+                <br/>・顧客サービス継続！ 🎉
+            </div>
+
+            <h3>例3：部門ごとに予算を決めたい場合</h3>
+            <div class="case-study">
+                <strong>シナリオ：</strong> 営業チーム、カスタマーサポートチーム、企画チームで、それぞれAI使用料の予算を決めたい
+                <br/>
+                <strong>通常のやり方（複雑）：</strong>
+                <br/>・各チーム用に別々のAPIキーを取得
+                <br/>・各チームのDifyに別々の設定をする
+                <br/>・月末に使用料を集計して、チームごとに計算
+                <br/>
+                <strong>LiteLLMを使った場合（簡単）：</strong>
+                <br/>・LiteLLMで「営業用キー」「サポート用キー」「企画用キー」を作成
+                <br/>・各チームに割り当てる時に、「月¥10,000まで」という上限を設定
+                <br/>・自動的に管理される。月末に集計も自動！
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>ステップバイステップ：実装の流れ</h2>
+
+            <h3>Step 1：LiteLLMの基本設定</h3>
+            <div class="step-box">
+                <strong>📌 何をするか？</strong>
+                LiteLLMの「設定ファイル」に、「standard-chat」= ChatGPT という対応関係を書く
+                <br/>
+                <strong>具体的には：</strong>
+                <br/>
+                <code>model_list:
+  - model_name: standard-chat
+    actual_model: openai/gpt-4-mini</code>
+                <br/>
+                <strong>意味：</strong> 「standard-chat」という呼び名が来たら、実際には「gpt-4-mini」を使いなさい
+                <br/>
+                <strong>時間：</strong> 5～10分
+            </div>
+
+            <h3>Step 2：DifyをLiteLLMに接続</h3>
+            <div class="step-box">
+                <strong>📌 何をするか？</strong>
+                Difyで「どのAIを使うか」という設定を、直接ChatGPTを指定せず、LiteLLMに問い合わせるように変更
+                <br/>
+                <strong>具体的には：</strong>
+                <br/>Difyの「Model Provider」の設定で、「LiteLLMのURL」を指定する
+                <br/>
+                <br/>Before: 「ChatGPT を使う」と直接指定
+                <br/>After: 「standard-chat を使う」と指定 → LiteLLMに聞く
+                <br/>
+                <strong>時間：</strong> 10～15分
+            </div>
+
+            <h3>Step 3：テスト</h3>
+            <div class="step-box">
+                <strong>📌 何をするか？</strong>
+                Difyのワークフローが、LiteLLMを通じて、正しくChatGPTに接続されているか確認
+                <br/>
+                <strong>やり方：</strong>
+                <br/>1. Difyでテストメッセージを送信
+                <br/>2. ChatGPTから応答が返ってくるか確認
+                <br/>3. LiteLLMのログを見て「standard-chat → ChatGPT」に正しく振り分けられているか確認
+                <br/>
+                <strong>時間：</strong> 10～15分
+            </div>
+
+            <div class="recommendation">
+                <span class="recommendation-title">✅ 設定完了！</span>
+                これで、Difyのワークフロー側は「standard-chat」という呼び名だけを使えばいい。
+                <br/>裏で何が使われているかは、LiteLLMの設定で自由に変更できるようになりました。
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>コスト削減のポイント</h2>
+
+            <h3>ポイント1：モデルを使い分ける</h3>
+            <div class="comparison-box">
+                <strong>同じAIでも、「値段 vs 性能」のトレードオフがあります</strong>
+                <br/>
+                <br/>・<span class="highlight">高性能・高い</span>: GPT-5（¥100/100万トークン）複雑な分析向け
+                <br/>・<span class="highlight">中程度・中</span>: GPT-4o-mini（¥15/100万トークン）標準的な質問応答
+                <br/>・<span class="highlight">低性能・安い</span>: GPT-3.5-turbo（¥0.5/100万トークン）簡単な質問応答
+                <br/>
+                <br/>【コスト削減のアイデア】
+                <br/>・簡単なFAQ回答 → GPT-3.5-turbo を使う（月¥500程度）
+                <br/>・標準的なチャット対応 → GPT-4o-mini を使う（月¥2,000程度）
+                <br/>・複雑な企画分析 → GPT-5 を使う（月¥5,000程度）
+                <br/>
+                <br/>LiteLLMなら、この「モデルの使い分け」を簡単に設定できます。
+                <br/>結果として、全体のコストを20～40%削減できます！
+            </div>
+
+            <h3>ポイント2：使用量を監視する</h3>
+            <div class="comparison-box">
+                <strong>毎月「どのモデルをどのくらい使ったか」を把握する</strong>
+                <br/>
+                <br/>LiteLLMは自動的に記録するので、月末に以下が見えます：
+                <br/>
+                <br/>【例：今月の使用状況】
+                <br/>・GPT-5（高性能）：200万トークン → 月¥2,000
+                <br/>・GPT-4o-mini（標準）：500万トークン → 月¥750
+                <br/>・GPT-3.5-turbo（安い）：300万トークン → 月¥150
+                <br/>　　　　　　　　　合計：月¥2,900
+                <br/>
+                <br/>「あ、思ったより高い。簡単な質問は全部 GPT-3.5-turbo に変更しよう」
+                <br/>→ 翌月は月¥1,500に削減できた！
+                <br/>
+                <br/>【効果】
+                <br/>・無駄な使用に気づきやすい
+                <br/>・改善するきっかけになる
+            </div>
+
+            <h3>ポイント3：部門別に予算を設定</h3>
+            <div class="comparison-box">
+                <strong>「営業チーム月¥5,000まで」のように、チーム別に上限を設定</strong>
+                <br/>
+                <br/>LiteLLMで「営業用キー」を作成し、上限¥5,000を設定
+                <br/>
+                <br/>→ 営業チームが月¥3,000使ったら、あと¥2,000分しか使えない
+                <br/>
+                <br/>【効果】
+                <br/>・無制限に使うことを防げる
+                <br/>・各チームの責任感が出る
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>よくある質問 Q&A</h2>
+
+            <h3>Q1：「LiteLLM」って難しくない？</h3>
+            <p><strong>A：</strong> 初期設定は5～10分程度で、とても簡単です。「standard-chat」という名前で「ChatGPT」を使う、という1行の設定をするだけ。プログラミング知識は不要です。その後は、Difyを使うのと変わりません。</p>
+
+            <h3>Q2：LiteLLMを使うと、追加料金が発生する？</h3>
+            <p><strong>A：</strong> LiteLLM自体は無料です。あなたが使う「ChatGPT」「Claude」などの料金は、そのまま発生しますが、LiteLLMを使ったからといって、追加料金は発生しません。むしろ、コスト管理が楽になります。</p>
+
+            <h3>Q3：複数のモデルを同時に使うことはできる？</h3>
+            <p><strong>A：</strong> はい。LiteLLMで複数のモデルを設定できます。例えば以下のように設定できます：
+            <br/>
+            <br/>・「standard-chat」→ GPT-4o-mini（通常の質問用、安い）
+            <br/>・「high-quality-chat」→ GPT-5（複雑な分析用、高い）
+            <br/>
+            <br/>Difyのワークフロー側で「どちらを使うか」を選べば、適切なモデルが自動的に使われます。</p>
+
+            <h3>Q4：「仲介役」がダウンしたらどうなる？</h3>
+            <p><strong>A：</strong> その場合、Difyからのリクエストが届かなくなります。ただし、LiteLLMは安定性が高く、大企業でも多く使われています。万一に備えて、「バックアップのモデル」を設定することもできます。</p>
+
+            <h3>Q5：最終的にどのくらい安くなる？</h3>
+            <p><strong>A：</strong> 使い分けと監視により、20～40%程度のコスト削減が見込めます。ただし、これは「無駄な使用を避ける」ことに基づいているので、組織の効率化次第です。</p>
+        </div>
+
+        <div class="section">
+            <h2>まとめ：3つの大切なこと</h2>
+
+            <div class="recommendation">
+                <span class="recommendation-title">💡 重要ポイント 1</span>
+                <span class="highlight">「仲介役」（LiteLLM）を挟むことで、Difyとモデルの関係を切り離せます</span>。
+                <br/>これにより、「モデルの変更」が一箇所の設定だけで済むようになります。
+            </div>
+
+            <div class="recommendation">
+                <span class="recommendation-title">💡 重要ポイント 2</span>
+                <span class="highlight">自動的に使用量が記録</span>されるので、「どのモデルをどのくらい使ったか」が一目瞭然になります。
+                <br/>これが「ムダな使用」に気づくきっかけになり、コスト削減につながります。
+            </div>
+
+            <div class="recommendation">
+                <span class="recommendation-title">💡 重要ポイント 3</span>
+                <span class="highlight">部門別に予算を設定</span>できるので、各チームで責任を持ってAIを使うようになります。
+                <br/>これが、組織全体のAI使用を健全に管理する基礎になります。
+            </div>
+
+            <h3>次のステップ</h3>
+            <p>本ガイドで基本を理解したら、次は以下を確認してください：</p>
+            <ol>
+                <li><strong>LiteLLMの公式ドキュメント</strong>を読む（セットアップガイド）</li>
+                <li><strong>テスト環境で試す</strong>（ChatGPT 1つだけで始める）</li>
+                <li><strong>本番環境に移行</strong>（複数モデルを追加）</li>
+                <li><strong>監視・最適化</strong>（月ごとに使用量をチェック）</li>
+            </ol>
+
+            <div class="tip-box">
+                <strong>🎯 初心者向けの次のステップ</strong>
+                「もっと詳しく知りたい」という方は、本ガイドの「技術版」（LiteLLM_Cost_Optimization.html）をご覧ください。設定ファイルの詳細や、エンタープライズレベルの運用方法が書かれています。
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>【初心者向けガイドについて】</strong></p>
+            <p>本ガイドは、技術的な背景知識がなくても理解できるよう、図形と具体例を中心に説明しました。</p>
+            <p>もし「もっと詳しく知りたい」「実装の詳細が知りたい」という場合は、より技術的な「v1 ガイド」（LiteLLM_Cost_Optimization.html）をご参照ください。</p>
+            <p>作成日：2026年5月</p>
+        </footer>
+    </div>
+</body>
+</html>
