@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dify プラン最適化ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: white;
+        }
+
+        h1 {
+            color: #1F4E78;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        h2 {
+            color: #1F4E78;
+            font-size: 1.8em;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1F4E78;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2E5C8A;
+            font-size: 1.3em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #1F4E78;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .highlight-team {
+            background: #FFF2CC;
+            font-weight: bold;
+        }
+
+        .highlight-pro {
+            background: #E7F3F0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-pro {
+            border-left: 5px solid #C6E0B4;
+            background: #f0f8f3;
+        }
+
+        .card-team {
+            border-left: 5px solid #FFC7CE;
+            background: #fff5f7;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #1F4E78;
+        }
+
+        .case-study {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #1F4E78;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .case-title {
+            font-weight: bold;
+            color: #1F4E78;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .recommendation {
+            background: #FFF2CC;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 2px solid #FFB6C1;
+        }
+
+        .recommendation h3 {
+            margin-top: 0;
+            color: #1F4E78;
+        }
+
+        .bullet-list {
+            list-style-position: inside;
+            margin: 15px 0;
+        }
+
+        .bullet-list li {
+            margin: 10px 0;
+            margin-left: 20px;
+        }
+
+        .feature-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid #1F4E78;
+        }
+
+        .feature-label {
+            font-weight: bold;
+            color: #1F4E78;
+            margin-bottom: 10px;
+        }
+
+        .feature-value {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .decision-flow {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+
+        .flowchart-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .flow-box {
+            padding: 15px 20px;
+            margin: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .flow-question {
+            background: #E3F2FD;
+            border: 2px solid #1F4E78;
+            color: #1F4E78;
+        }
+
+        .flow-pro {
+            background: #C6E0B4;
+            border: 2px solid #70AD47;
+            color: #333;
+        }
+
+        .flow-team {
+            background: #FFC7CE;
+            border: 2px solid #FF69B4;
+            color: #333;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 1.5em;
+            color: #1F4E78;
+            margin: 0 10px;
+        }
+
+        .roi-highlight {
+            background: #E7F3F0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .summary-intro {
+            font-size: 1.1em;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .final-recommendation {
+            background: linear-gradient(135deg, #FFF2CC 0%, #FFE6E6 100%);
+            padding: 30px;
+            border-radius: 8px;
+            margin: 40px 0;
+            border: 2px solid #FFB6C1;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .final-recommendation strong {
+            color: #1F4E78;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            td, th {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dify プラン最適化ガイド</h1>
+        <p class="subtitle">Professional プラン vs Team プラン の詳細比較と選択ガイド</p>
+
+        <!-- Section 1: 基本スペック比較 -->
+        <h2>1. 基本スペック比較</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>Professional</th>
+                    <th>Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>月額料金</strong></td>
+                    <td>$59/月<br>($590/年)</td>
+                    <td>$159/月<br>($1,590/年)</td>
+                </tr>
+                <tr>
+                    <td><strong>チームメンバー</strong></td>
+                    <td>3人</td>
+                    <td>50人</td>
+                </tr>
+                <tr>
+                    <td><strong>アプリ数</strong></td>
+                    <td>50個</td>
+                    <td>200個</td>
+                </tr>
+                <tr>
+                    <td><strong>月間メッセージクレジット</strong></td>
+                    <td>5,000</td>
+                    <td>10,000</td>
+                </tr>
+                <tr>
+                    <td><strong>ナレッジベース</strong></td>
+                    <td>500ファイル<br>5GB</td>
+                    <td>1,000ファイル<br>20GB</td>
+                </tr>
+                <tr>
+                    <td><strong>API リクエスト</strong></td>
+                    <td class="highlight-pro">無制限</td>
+                    <td class="highlight-pro">無制限</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 2: 詳細機能比較 -->
+        <h2>2. 詳細機能比較</h2>
+
+        <h3>処理能力・パフォーマンス</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>機能</th>
+                    <th>Professional</th>
+                    <th>Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>文書処理優先度</strong></td>
+                    <td>優先</td>
+                    <td class="highlight-team">最優先</td>
+                </tr>
+                <tr>
+                    <td><strong>ナレッジリクエスト上限</strong></td>
+                    <td>100回/分</td>
+                    <td class="highlight-team">1,000回/分（10倍）</td>
+                </tr>
+                <tr>
+                    <td><strong>ワークフロー実行キュー</strong></td>
+                    <td>高速</td>
+                    <td class="highlight-team">優先度の高い</td>
+                </tr>
+                <tr>
+                    <td><strong>トリガーイベント/月</strong></td>
+                    <td>20,000</td>
+                    <td class="highlight-team">無制限</td>
+                </tr>
+                <tr>
+                    <td><strong>注釈クォータ</strong></td>
+                    <td>2,000</td>
+                    <td>5,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 3: ユースケース -->
+        <h2>3. 具体的なユースケース別選択ガイド</h2>
+
+        <div class="case-study">
+            <div class="case-title">📌 ケース1：小規模スタートアップ（3人チーム）</div>
+            <p><strong>➜ Professional プランを推奨</strong></p>
+            <p><strong>理由：</strong>チームサイズが3人以下なら完全にマッチ。50アプリで十分。</p>
+            <p style="margin-top: 10px;"><strong style="color: #1F4E78;">年間費用：$708（月額$59）</strong></p>
+            <p style="margin-top: 10px;">例：AI営業アシスタント、顧客サポートボットなど3～5個のアプリを管理する場合、Professional の50アプリ上限で十分対応可能。</p>
+        </div>
+
+        <div class="case-study">
+            <div class="case-title">📌 ケース2：成長中のテックスタートアップ（5～10人）</div>
+            <p><strong>➜ Team プランへのアップグレード検討</strong></p>
+            <p><strong>理由：</strong>メンバーが増えても50人まで対応。複数プロジェクトに対応可能。</p>
+            <p style="margin-top: 10px;"><strong style="color: #1F4E78;">年間費用：$1,908（月額$159）</strong></p>
+            <p style="margin-top: 10px;"><strong style="color: #D9534F;">追加コスト差分：$1,200/年（1人当たり$120～240/年）</strong></p>
+            <p style="margin-top: 10px;">例：営業、マーケティング、カスタマーサクセスで異なるAIアプリが必要な場合、200個のアプリ上限で各部門が独立して運用可能。</p>
+        </div>
+
+        <div class="case-study">
+            <div class="case-title">📌 ケース3：ハイボリューム利用（大量メッセージ処理）</div>
+            <p><strong>➜ Team プランを推奨</strong></p>
+            <p><strong>理由：</strong>メッセージクレジットが2倍。ナレッジリクエストが10倍。</p>
+            <p style="margin-top: 10px;"><strong>Professional：</strong>5,000メッセージ/月 → 月5,000回の会話まで</p>
+            <p><strong style="color: #1F4E78;">Team：</strong>10,000メッセージ/月 → 月10,000回の会話に対応</p>
+            <p style="margin-top: 10px;">例：カスタマーサポートボットで月8,000～10,000件の問い合わせ処理が必要な場合、Professional では足りない可能性が高い。Team なら余裕あり。</p>
+        </div>
+
+        <div class="case-study">
+            <div class="case-title">📌 ケース4：複数プロジェクト＋分散チーム</div>
+            <p><strong>➜ Team プランを推奨</strong></p>
+            <p><strong>理由：</strong>アプリ数が多く、チーム規模が拡大傾向。</p>
+            <p style="margin-top: 10px;"><strong>Professional：</strong>50アプリ × 3人 = チーム間の競合リスク</p>
+            <p><strong style="color: #1F4E78;">Team：</strong>200アプリ × 50人 = 各部門が独立してプロジェクト管理可能</p>
+            <p style="margin-top: 10px;">例：10～20個のアプリを複数チーム（営業、マーケティング、サポート等）で並行運用する場合、Team の200アプリ上限が生きる。</p>
+        </div>
+
+        <!-- Section 4: ROI分析 -->
+        <h2>4. ROI分析：投資効果の比較</h2>
+        <p class="summary-intro">年額 $1,200 差分（Professional vs Team）の投資対効果を検討：</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>指標</th>
+                    <th>Professional</th>
+                    <th>Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>年間投資額</strong></td>
+                    <td>$708</td>
+                    <td>$1,908</td>
+                </tr>
+                <tr>
+                    <td><strong>年間追加コスト</strong></td>
+                    <td>-</td>
+                    <td class="highlight-team">+$1,200</td>
+                </tr>
+                <tr>
+                    <td><strong>ROI基準</strong></td>
+                    <td>$708以上の<br>価値創出</td>
+                    <td>追加$1,200以上の<br>価値創出</td>
+                </tr>
+                <tr>
+                    <td><strong>月額換算</strong></td>
+                    <td>$59/月</td>
+                    <td>追加$100/月</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="roi-highlight">
+            <p><strong>Team プランの追加$100/月の価値を創出する例：</strong></p>
+            <ul class="bullet-list">
+                <li>営業効率化：営業担当者が月1時間の時短 × 3人 = 時給換算で月$150～300の価値</li>
+                <li>顧客対応の質向上：ナレッジリクエスト10倍で検索精度向上 → 顧客満足度+5% = 離脱率低下</li>
+                <li>スケーラビリティ：50人の制限を超える場合、Team なら増員コストなしで対応</li>
+            </ul>
+        </div>
+
+        <!-- Section 5: プラン選択フロー -->
+        <h2>5. プラン選択フロー図</h2>
+
+        <h3>チームサイズで判定</h3>
+        <svg viewBox="0 0 800 250" style="width: 100%; height: auto; margin: 20px 0;">
+            <!-- Title -->
+            <text x="400" y="30" font-size="18" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                チームメンバーは何人か？
+            </text>
+
+            <!-- Start box -->
+            <rect x="300" y="50" width="200" height="50" fill="#E3F2FD" stroke="#1F4E78" stroke-width="2" rx="5"/>
+            <text x="400" y="85" font-size="14" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                チーム規模の確認
+            </text>
+
+            <!-- Arrows down -->
+            <line x1="400" y1="100" x2="200" y2="130" stroke="#1F4E78" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="400" y1="100" x2="600" y2="130" stroke="#1F4E78" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+            <!-- Left path - 3人以下 -->
+            <rect x="50" y="130" width="300" height="70" fill="#C6E0B4" stroke="#70AD47" stroke-width="2" rx="5"/>
+            <text x="200" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                3人以下
+            </text>
+            <text x="200" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Professional で十分
+            </text>
+            <text x="200" y="200" font-size="12" text-anchor="middle" fill="#333">
+                月額 $59/月
+            </text>
+
+            <!-- Right path - 4人以上 -->
+            <rect x="450" y="130" width="300" height="70" fill="#FFC7CE" stroke="#FF69B4" stroke-width="2" rx="5"/>
+            <text x="600" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                4人以上
+            </text>
+            <text x="600" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team を強く検討
+            </text>
+            <text x="600" y="200" font-size="12" text-anchor="middle" fill="#333">
+                月額 $159/月
+            </text>
+
+            <!-- Arrow marker definition -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#1F4E78"/>
+                </marker>
+            </defs>
+        </svg>
+
+        <h3>メッセージ処理量で判定</h3>
+        <svg viewBox="0 0 900 280" style="width: 100%; height: auto; margin: 20px 0;">
+            <!-- Title -->
+            <text x="450" y="30" font-size="18" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                月間メッセージ処理量は？
+            </text>
+
+            <!-- Start box -->
+            <rect x="325" y="50" width="250" height="50" fill="#E3F2FD" stroke="#1F4E78" stroke-width="2" rx="5"/>
+            <text x="450" y="85" font-size="14" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                月間メッセージ処理件数
+            </text>
+
+            <!-- Three arrows -->
+            <line x1="350" y1="100" x2="150" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="450" y1="100" x2="450" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="550" y1="100" x2="750" y2="130" stroke="#1F4E78" stroke-width="2"/>
+
+            <!-- Left: ~3000 -->
+            <rect x="30" y="130" width="240" height="80" fill="#C6E0B4" stroke="#70AD47" stroke-width="2" rx="5"/>
+            <text x="150" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                ～3,000件
+            </text>
+            <text x="150" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Professional
+            </text>
+            <text x="150" y="200" font-size="12" text-anchor="middle" fill="#333">
+                で十分
+            </text>
+
+            <!-- Center: 3000～8000 -->
+            <rect x="330" y="130" width="240" height="80" fill="#FFE6B3" stroke="#FF9800" stroke-width="2" rx="5"/>
+            <text x="450" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                3,000～8,000件
+            </text>
+            <text x="450" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team を
+            </text>
+            <text x="450" y="200" font-size="12" text-anchor="middle" fill="#333">
+                推奨
+            </text>
+
+            <!-- Right: 8000+ -->
+            <rect x="630" y="130" width="240" height="80" fill="#FFC7CE" stroke="#FF69B4" stroke-width="2" rx="5"/>
+            <text x="750" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                8,000件以上
+            </text>
+            <text x="750" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team
+            </text>
+            <text x="750" y="200" font-size="12" text-anchor="middle" fill="#333">
+                必須
+            </text>
+        </svg>
+
+        <h3>アプリ数で判定</h3>
+        <svg viewBox="0 0 900 280" style="width: 100%; height: auto; margin: 20px 0;">
+            <!-- Title -->
+            <text x="450" y="30" font-size="18" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                管理するアプリ数は？
+            </text>
+
+            <!-- Start box -->
+            <rect x="325" y="50" width="250" height="50" fill="#E3F2FD" stroke="#1F4E78" stroke-width="2" rx="5"/>
+            <text x="450" y="85" font-size="14" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                アプリケーション数
+            </text>
+
+            <!-- Three arrows -->
+            <line x1="350" y1="100" x2="150" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="450" y1="100" x2="450" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="550" y1="100" x2="750" y2="130" stroke="#1F4E78" stroke-width="2"/>
+
+            <!-- Left: ~30 -->
+            <rect x="30" y="130" width="240" height="80" fill="#C6E0B4" stroke="#70AD47" stroke-width="2" rx="5"/>
+            <text x="150" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                ～30個
+            </text>
+            <text x="150" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Professional
+            </text>
+            <text x="150" y="200" font-size="12" text-anchor="middle" fill="#333">
+                で十分
+            </text>
+
+            <!-- Center: 30～100 -->
+            <rect x="330" y="130" width="240" height="80" fill="#FFE6B3" stroke="#FF9800" stroke-width="2" rx="5"/>
+            <text x="450" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                30～100個
+            </text>
+            <text x="450" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Professional
+            </text>
+            <text x="450" y="200" font-size="12" text-anchor="middle" fill="#333">
+                ギリギリ対応
+            </text>
+
+            <!-- Right: 100+ -->
+            <rect x="630" y="130" width="240" height="80" fill="#FFC7CE" stroke="#FF69B4" stroke-width="2" rx="5"/>
+            <text x="750" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                100個以上
+            </text>
+            <text x="750" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team
+            </text>
+            <text x="750" y="200" font-size="12" text-anchor="middle" fill="#333">
+                必須
+            </text>
+        </svg>
+
+        <h3>ナレッジベースサイズで判定</h3>
+        <svg viewBox="0 0 900 280" style="width: 100%; height: auto; margin: 20px 0;">
+            <!-- Title -->
+            <text x="450" y="30" font-size="18" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                ナレッジベースサイズは？
+            </text>
+
+            <!-- Start box -->
+            <rect x="325" y="50" width="250" height="50" fill="#E3F2FD" stroke="#1F4E78" stroke-width="2" rx="5"/>
+            <text x="450" y="85" font-size="14" font-weight="bold" text-anchor="middle" fill="#1F4E78">
+                必要なストレージサイズ
+            </text>
+
+            <!-- Three arrows -->
+            <line x1="350" y1="100" x2="150" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="450" y1="100" x2="450" y2="130" stroke="#1F4E78" stroke-width="2"/>
+            <line x1="550" y1="100" x2="750" y2="130" stroke="#1F4E78" stroke-width="2"/>
+
+            <!-- Left: ~3GB -->
+            <rect x="30" y="130" width="240" height="80" fill="#C6E0B4" stroke="#70AD47" stroke-width="2" rx="5"/>
+            <text x="150" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                ～3GB
+            </text>
+            <text x="150" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Professional
+            </text>
+            <text x="150" y="200" font-size="12" text-anchor="middle" fill="#333">
+                で十分
+            </text>
+
+            <!-- Center: 3～15GB -->
+            <rect x="330" y="130" width="240" height="80" fill="#FFE6B3" stroke="#FF9800" stroke-width="2" rx="5"/>
+            <text x="450" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                3～15GB
+            </text>
+            <text x="450" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team を
+            </text>
+            <text x="450" y="200" font-size="12" text-anchor="middle" fill="#333">
+                推奨
+            </text>
+
+            <!-- Right: 15GB+ -->
+            <rect x="630" y="130" width="240" height="80" fill="#FFC7CE" stroke="#FF69B4" stroke-width="2" rx="5"/>
+            <text x="750" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+                15GB以上
+            </text>
+            <text x="750" y="180" font-size="13" text-anchor="middle" fill="#333">
+                ➜ Team
+            </text>
+            <text x="750" y="200" font-size="12" text-anchor="middle" fill="#333">
+                必須
+            </text>
+        </svg>
+
+        <!-- Section 6: まとめ -->
+        <h2>6. まとめ：結局どちらを選ぶ？</h2>
+
+        <div class="comparison-grid">
+            <div class="card card-pro">
+                <h3>✓ Professional $59/月 を選ぶべき</h3>
+                <ul>
+                    <li>チームが3人以下</li>
+                    <li>アプリ数が30個以下</li>
+                    <li>月間メッセージが3,000以下</li>
+                    <li>ナレッジベースが3GB以下</li>
+                    <li>スタートアップ初期段階</li>
+                    <li>独立した開発者・フリーランス</li>
+                </ul>
+            </div>
+
+            <div class="card card-team">
+                <h3>✓ Team $159/月 を選ぶべき</h3>
+                <ul>
+                    <li>チームが4人以上</li>
+                    <li>アプリ数が50個以上</li>
+                    <li>月間メッセージが5,000以上</li>
+                    <li>ナレッジベースが5GB以上</li>
+                    <li>複数部門で並行利用</li>
+                    <li>スケーリングを想定</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="final-recommendation">
+            <strong>【最終推奨】</strong><br><br>
+            ほとんどの成長志向企業は <strong>Team プランから始める</strong>ことをお勧めします。追加$100/月の投資で得られる柔軟性とスケーラビリティが、後々の乗り換えコスト（既存アプリの移行、ユーザー教育など）を考慮すると、圧倒的にお得です。
+        </div>
+    </div>
+</body>
+</html>
