@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Difyワークフロー構築 成果報告レジュメ（わかりやすい版）</title>
+<style>
+  :root{
+    --main:#2b6cb0;
+    --accent:#e07a2c;
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --text:#26303d;
+    --sub:#5a6472;
+    --line:#e3e7ec;
+    --ok:#2f9e5c;
+    --err:#d0483e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.8;
+  }
+  .page{
+    max-width:860px;
+    margin:0 auto;
+    padding:40px 28px 80px;
+  }
+  header.title{
+    text-align:center;
+    padding:36px 20px 30px;
+    background:linear-gradient(135deg,#2b6cb0,#1f4f85);
+    color:#fff;
+    border-radius:14px;
+    margin-bottom:28px;
+  }
+  header.title h1{
+    margin:0 0 10px;
+    font-size:1.55em;
+    letter-spacing:.02em;
+  }
+  header.title p{
+    margin:0;
+    font-size:.95em;
+    opacity:.9;
+  }
+  .meta-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:18px;
+  }
+  .meta-chip{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:20px;
+    padding:6px 16px;
+    font-size:.85em;
+  }
+  .status-ok{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#e9f9ef;
+    color:var(--ok);
+    border:1px solid #bfe9cf;
+    border-radius:20px;
+    padding:6px 16px;
+    font-weight:600;
+    font-size:.85em;
+  }
+
+  section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:28px 30px;
+    margin-bottom:22px;
+  }
+  h2{
+    font-size:1.15em;
+    margin:0 0 16px;
+    color:var(--main);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  h2 .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;height:28px;
+    background:var(--main);
+    color:#fff;
+    border-radius:8px;
+    font-size:.8em;
+    flex-shrink:0;
+  }
+  p{margin:0 0 14px;color:var(--text);}
+  .lead{
+    font-size:1em;
+    color:var(--sub);
+  }
+
+  /* 全体像の一言まとめ */
+  .summary-box{
+    background:#eef4fb;
+    border-left:4px solid var(--main);
+    border-radius:8px;
+    padding:16px 20px;
+    margin-bottom:6px;
+  }
+  .summary-box b{color:var(--main);}
+
+  /* フロー図 */
+  .flow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:stretch;
+    margin:20px 0 8px;
+  }
+  .flow-step{
+    flex:1 1 150px;
+    background:#f5f8fc;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 10px;
+    text-align:center;
+    font-size:.82em;
+    color:var(--sub);
+  }
+  .flow-step b{
+    display:block;
+    color:var(--text);
+    font-size:1.05em;
+    margin-bottom:4px;
+  }
+  .flow-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--main);
+    font-size:1.3em;
+    flex:0 0 20px;
+  }
+
+  /* ステップカード */
+  .step-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:14px;
+    background:#fcfdfe;
+  }
+  .step-card:last-child{margin-bottom:0;}
+  .step-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .step-badge{
+    background:var(--main);
+    color:#fff;
+    font-weight:700;
+    font-size:.78em;
+    padding:4px 10px;
+    border-radius:20px;
+    flex-shrink:0;
+  }
+  .step-title{font-weight:700;font-size:1.02em;}
+  .step-role{
+    color:var(--sub);
+    font-size:.88em;
+    margin:0 0 8px;
+  }
+  .step-desc{margin:0;font-size:.95em;}
+
+  /* エラーカード */
+  .err-card{
+    border:1px solid #f1d3ce;
+    background:#fff8f7;
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .err-card:last-child{margin-bottom:0;}
+  .err-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    color:var(--err);
+    margin-bottom:12px;
+    font-size:1.02em;
+  }
+  .err-title .tag{
+    background:var(--err);
+    color:#fff;
+    font-size:.72em;
+    padding:3px 9px;
+    border-radius:6px;
+    font-weight:700;
+  }
+  .err-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+    align-items:flex-start;
+  }
+  .err-row:last-child{margin-bottom:0;}
+  .err-label{
+    flex:0 0 90px;
+    font-weight:700;
+    font-size:.85em;
+    color:var(--sub);
+    padding-top:2px;
+  }
+  .err-label.what{color:#946200;}
+  .err-label.why{color:#8a3b2f;}
+  .err-label.fix{color:var(--ok);}
+  .err-content{flex:1;font-size:.93em;}
+
+  /* 学び */
+  .learn-list{list-style:none;margin:0;padding:0;}
+  .learn-list li{
+    display:flex;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .learn-list li:last-child{border-bottom:none;}
+  .learn-icon{
+    flex:0 0 30px;
+    font-size:1.3em;
+  }
+  .learn-body b{display:block;margin-bottom:3px;}
+  .learn-body span{color:var(--sub);font-size:.93em;}
+
+  footer{
+    text-align:center;
+    color:var(--sub);
+    font-size:.82em;
+    margin-top:30px;
+  }
+
+  @media (max-width:600px){
+    .flow{flex-direction:column;}
+    .flow-arrow{transform:rotate(90deg);}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="title">
+    <h1>Difyワークフロー構築<br>成果報告・リフレクション レジュメ</h1>
+    <p>Excel解析 → 自動メール生成 / データ登録システム</p>
+    <div class="meta-bar">
+      <span class="meta-chip">提出日：2026年7月11日</span>
+      <span class="status-ok">✅ テスト実行 完全成功</span>
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="num">1</span>このシステムは何をするもの？</h2>
+    <div class="summary-box">
+      <p style="margin:0;">
+        シフト表のExcelファイルをアップロードすると、<b>「まだ予定が埋まっていない日程」を自動で見つけ出し</b>、
+        (1) 担当者に送る調整依頼メールの文面を自動作成し、(2) その内容をGoogleスプレッドシートなどの外部データベースに自動登録する、
+        という一連の作業をワンクリックで済ませてくれるシステムです。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>処理の流れ（全体図）</h2>
+    <p class="lead">Excelファイルを入れてから2つの結果（メール文面・データ登録）が出てくるまで、5つの工程を通ります。</p>
+
+    <div class="flow">
+      <div class="flow-step"><b>①開始</b>Excelを受け取る</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><b>②コード実行</b>中身を整理する</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><b>③外部API通信</b>Excelを解析する</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><b>④AI（2種）</b>文章と登録データを作る</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><b>⑤外部API通信</b>スプレッドシートに登録</div>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="step-card">
+        <div class="step-head"><span class="step-badge">STEP 1</span><span class="step-title">開始</span></div>
+        <p class="step-role">役割：ファイルの受け取り口</p>
+        <p class="step-desc">ユーザーがアップロードしたExcelファイル（excelfile）を受け取り、後続の処理を開始させます。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-badge">STEP 2</span><span class="step-title">コード実行（Python）</span></div>
+        <p class="step-role">役割：次の工程に渡す情報を整理する下ごしらえ</p>
+        <p class="step-desc">受け取ったファイル情報の中から、外部の解析サービスがアクセスするために必要な「ファイルの場所を示すURL」だけを取り出して、次の工程に渡します。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-badge">STEP 3</span><span class="step-title">HTTPリクエスト①（外部解析サービスとの通信）</span></div>
+        <p class="step-role">役割：Excelの中身をテキストとして読み取る</p>
+        <p class="step-desc">STEP2で用意したURLを、Excelを解析する外部サービス（Cloud Run上のアプリ）に送信し、Excel内の文字情報を抽出してもらいます。万が一この通信が失敗しても、システム全体が止まらないよう、代わりのダミーデータを返す「安全装置（例外処理）」を組み込んでいます。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-badge">STEP 4</span><span class="step-title">AIによる文章生成（2つのGeminiノード）</span></div>
+        <p class="step-role">役割：同じ抽出結果から、用途の異なる2つの出力を並行で作る</p>
+        <p class="step-desc">
+          <b>4-A（メール作成）：</b>抽出したスケジュール情報をもとに、「シフトが未入力の担当者への調整依頼メール」を自然な文章で自動生成します。<br>
+          <b>4-B（データ整形）：</b>同じ情報から、あいさつ文などの余分な言葉を取り除き、次のSTEP5でスプレッドシートに登録しやすい形（データだけの形式）に変換します。
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-badge">STEP 5</span><span class="step-title">HTTPリクエスト②（Googleスプレッドシートへの登録）</span></div>
+        <p class="step-role">役割：整形済みデータを外部データベースへ書き込む</p>
+        <p class="step-desc">STEP4-Bで整形したデータを、Google Apps Script（GAS）で作った窓口（Web API）に送信し、スプレッドシートへ自動で書き込みます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>つまずいたポイントと解決した方法</h2>
+    <p class="lead">開発中に3つのエラーにぶつかりましたが、原因を1つずつ切り分けて解決しました。</p>
+
+    <div class="err-card">
+      <div class="err-title"><span class="tag">エラー①</span>「コード実行」ノードでの出力エラー</div>
+      <div class="err-row"><div class="err-label what">何が起きた</div><div class="err-content">STEP2のコード実行ノードが、設定と合わずにエラーで止まった。</div></div>
+      <div class="err-row"><div class="err-label why">なぜ起きた</div><div class="err-content">ノードの設定画面で「出力する項目名」を <code>result</code> と決めていたのに、コード側では別の名前で返してしまっていた。名前が1文字でも違うとDifyがエラーにする仕様だった。</div></div>
+      <div class="err-row"><div class="err-label fix">どう直した</div><div class="err-content">コードの戻り値を、設定と完全に同じ <code>result</code> という名前に統一した。</div></div>
+    </div>
+
+    <div class="err-card">
+      <div class="err-title"><span class="tag">エラー②</span>外部解析サービスへの通信エラー</div>
+      <div class="err-row"><div class="err-label what">何が起きた</div><div class="err-content">STEP3の外部サービスへの通信が、規定の再試行回数を超えて失敗し続けた。</div></div>
+      <div class="err-row"><div class="err-label why">なぜ起きた</div><div class="err-content">外部サービス側が何らかの理由で正常に応答できずクラッシュしていた。さらに、失敗時の代替（フォールバック）設定で「ヘッダー情報」の欄を空欄のままにしていたため、二重にエラーが発生していた。</div></div>
+      <div class="err-row"><div class="err-label fix">どう直した</div><div class="err-content">失敗時の代替設定で、ステータスコードを200（正常）にし、ヘッダー情報の欄には空の情報であることを示す <code>{}</code> を明示的に入力することで、エラーを回避した。</div></div>
+    </div>
+
+    <div class="err-card">
+      <div class="err-title"><span class="tag">エラー③</span>スプレッドシート登録先への通信拒否（401エラー）</div>
+      <div class="err-row"><div class="err-label what">何が起きた</div><div class="err-content">STEP5でスプレッドシートに書き込もうとした際、「認証エラー（401 Unauthorized）」で拒否された。</div></div>
+      <div class="err-row"><div class="err-label why">なぜ起きた</div><div class="err-content">GoogleのセキュリティによってDifyからのアクセスが「許可されていない相手」として弾かれていた。</div></div>
+      <div class="err-row"><div class="err-label fix">どう直した</div><div class="err-content">GAS（Google Apps Script）のデプロイ設定画面で、アクセス権限を「全員に公開」に変更し、新しいURLで再デプロイ。そのURLをDifyに貼り直して解決した。</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>今回の学び・自己評価</h2>
+    <ul class="learn-list">
+      <li>
+        <div class="learn-icon">🔧</div>
+        <div class="learn-body">
+          <b>システム連携の基本原則を体感できた</b>
+          <span>複数のWebサービスをつなぐときは、「データの形式」「JSONの書き方」「アクセス権限（認証）」の3つのうち、1つでも合っていないとエラーになることを実際の失敗を通して学べた。</span>
+        </div>
+      </li>
+      <li>
+        <div class="learn-icon">💡</div>
+        <div class="learn-body">
+          <b>エラーを恐れずに1つずつ読み解けた</b>
+          <span>最初は赤いエラー表示に戸惑ったが、エラーメッセージを読み、例外処理や空データ（{}）の意味、API権限の仕組みを順番に理解できたことで、開発の面白さと仕組みへの理解が大きく深まった。</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <footer>Difyワークフロー構築 成果報告レジュメ（わかりやすい版）</footer>
+</div>
+</body>
+</html>
