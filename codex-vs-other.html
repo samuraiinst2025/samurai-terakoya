@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex Sitesと同じことを自分で作る場合の比較</title>
+<style>
+  body{
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    line-height: 1.8;
+    color: #333;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    background: #fff;
+  }
+  h1{
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .date{
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+  h2{
+    font-size: 18px;
+    margin-top: 48px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  p{
+    margin-bottom: 12px;
+  }
+  .lead{
+    color: #555;
+    font-size: 15px;
+  }
+
+  /* 比較ボックス */
+  .compare{
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .box{
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .box h3{
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .box .box-sub{
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .box.sealed{ background: #f3faf7; border-color: #bfe3d3; }
+  .box.sealed h3{ color: #2f8a63; }
+  .box.parts{ background: #fdf7ee; border-color: #f0d9ad; }
+  .box.parts h3{ color: #b8791a; }
+  .box.google{ background: #f2f7fd; border-color: #c3d9f0; }
+  .box.google h3{ color: #2f6bb8; }
+  .box ul{
+    margin: 0;
+    padding-left: 18px;
+    font-size: 14px;
+  }
+  .box li{ margin-bottom: 6px; }
+
+  .compare.three{ align-items: stretch; }
+
+  @media (max-width: 700px){
+    .compare{ flex-direction: column; }
+  }
+
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  th, td{
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  th{
+    background: #f7f7f7;
+    font-weight: 600;
+  }
+
+  .note{
+    background: #f7f7f7;
+    border-left: 3px solid #999;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #555;
+    margin: 16px 0;
+  }
+
+  .rec{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+  .rec.highlight{ border-color: #2f8a63; background: #f3faf7; }
+  .rec h4{ font-size: 15px; margin-bottom: 4px; }
+  .rec p{ font-size: 14px; color: #555; margin: 0; }
+
+  footer{
+    margin-top: 60px;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+
+  h3.subtable{
+    font-size: 14px;
+    margin: 28px 0 4px;
+  }
+  .caveat{
+    font-size: 12.5px;
+    color: #a06a1a;
+    background: #fdf7ee;
+    border: 1px solid #f0d9ad;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 10px 0 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Codex Sitesと同じことを自分で作る場合の比較</h1>
+<div class="date">2026年7月時点</div>
+
+<p class="lead">
+「プロンプトを打つとWebアプリが公開される」——Codexはこれを認証・データベース・ホスティングを1つにまとめて実現しています。同じ結果を他の方法で作ろうとすると、必要な部品を自分たちで選び、組み合わせる必要があります。ここでは「Codex Sites」「自作①：非Google系」「自作②：Google系」の3パターンで比較します。
+</p>
+
+<h2>構成の違い</h2>
+<p>Codex Sitesは必要な要素があらかじめ1つになっています。自作する場合も、Google系（Firebase）を使うかどうかで組み立てる部品数が変わります。Firebaseは認証・DB・ホスティングがもともと1つのサービスにまとまっているため、非Google系より部品数が少なくて済みます。</p>
+
+<div class="compare three">
+  <div class="box sealed">
+    <h3>Codex Sites</h3>
+    <div class="box-sub">1つで完結</div>
+    <ul>
+      <li>プロンプト入力</li>
+      <li>そのまま公開URL発行</li>
+      <li>認証・DB・サーバーが最初から一体</li>
+      <li>設定はほぼ不要</li>
+    </ul>
+  </div>
+  <div class="box parts">
+    <h3>自作① 非Google系</h3>
+    <div class="box-sub">部品を3つ組む</div>
+    <ul>
+      <li>画面・機能を作る：Claude Code</li>
+      <li>認証・DB：Supabase</li>
+      <li>公開・ホスティング：Vercel / Netlify</li>
+    </ul>
+  </div>
+  <div class="box google">
+    <h3>自作② Google系</h3>
+    <div class="box-sub">部品は2つで済む</div>
+    <ul>
+      <li>画面・機能を作る：Claude Code（Geminiでも可）</li>
+      <li>認証・DB・ホスティング：Firebase（一体）</li>
+    </ul>
+  </div>
+</div>
+
+<div class="note">
+非Google系は「認証・DB担当」と「公開担当」が別サービスになるため、組む部品が1つ多くなります。Google系はFirebaseが認証・DB・ホスティングを最初からまとめているため、自作の中では最もCodex Sitesに近い構成になります。ただし選べる範囲はどちらもOpenAIの箱の外にあり、自分たちで設計・運用する前提です。
+</div>
+
+<h2>料金の考え方</h2>
+<p>自作（①非Google系・②Google系のどちらも）は「アプリを使う人の量」に対して課金され、Codexは「アプリを作る人（開発側）の作業量」に対して課金されます。ここが料金設計を考える上で一番重要な違いで、これは自作①②に共通する構造です。</p>
+
+<div class="compare">
+  <div class="box parts">
+    <h3>自作①②：利用者数に比例</h3>
+    <ul>
+      <li>どちらも無料枠あり（Firebase／Supabase＋Vercel）</li>
+      <li>10人規模の利用ならほぼ無料枠内</li>
+      <li>超えた分だけ従量課金</li>
+      <li>利用者が増えるほど費用も増える</li>
+    </ul>
+  </div>
+  <div class="box sealed">
+    <h3>Codex：開発作業量に比例</h3>
+    <ul>
+      <li>公開後、顧客が何人見ても追加費用は基本なし</li>
+      <li>費用はサブスク定額＋開発時のAI利用量</li>
+      <li>実務レベルの目安：月100〜200ドル</li>
+      <li>利用者数増加はコストに直結しにくい</li>
+    </ul>
+  </div>
+</div>
+
+<h2>具体的な料金</h2>
+
+<h3 class="subtable">自作② Google系：Firebase</h3>
+<table>
+  <thead>
+    <tr><th>Firebase</th><th>無料枠（Spark）</th><th>超過後（Blaze）</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>データベース読み取り</td><td>5万回／日</td><td>10万回ごとに $0.06</td></tr>
+    <tr><td>データベース書き込み</td><td>2万回／日</td><td>10万回ごとに $0.18</td></tr>
+    <tr><td>サーバー関数の実行</td><td>200万回／月</td><td>100万GB秒ごとに $0.40</td></tr>
+    <tr><td>公開・転送データ量</td><td>360MB／日</td><td>GiBごとに $0.20</td></tr>
+    <tr><td>企業向けSSOログイン</td><td>50人まで</td><td>51人目から1人 $0.015</td></tr>
+  </tbody>
+</table>
+<p style="font-size:13.5px; color:#555;">10人規模なら、無料枠（Spark）の範囲内でほぼ収まります。商用利用を制限する条件もありません。</p>
+
+<h3 class="subtable">自作① 非Google系：Supabase + Vercel</h3>
+<table>
+  <thead>
+    <tr><th>サービス</th><th>無料枠</th><th>有料プラン</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Supabase（認証・DB）</td><td>DB 500MB／月間利用者5万人まで</td><td>Pro：月$25〜</td></tr>
+    <tr><td>Vercel（ホスティング）</td><td>Hobbyプランあり</td><td>Pro：月$20／人〜</td></tr>
+  </tbody>
+</table>
+<div class="caveat">
+注意：Vercelの無料枠（Hobby）は<strong>商用利用が規約上禁止</strong>されています。顧客に公開する製品として使う場合は、実質的にVercel Proプラン（月$20〜）が最低ラインになります。Supabase側は無料枠のままでも10人規模なら足りることが多いです。
+</div>
+
+<h3 class="subtable">Codex（ChatGPT）</h3>
+<table>
+  <thead>
+    <tr><th>プラン</th><th>月額</th><th>内容</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Free</td><td>$0</td><td>お試し程度。上限が最も厳しい</td></tr>
+    <tr><td>Plus</td><td>$20</td><td>個人利用の標準ライン</td></tr>
+    <tr><td>Pro</td><td>$100〜200</td><td>本格的な開発・毎日利用向け</td></tr>
+    <tr><td>Business</td><td>$20〜25／人</td><td>チーム利用、管理機能つき</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:13.5px; color:#555;">
+10人規模の顧客向けアプリで比較すると、月額の目安は「Google系：ほぼ$0」「非Google系：$20〜（Vercel Pro分）」「Codex：開発の使い方次第で$20〜200」となります。
+</p>
+
+<h2>選び方の目安</h2>
+
+<div class="rec">
+  <h4>Codex Sites：とにかく早く形にしたい</h4>
+  <p>社内向けの検証・試作段階。スピードと手間の少なさを優先するならCodex Sitesが向いています。</p>
+</div>
+<div class="rec">
+  <h4>自作①非Google系：技術選定の自由度を重視したい</h4>
+  <p>特定のクラウドに縛られたくない、Next.jsなど技術スタックを自分たちで選びたい場合。ただし商用利用にはVercel Proが必要になる点は考慮が必要です。</p>
+</div>
+<div class="rec highlight">
+  <h4>自作②Google系：コストを抑えつつGoogleと相性よく</h4>
+  <p>顧客がすでにGoogle Workspaceを使っている、または最小コストで本番運用したい場合はFirebaseが有利です。部品数も少なく、自作の中では最もシンプルな構成になります。</p>
+</div>
+
+<footer>
+TOMMY &amp; COMPANY — AI実装コンサルティング資料<br>
+本資料の数値は2026年7月時点の公開情報に基づく目安です
+</footer>
+
+</body>
+</html>
