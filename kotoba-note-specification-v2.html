@@ -1,0 +1,63 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>kotoba note 仕様書 v2</title><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{primaryColor:'#eef2ff',primaryBorderColor:'#5570d8',primaryTextColor:'#17233b',lineColor:'#5570d8',secondaryColor:'#f8fafc',tertiaryColor:'#fff'}});</script><style>:root{--ink:#17233b;--muted:#687894;--line:#dce3ef;--blue:#4968d8;--bg:#f7f9fc}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}.wrap{max-width:1100px;margin:auto;padding:36px 22px 70px}.hero{background:linear-gradient(135deg,#253b83,#526fe0);color:#fff;padding:38px 42px;border-radius:22px}.hero h1{font-size:38px;line-height:1.2;margin:8px 0}.hero p{color:#eef2ff}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;margin-top:20px;box-shadow:0 8px 24px #243c7a0c}h2{border-left:5px solid var(--blue);padding-left:12px;margin-top:0}.diagram{overflow:auto;background:#fbfcff;border:1px solid var(--line);border-radius:12px;padding:20px;margin:15px 0}.mermaid{min-width:760px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#eef2ff}.flow{display:grid;gap:10px}.step{display:grid;grid-template-columns:38px 1fr;gap:12px}.step b{background:var(--blue);color:white;border-radius:50%;width:32px;height:32px;text-align:center;padding-top:2px}.muted{color:var(--muted)}.note{background:#fff8e8;border-left:4px solid #d79829;padding:12px 15px;border-radius:7px}@media(max-width:700px){.wrap{padding:18px 12px}.hero{padding:28px 22px}.hero h1{font-size:30px}.mermaid{min-width:600px}table{font-size:12px}}
+</style></head><body><main class="wrap"><header class="hero"><small>SYSTEM SPECIFICATION / REVISED</small><h1>kotoba note<br>システム仕様書</h1><p>日本語・英語カードを登録し、タグで整理しながら双方向に復習するWebアプリケーション。</p></header>
+<section class="panel"><h2>1. システム構成（正しい流れ）</h2><p class="muted">ChatGPT認証はD1と直接接続しません。ブラウザからのリクエストをWorkerが受け、認証情報を確認してからD1へアクセスします。</p><div class="diagram"><pre class="mermaid">flowchart LR
+  U[Mac / iPhone<br/>Webブラウザ]
+  S[Cloudflare Sites<br/>Vinext / Cloudflare Worker]
+  A{ChatGPT認証情報<br/>ユーザーIDを確認}
+  D[(Cloudflare D1<br/>カード・復習履歴)]
+  R[結果をブラウザへ返す]
+  U -->|画面操作・APIリクエスト| S
+  S --> A
+  A -->|認証OK| D
+  A -->|未ログイン| X[ログイン要求]
+  D -->|カード・履歴| R
+  R --> U</pre></div><div class="note"><strong>要点：</strong>認証確認はWorker内で実行され、D1にはユーザーIDを条件にしてアクセスします。これにより、ユーザーごとのカードデータを分離します。</div></section>
+<section class="panel"><h2>2. CSV登録プロセス</h2><div class="diagram"><pre class="mermaid">flowchart TD
+  F[CSVファイルを選択]
+  P[ブラウザで行を読み込み]
+  Q[1行ずつAPIへ送信]
+  A{Workerが認証確認}
+  C{既存カードを確認<br/>日本語 + 英語}
+  I[新規カードをD1へINSERT]
+  K[重複としてスキップ]
+  T[進捗・登録結果を画面表示]
+  F --> P --> Q --> A
+  A -->|OK| C
+  A -->|NG| L[ログインエラー]
+  C -->|なし| I --> T
+  C -->|あり| K --> T</pre></div><p class="muted">CSV列：タグ、英語、日本語訳、使用例（任意）。既存カードを更新せず、復習履歴を保持したまま新規行だけを追加します。</p></section>
+<section class="panel"><h2>3. 復習プロセス</h2><div class="diagram"><pre class="mermaid">flowchart TD
+  S[タグを選択] --> M[出題モードを選択]
+  M --> Q[カードを出題]
+  Q --> A[回答を表示]
+  A --> G{学習結果}
+  G -->|覚えた| H[復習ログ保存<br/>次回復習日時を更新]
+  G -->|もう一度| R[同じ復習セッションで再出題]
+  R --> Q
+  H --> N[次のカード]
+  N --> Q</pre></div></section>
+<section class="panel"><h2>4. 機能一覧</h2><table><tr><th>分類</th><th>機能</th><th>内容</th></tr><tr><td>カード</td><td>追加・編集</td><td>タグ、日本語、英語、使用例を登録・更新。</td></tr><tr><td>インポート</td><td>CSV登録</td><td>4列対応、重複確認、処理中の進捗表示。</td></tr><tr><td>整理</td><td>タグ絞り込み</td><td>自然な昇順と件数表示。</td></tr><tr><td>学習</td><td>双方向出題</td><td>日本語→English / English→日本語。</td></tr><tr><td>学習</td><td>復習評価</td><td>覚えた・もう一度で復習状態を管理。</td></tr><tr><td>保存</td><td>クラウドDB</td><td>カードと復習ログをD1に永続保存。</td></tr></table></section>
+<section class="panel"><h2>5. APIとデータ</h2><table><tr><th>API</th><th>役割</th></tr><tr><td><code>GET /api/cards</code></td><td>ログインユーザーのカード一覧を取得。</td></tr><tr><td><code>POST /api/cards</code></td><td>新規登録。既存カードはスキップ。</td></tr><tr><td><code>PATCH /api/cards</code></td><td>カード編集、復習日時、復習ログを更新。</td></tr><tr><td><code>DELETE /api/cards</code></td><td>重複カード整理。</td></tr></table><p class="muted">主なデータ：cards（カード本体）、review_logs（復習結果）。</p></section>
+<section class="panel"><h2>6. Sites・Python・GASの構成比較</h2><p class="muted">前提：個人利用、MacBookとiPhoneから利用、カードと復習履歴をクラウド保存、CSV登録を行うケース。</p><table><tr><th>方式</th><th>Web画面</th><th>認証</th><th>DB</th><th>ファイル保存</th></tr><tr><td><strong>Sites</strong></td><td>React / Vinext</td><td>ChatGPT認証</td><td>Cloudflare D1</td><td>Cloudflare R2等</td></tr><tr><td><strong>Python</strong></td><td>Flask / FastAPI + HTML、またはStreamlit</td><td>Google OAuth、Auth0、Clerk等</td><td>SQLite、PostgreSQL、Supabase等</td><td>S3、Cloud Storage、ローカル保存</td></tr><tr><td><strong>GAS</strong></td><td>HTML Service + JavaScript</td><td>Googleアカウント</td><td>Google Sheets、Properties Service</td><td>Google Drive</td></tr></table><h3>6-1. Pythonで実現する場合</h3><div class="diagram"><pre class="mermaid">flowchart LR
+ B[Mac / iPhone<br/>ブラウザ] --> H[Python Webアプリ<br/>FastAPI / Flask]
+ H --> A[Google OAuth等<br/>ログイン確認]
+ H --> D[(PostgreSQL / Supabase<br/>カード・履歴)]
+ H --> F[(S3 / Cloud Storage<br/>CSV・音声ファイル)]</pre></div><p><strong>メリット：</strong>自由度が最も高く、復習アルゴリズム、API、画面、外部サービス連携を細かく設計できます。将来的な拡張にも向いています。</p><p><strong>デメリット：</strong>認証、DB、デプロイ、バックアップ、セキュリティを自分で設計・管理する必要があります。個人利用では構成がやや大きくなりがちです。</p><p><strong>難易度：</strong>中〜高。個人用の簡易版なら中程度ですが、スマホ対応・認証・永続DBまで含めると高くなります。</p><h3>6-2. GASで実現する場合</h3><div class="diagram"><pre class="mermaid">flowchart LR
+ B[Mac / iPhone<br/>ブラウザ] --> W[GAS Webアプリ<br/>HTML Service]
+ W --> A[Googleアカウント<br/>実行ユーザー確認]
+ W --> S[(Google Sheets<br/>カード・復習履歴)]
+ W --> F[(Google Drive<br/>CSV・音声ファイル)]</pre></div><p><strong>メリット：</strong>Googleアカウント、Sheets、Driveが最初から揃っており、個人利用では最も始めやすい構成です。CSV登録や一覧表示も短いコードで作れます。</p><p><strong>デメリット：</strong>大量データ、同時アクセス、複雑な画面、実行時間制限に弱いです。SheetsをDBとして使うため、データ量が増えると検索・更新が遅くなります。</p><p><strong>難易度：</strong>低〜中。自分だけで使うカード学習アプリなら最も簡単です。</p><h3>6-3. Sitesで実現する場合</h3><div class="diagram"><pre class="mermaid">flowchart LR
+ B[Mac / iPhone<br/>ブラウザ] --> S[Sites<br/>React / Cloudflare Worker]
+ S --> A[ChatGPT認証<br/>ユーザーID確認]
+ S --> D[(Cloudflare D1<br/>カード・履歴)]
+ S --> F[(R2等<br/>ファイル保存)]</pre></div><p><strong>メリット：</strong>画面・API・公開環境・D1を一体で扱え、今回のようなWebアプリを素早く公開できます。スマホ対応もしやすく、GitHubで変更履歴を管理できます。</p><p><strong>デメリット：</strong>Sites固有の認証・公開方式に依存します。Cloudflareの詳細設定や、外部環境への移行には追加作業が必要です。</p><p><strong>難易度：</strong>低〜中。今回のような個人利用では、実装と公開のバランスが良い方式です。</p></section>
+<section class="panel"><h2>7. 個人利用での比較評価</h2><table><tr><th>評価項目</th><th>Sites</th><th>Python</th><th>GAS</th></tr><tr><td>初期構築の簡単さ</td><td>◎</td><td>△</td><td>◎</td></tr><tr><td>画面の自由度</td><td>◎</td><td>◎</td><td>○</td></tr><tr><td>認証の手軽さ</td><td>◎</td><td>△</td><td>◎</td></tr><tr><td>DBの本格性</td><td>○</td><td>◎</td><td>△</td></tr><tr><td>CSV・Drive連携</td><td>○</td><td>○</td><td>◎</td></tr><tr><td>スマホ対応</td><td>◎</td><td>◎</td><td>○</td></tr><tr><td>運用の手間</td><td>少</td><td>多</td><td>少</td></tr><tr><td>将来の拡張性</td><td>○</td><td>◎</td><td>△</td></tr></table><div class="note"><strong>結論：</strong>個人利用で早く使い始めたいならGAS、Web画面の品質と公開のしやすさを両立するならSites、将来サービス化・高度な分析・独自APIまで考えるならPythonが適しています。現在のkotoba noteは、個人利用に対してSites構成が最もバランスのよい選択です。</div></section>
+<section class="panel"><h2>8. 推奨構成</h2><ol><li><strong>現状維持：</strong>Sites + D1を使い、復習フローやUIの完成度を上げる。</li><li><strong>ファイルが増えた場合：</strong>CSV・音声ファイルをR2または外部ストレージへ分離する。</li><li><strong>Google中心にしたい場合：</strong>GAS + Sheets + Driveへ移行する。ただし、移行時はカードIDと復習履歴の引き継ぎを行う。</li><li><strong>本格サービス化する場合：</strong>Python + PostgreSQL + OAuth + オブジェクトストレージへ段階的に移行する。</li></ol></section>
+<section class="panel"><h2>9. Sitesの特徴とCloudflareの役割</h2><p>Sitesは、WebサイトやWebアプリを作成・公開するための開発基盤です。今回のkotoba noteでは、画面、API、データベースを一つの公開プロジェクトとして管理しています。</p><table><tr><th>Sites上の役割</th><th>今回のkotoba noteでの担当</th><th>Cloudflareのサービス</th></tr><tr><td>Web画面の公開</td><td>Mac・iPhoneに画面を配信</td><td>Cloudflareの配信・実行基盤</td></tr><tr><td>サーバー処理</td><td>カード取得、登録、編集、復習結果のAPI</td><td>Cloudflare Workers</td></tr><tr><td>データベース</td><td>カード・タグ・使用例・復習履歴の保存</td><td>Cloudflare D1</td></tr><tr><td>ファイル保存</td><td>将来的なCSV・音声ファイル保存</td><td>Cloudflare R2等</td></tr><tr><td>認証連携</td><td>ChatGPTのユーザー情報をWorkerで確認</td><td>Sites / ChatGPT認証連携</td></tr></table><h3>Sitesを使うメリット</h3><ul><li>画面、API、公開環境をまとめて構築しやすい。</li><li>Cloudflareの配信基盤により、個人利用でもスマホからアクセスしやすい。</li><li>D1を使えば、ブラウザの一時保存ではなくクラウドにデータを永続保存できる。</li><li>GitHubでソースコードを管理し、修正・ビルド・公開の流れを統一できる。</li><li>今回のような個人用Webアプリを、サーバーを自分で運用せずに公開できる。</li></ul><h3>注意点</h3><ul><li>Sitesの認証方式や公開方式に依存するため、別環境へ移行するときは追加設計が必要。</li><li>D1は本格的な大規模DBというより、個人〜小規模アプリに適した構成。</li><li>Cloudflareの各サービスには容量・実行時間・料金プランなどの条件がある。</li><li>外部サービスの障害や認証状態によって、データ取得・保存ができない場合がある。</li></ul><div class="note"><strong>まとめ：</strong>Sitesは「作る・保存する・公開する」を一体化しやすく、Cloudflare Workersが処理、D1がDB、配信基盤がWeb公開を担当します。個人利用のkotoba noteには、開発の速さと運用の軽さのバランスが良い構成です。</div></section>
+<section class="panel"><h2>9-1. Sites + Cloudflare / Python / GAS 比較</h2><table><tr><th>比較項目</th><th>Sites + Cloudflare</th><th>Python構成</th><th>GAS構成</th></tr><tr><td>公開・実行基盤</td><td>Sites + Cloudflare Workers</td><td>Render、Railway、AWS、Cloud Run等を別途選択</td><td>Google Apps ScriptのWebアプリ</td></tr><tr><td>Web画面</td><td>React / Vinextで自由度が高い</td><td>React、HTML、Streamlit等。自由度が最も高い</td><td>HTML Service。簡単だが複雑なUIは工夫が必要</td></tr><tr><td>認証</td><td>ChatGPT認証との連携</td><td>Google OAuth、Auth0、Clerk等を自分で構成</td><td>Googleアカウントを利用しやすい</td></tr><tr><td>データベース</td><td>Cloudflare D1。Web APIから扱いやすい</td><td>PostgreSQL、Supabase等。最も柔軟</td><td>Google Sheets。導入は簡単だが大量データには不向き</td></tr><tr><td>ファイル保存</td><td>R2等のオブジェクトストレージ</td><td>S3、Cloud Storage等を選択</td><td>Google Driveが使いやすい</td></tr><tr><td>スマホ対応</td><td>レスポンシブWebを作りやすい</td><td>自由に設計可能</td><td>可能だが画面調整に制約がある</td></tr><tr><td>運用負担</td><td>少。公開基盤と実行環境がまとまる</td><td>多。サーバー、DB、認証、監視を組み合わせる</td><td>少。Google側の管理に乗せやすい</td></tr><tr><td>拡張性</td><td>中〜高。Webアプリとして拡張しやすい</td><td>非常に高い。サービス化にも向く</td><td>低〜中。個人用・業務補助に向く</td></tr><tr><td>個人利用との相性</td><td>◎ 見た目と保存を両立</td><td>○ 高機能だが構築コスト高め</td><td>◎ 最短で作りやすい</td></tr></table><div class="note"><strong>選び方：</strong>画面品質とWebアプリらしい操作性を重視するならSites + Cloudflare、自由度と将来のサービス化を重視するならPython、Google Sheets・Driveを中心に最短で個人ツールを作るならGASが適しています。</div></section>
+<section class="panel"><h2>9-2. 個人ローカル環境でのPython構成</h2><div class="diagram"><pre class="mermaid">flowchart LR
+  B[Mac / iPhone] -->|同じMac内| F[FastAPI / Python<br/>localhost]
+  F --> D[(SQLite<br/>カード・復習履歴)]
+  F --> L[ローカルフォルダ<br/>CSV・音声ファイル]
+  B -.外部から使う場合.- T[VPN / トンネル / クラウド公開]</pre></div><table><tr><th>項目</th><th>ローカルPython（FastAPI）</th><th>Sites + Cloudflare</th><th>GAS</th></tr><tr><td>公開・実行場所</td><td>自分のMacで <code>localhost</code> 起動</td><td>クラウド上で常時公開</td><td>Googleのクラウド上で公開</td></tr><tr><td>DB</td><td>SQLiteファイル。バックアップしやすい</td><td>Cloudflare D1</td><td>Google Sheets</td></tr><tr><td>認証</td><td>個人利用なら省略、または簡易パスワード。外部公開時はOAuth等が必要</td><td>ChatGPT認証と連携</td><td>Googleアカウントと連携</td></tr><tr><td>ファイル</td><td>Macのフォルダへ直接保存</td><td>R2等のクラウドストレージ</td><td>Google Drive</td></tr><tr><td>iPhone利用</td><td>同じWi-Fi内のMacへアクセスする設定が必要。Macが起動中である必要あり</td><td>URLですぐ利用可能</td><td>URLですぐ利用可能</td></tr><tr><td>費用</td><td>基本無料。Macの電気代・保守は必要</td><td>無料枠やプラン条件あり</td><td>Googleアカウントの範囲で始めやすい</td></tr><tr><td>難易度</td><td>Python経験があれば中。外部公開すると高くなる</td><td>低〜中</td><td>低〜中</td></tr></table><h3>ローカルPythonのメリット</h3><ul><li>データを自分のMac内だけに置けるため、プライバシーを重視しやすい。</li><li>SQLite、CSV、音声ファイルをローカルで簡単に扱える。</li><li>FastAPIでAPIを明確に分離でき、将来Sitesやクラウドへ移行しやすい。</li><li>外部サービスの認証・公開設定なしで開発を始められる。</li></ul><h3>注意点</h3><ul><li>Macがスリープ・電源オフだとiPhoneから利用できない。</li><li>Macの故障に備えてSQLiteとファイルを定期バックアップする必要がある。</li><li>外出先から使う場合はVPN、トンネル、またはクラウド公開が必要。</li><li>ローカル利用でも、家族など他人が使う場合は認証を追加した方が安全。</li></ul><div class="note"><strong>個人利用での現実的な選択：</strong>MacBook中心で、iPhoneは同じWi-Fi内で使えればよいなら、FastAPI + SQLiteのローカル構成が最もシンプルです。Macが起動していなくても使いたい、外出先から使いたい場合はSitesやGASなどクラウド構成が適しています。</div></section>
+<p class="muted" style="text-align:center">kotoba note / Revised system specification</p></main></body></html>
