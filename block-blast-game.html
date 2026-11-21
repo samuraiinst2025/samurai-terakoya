@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>ブロックパズル - Block Blast風ゲーム</title>
+<style>
+  :root {
+    --bg: #10131f;
+    --panel: #1b2033;
+    --panel-2: #232a45;
+    --grid-empty: #262c46;
+    --grid-border: #323a5c;
+    --accent: #7c8cff;
+    --text: #eef0ff;
+    --sub: #9aa3c7;
+    --good: #4fd18b;
+    --bad: #ff5d6c;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(1200px 800px at 50% -10%, #232a52 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: "Hiragino Sans", "Yu Gothic", "Segoe UI", system-ui, sans-serif;
+    min-height: 100%;
+    overscroll-behavior: none;
+    touch-action: none;
+    user-select: none;
+  }
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  header a.back {
+    color: var(--sub);
+    text-decoration: none;
+    font-size: 13px;
+    border: 1px solid var(--grid-border);
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  header a.back:hover { color: var(--text); border-color: var(--accent); }
+  h1 {
+    font-size: 20px;
+    margin: 4px 0 14px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .scoreboard {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .score-box {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--grid-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .score-box .label {
+    font-size: 11px;
+    color: var(--sub);
+    letter-spacing: 1px;
+  }
+  .score-box .value {
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  #combo-flash {
+    height: 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--good);
+    margin-bottom: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+    background: var(--panel);
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--grid-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  .cell {
+    background: var(--grid-empty);
+    border-radius: 6px;
+    transition: background 0.08s, transform 0.08s;
+  }
+  .cell.filled {
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.25);
+  }
+  .cell.preview-ok {
+    background: var(--good) !important;
+    opacity: 0.55;
+  }
+  .cell.preview-bad {
+    background: var(--bad) !important;
+    opacity: 0.45;
+  }
+  .cell.clearing {
+    animation: pop 0.32s ease forwards;
+  }
+  @keyframes pop {
+    0% { transform: scale(1); filter: brightness(1.8); }
+    100% { transform: scale(0.2); filter: brightness(2.4); opacity: 0; }
+  }
+  #tray {
+    width: 100%;
+    max-width: 420px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .tray-slot {
+    background: var(--panel);
+    border: 1px solid var(--grid-border);
+    border-radius: 12px;
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    position: relative;
+  }
+  .tray-slot.empty-slot { opacity: 0.35; }
+  .piece-grid {
+    display: grid;
+    gap: 3px;
+    touch-action: none;
+  }
+  .piece-cell {
+    border-radius: 4px;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.25);
+  }
+  .piece-cell.blank { background: transparent; box-shadow: none; }
+  .dragging-piece {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    display: grid;
+    gap: 3px;
+    z-index: 999;
+    opacity: 0.95;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.45));
+  }
+  .drag-cell {
+    border-radius: 5px;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.25);
+  }
+  .drag-cell.blank { background: transparent; box-shadow: none; }
+
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,10,20,0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  #overlay.show { display: flex; }
+  .modal {
+    background: var(--panel-2);
+    border: 1px solid var(--grid-border);
+    border-radius: 16px;
+    padding: 28px 30px;
+    text-align: center;
+    width: min(320px, 86vw);
+  }
+  .modal h2 { margin: 0 0 6px; font-size: 22px; }
+  .modal p { color: var(--sub); margin: 4px 0 18px; font-size: 14px; }
+  .modal .final-score { font-size: 40px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+  button.primary {
+    background: linear-gradient(135deg, #7c8cff, #5a67e0);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+  }
+  button.primary:active { transform: scale(0.98); }
+  footer {
+    margin-top: 22px;
+    color: var(--sub);
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./index.html">← 一覧へ</a>
+    <span style="font-size:12px;color:var(--sub)">8×8</span>
+  </header>
+  <h1>ブロックパズル</h1>
+
+  <div class="scoreboard">
+    <div class="score-box">
+      <div class="label">SCORE</div>
+      <div class="value" id="score">0</div>
+    </div>
+    <div class="score-box">
+      <div class="label">BEST</div>
+      <div class="value" id="best">0</div>
+    </div>
+  </div>
+  <div id="combo-flash"></div>
+
+  <div id="board"></div>
+
+  <div id="tray"></div>
+
+  <footer>マス目にブロックをドラッグして配置しよう。縦か横の列をすべて埋めると消えるよ。</footer>
+</div>
+
+<div id="overlay">
+  <div class="modal">
+    <h2>ゲームオーバー</h2>
+    <div class="final-score" id="final-score">0</div>
+    <p id="final-sub">お疲れさま！</p>
+    <button class="primary" id="restart-btn">もう一度プレイ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const SIZE = 8;
+  const COLORS = [
+    "#ff6b6b", "#ffa94d", "#ffd43b", "#69db7c",
+    "#4fd1e0", "#5c9dff", "#9775fa", "#f783ac"
+  ];
+
+  const SHAPES = [
+    // single
+    [[0,0]],
+    // dominoes
+    [[0,0],[0,1]],
+    [[0,0],[1,0]],
+    // trominoes (line)
+    [[0,0],[0,1],[0,2]],
+    [[0,0],[1,0],[2,0]],
+    // trominoes (corner) x4
+    [[0,0],[0,1],[1,0]],
+    [[0,0],[0,1],[1,1]],
+    [[0,0],[1,0],[1,1]],
+    [[0,1],[1,0],[1,1]],
+    // square
+    [[0,0],[0,1],[1,0],[1,1]],
+    // 4-line
+    [[0,0],[0,1],[0,2],[0,3]],
+    [[0,0],[1,0],[2,0],[3,0]],
+    // 5-line
+    [[0,0],[0,1],[0,2],[0,3],[0,4]],
+    [[0,0],[1,0],[2,0],[3,0],[4,0]],
+    // L / J tetromino (4 rotations each, simplified set)
+    [[0,0],[1,0],[2,0],[2,1]],
+    [[0,0],[0,1],[1,0],[2,0]],
+    [[0,0],[0,1],[0,2],[1,0]],
+    [[0,0],[0,1],[0,2],[1,2]],
+    [[0,0],[1,0],[1,1],[1,2]],
+    [[0,2],[1,0],[1,1],[1,2]],
+    [[0,0],[0,1],[1,1],[2,1]],
+    [[1,0],[1,1],[0,1],[2,1]],
+    // T tetromino
+    [[0,0],[0,1],[0,2],[1,1]],
+    [[0,1],[1,0],[1,1],[2,1]],
+    [[1,0],[1,1],[1,2],[0,1]],
+    [[0,0],[1,0],[2,0],[1,1]],
+    // S / Z tetromino
+    [[0,1],[0,2],[1,0],[1,1]],
+    [[0,0],[0,1],[1,1],[1,2]],
+    [[0,0],[1,0],[1,1],[2,1]],
+    [[0,1],[1,0],[1,1],[2,0]],
+    // 2x3 / 3x2 block
+    [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2]],
+    [[0,0],[0,1],[1,0],[1,1],[2,0],[2,1]],
+    // 3x3 big block
+    [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]],
+    // plus shape
+    [[0,1],[1,0],[1,1],[1,2],[2,1]],
+  ];
+
+  const boardEl = document.getElementById("board");
+  const trayEl = document.getElementById("tray");
+  const scoreEl = document.getElementById("score");
+  const bestEl = document.getElementById("best");
+  const comboFlashEl = document.getElementById("combo-flash");
+  const overlayEl = document.getElementById("overlay");
+  const finalScoreEl = document.getElementById("final-score");
+  const finalSubEl = document.getElementById("final-sub");
+  const restartBtn = document.getElementById("restart-btn");
+
+  const BEST_KEY = "block-blast-best-score";
+
+  let grid = []; // grid[row][col] = null | color
+  let cellEls = [];
+  let tray = []; // array of 3: {shape, color, id} or null
+  let score = 0;
+  let best = parseInt(localStorage.getItem(BEST_KEY) || "0", 10);
+  let dragState = null;
+  let gameOver = false;
+
+  bestEl.textContent = best;
+
+  function normalizeShape(cells) {
+    const minR = Math.min(...cells.map(c => c[0]));
+    const minC = Math.min(...cells.map(c => c[1]));
+    return cells.map(([r, c]) => [r - minR, c - minC]);
+  }
+
+  function shapeDims(cells) {
+    const rows = Math.max(...cells.map(c => c[0])) + 1;
+    const cols = Math.max(...cells.map(c => c[1])) + 1;
+    return { rows, cols };
+  }
+
+  function randomPiece() {
+    const shape = normalizeShape(SHAPES[Math.floor(Math.random() * SHAPES.length)]);
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    return { shape, color, id: Math.random().toString(36).slice(2) };
+  }
+
+  function buildBoard() {
+    boardEl.innerHTML = "";
+    grid = [];
+    cellEls = [];
+    for (let r = 0; r < SIZE; r++) {
+      const rowArr = [];
+      const rowEls = [];
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+        boardEl.appendChild(cell);
+        rowArr.push(null);
+        rowEls.push(cell);
+      }
+      grid.push(rowArr);
+      cellEls.push(rowEls);
+    }
+  }
+
+  function paintBoard() {
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const el = cellEls[r][c];
+        const val = grid[r][c];
+        if (val) {
+          el.classList.add("filled");
+          el.style.background = val;
+        } else {
+          el.classList.remove("filled");
+          el.style.background = "";
+        }
+      }
+    }
+  }
+
+  function renderPieceGrid(container, shape, color, cellSize) {
+    const { rows, cols } = shapeDims(shape);
+    container.innerHTML = "";
+    container.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    container.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    const filled = new Set(shape.map(([r, c]) => r + "," + c));
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cell = document.createElement("div");
+        if (filled.has(r + "," + c)) {
+          cell.className = "piece-cell";
+          cell.style.background = color;
+        } else {
+          cell.className = "piece-cell blank";
+        }
+        cell.style.width = cellSize + "px";
+        cell.style.height = cellSize + "px";
+        container.appendChild(cell);
+      }
+    }
+  }
+
+  function renderTray() {
+    trayEl.innerHTML = "";
+    tray.forEach((piece, idx) => {
+      const slot = document.createElement("div");
+      slot.className = "tray-slot";
+      slot.dataset.slot = idx;
+      if (!piece) {
+        slot.classList.add("empty-slot");
+      } else {
+        const { cols } = shapeDims(piece.shape);
+        const cellSize = cols >= 5 ? 18 : cols === 4 ? 20 : 24;
+        const pieceGrid = document.createElement("div");
+        pieceGrid.className = "piece-grid";
+        renderPieceGrid(pieceGrid, piece.shape, piece.color, cellSize);
+        slot.appendChild(pieceGrid);
+        attachDrag(slot, piece, idx);
+      }
+      trayEl.appendChild(slot);
+    });
+  }
+
+  function refillTrayIfNeeded() {
+    if (tray.every(p => p === null)) {
+      tray = [randomPiece(), randomPiece(), randomPiece()];
+    }
+  }
+
+  function canPlace(shape, row, col) {
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return false;
+      if (grid[r][c]) return false;
+    }
+    return true;
+  }
+
+  function anyPlacementExists(shape) {
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (canPlace(shape, r, c)) return true;
+      }
+    }
+    return false;
+  }
+
+  function checkGameOver() {
+    const active = tray.filter(p => p !== null);
+    const stillPossible = active.some(p => anyPlacementExists(p.shape));
+    if (!stillPossible && active.length > 0) {
+      endGame();
+    }
+  }
+
+  function placePiece(shape, color, row, col) {
+    for (const [dr, dc] of shape) {
+      grid[row + dr][col + dc] = color;
+    }
+  }
+
+  function clearLines() {
+    const fullRows = [];
+    const fullCols = [];
+    for (let r = 0; r < SIZE; r++) {
+      if (grid[r].every(v => v)) fullRows.push(r);
+    }
+    for (let c = 0; c < SIZE; c++) {
+      let full = true;
+      for (let r = 0; r < SIZE; r++) if (!grid[r][c]) { full = false; break; }
+      if (full) fullCols.push(c);
+    }
+    const totalLines = fullRows.length + fullCols.length;
+    if (totalLines === 0) return 0;
+
+    const cellsToClear = new Set();
+    fullRows.forEach(r => { for (let c = 0; c < SIZE; c++) cellsToClear.add(r + "," + c); });
+    fullCols.forEach(c => { for (let r = 0; r < SIZE; r++) cellsToClear.add(r + "," + c); });
+
+    cellsToClear.forEach(key => {
+      const [r, c] = key.split(",").map(Number);
+      cellEls[r][c].classList.add("clearing");
+    });
+
+    setTimeout(() => {
+      cellsToClear.forEach(key => {
+        const [r, c] = key.split(",").map(Number);
+        grid[r][c] = null;
+        cellEls[r][c].classList.remove("clearing");
+      });
+      paintBoard();
+    }, 300);
+
+    return totalLines;
+  }
+
+  function addScore(cellsPlaced, linesCleared) {
+    let gained = cellsPlaced;
+    if (linesCleared > 0) {
+      gained += linesCleared * 10 + (linesCleared > 1 ? (linesCleared - 1) * 15 : 0);
+    }
+    score += gained;
+    scoreEl.textContent = score;
+    if (score > best) {
+      best = score;
+      bestEl.textContent = best;
+      localStorage.setItem(BEST_KEY, String(best));
+    }
+    if (linesCleared > 0) {
+      const messages = { 1: "ライン クリア！", 2: "ダブル クリア！", 3: "トリプル クリア！" };
+      comboFlashEl.textContent = (messages[linesCleared] || `${linesCleared} ライン クリア！`) + ` +${gained}`;
+      comboFlashEl.style.opacity = "1";
+      clearTimeout(comboFlashEl._t);
+      comboFlashEl._t = setTimeout(() => { comboFlashEl.style.opacity = "0"; }, 900);
+    }
+  }
+
+  function clearPreview() {
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        cellEls[r][c].classList.remove("preview-ok", "preview-bad");
+      }
+    }
+  }
+
+  function showPreview(shape, row, col) {
+    clearPreview();
+    const valid = canPlace(shape, row, col);
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) {
+        cellEls[r][c].classList.add(valid ? "preview-ok" : "preview-bad");
+      }
+    }
+    return valid;
+  }
+
+  function attachDrag(slotEl, piece, slotIdx) {
+    const pieceGridEl = slotEl.querySelector(".piece-grid");
+
+    pieceGridEl.addEventListener("pointerdown", (e) => {
+      if (gameOver) return;
+      e.preventDefault();
+      startDrag(e, piece, slotIdx, slotEl);
+    });
+  }
+
+  function startDrag(e, piece, slotIdx, slotEl) {
+    const boardRect = boardEl.getBoundingClientRect();
+    const cellSize = (boardRect.width - 8 * 2 - 4 * (SIZE - 1)) / SIZE;
+    const gap = 4;
+    const step = cellSize + gap;
+    const { rows, cols } = shapeDims(piece.shape);
+
+    const ghost = document.createElement("div");
+    ghost.className = "dragging-piece";
+    renderPieceGrid(ghost, piece.shape, piece.color, cellSize);
+    ghost.classList.add("dragging-piece");
+    document.body.appendChild(ghost);
+
+    slotEl.style.visibility = "hidden";
+
+    const isTouch = e.pointerType === "touch";
+    const liftY = isTouch ? 90 : 20;
+
+    dragState = {
+      piece, slotIdx, ghost, cellSize, step, rows, cols, boardRect, liftY,
+      pieceW: cols * step - gap,
+      pieceH: rows * step - gap,
+      lastRow: null, lastCol: null, lastValid: false,
+    };
+
+    updateGhostPosition(e.clientX, e.clientY);
+
+    const move = (ev) => updateGhostPosition(ev.clientX, ev.clientY);
+    const up = (ev) => finishDrag(ev.clientX, ev.clientY, slotEl);
+
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up, { once: true });
+    dragState._move = move;
+  }
+
+  function boardCellFromPoint(x, y) {
+    if (!dragState) return null;
+    const rect = boardEl.getBoundingClientRect();
+    const padding = 8;
+    const col = Math.round((x - rect.left - padding - dragState.cellSize / 2) / dragState.step);
+    const row = Math.round((y - rect.top - padding - dragState.cellSize / 2) / dragState.step);
+    return { row, col };
+  }
+
+  function updateGhostPosition(x, y) {
+    const ds = dragState;
+    if (!ds) return;
+    const top = y - ds.liftY - ds.pieceH / 2;
+    const left = x - ds.pieceW / 2;
+    ds.ghost.style.top = top + "px";
+    ds.ghost.style.left = left + "px";
+
+    const anchorX = x;
+    const anchorY = y - ds.liftY;
+    const { row, col } = boardCellFromPoint(anchorX, anchorY);
+
+    if (row !== ds.lastRow || col !== ds.lastCol) {
+      ds.lastRow = row;
+      ds.lastCol = col;
+      if (row >= -2 && row <= SIZE + 1 && col >= -2 && col <= SIZE + 1) {
+        ds.lastValid = showPreview(ds.piece.shape, row, col);
+      } else {
+        clearPreview();
+        ds.lastValid = false;
+      }
+    }
+  }
+
+  function finishDrag(x, y, slotEl) {
+    const ds = dragState;
+    if (!ds) return;
+    window.removeEventListener("pointermove", ds._move);
+    ds.ghost.remove();
+    clearPreview();
+    slotEl.style.visibility = "";
+
+    const anchorX = x;
+    const anchorY = y - ds.liftY;
+    const { row, col } = boardCellFromPoint(anchorX, anchorY);
+
+    if (canPlace(ds.piece.shape, row, col)) {
+      placePiece(ds.piece.shape, ds.piece.color, row, col);
+      tray[ds.slotIdx] = null;
+      paintBoard();
+      const linesCleared = clearLines();
+      addScore(ds.piece.shape.length, linesCleared);
+      renderTray();
+      refillTrayIfNeeded();
+      renderTray();
+      checkGameOver();
+    }
+    dragState = null;
+  }
+
+  function endGame() {
+    gameOver = true;
+    finalScoreEl.textContent = score;
+    finalSubEl.textContent = score >= best ? "自己ベスト更新！" : "お疲れさま！";
+    overlayEl.classList.add("show");
+  }
+
+  function newGame() {
+    gameOver = false;
+    score = 0;
+    scoreEl.textContent = "0";
+    overlayEl.classList.remove("show");
+    buildBoard();
+    paintBoard();
+    tray = [randomPiece(), randomPiece(), randomPiece()];
+    renderTray();
+  }
+
+  restartBtn.addEventListener("click", newGame);
+
+  newGame();
+})();
+</script>
+</body>
+</html>
